@@ -43,7 +43,7 @@ Hệ thống phân quyền 3 cấp độ người dùng:
 ├── config/             # Cấu hình kết nối CSDL
 ├── core/               # Lõi xử lý MVC (Router, Database, Base Controller)
 ├── public/             # Thư mục gốc truy cập web
-├── database.sql        # File Cơ sở dữ liệu
+├── GenerateTable.sql   # File Cơ sở dữ liệu
 └── README.md
 ```
 
