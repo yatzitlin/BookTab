@@ -1,23 +1,34 @@
 <?php
-session_start();
-define('BASE_URL', 'http://localhost/MobileS');
+define('BASE_URL', 'http://localhost/BookTab');
 
-// Load Auth Controller
 require_once '../app/controllers/AuthController.php';
+
+// Cấu hình cài đặt cookie session bảo mật
+AuthController::configureSessionSecurity();
+
+session_start();
+
+// Tạo một thực thể AuthController duy nhất để xử lý session và yêu cầu.
+$authController = new AuthController();
+
+// Kiểm tra session timeout trước khi xử lý
+$authController->checkSessionTimeout();
+
+// Tạo token chống CSRF
+if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 
 // Kiểm tra action
 $action = isset($_GET['action']) ? $_GET['action'] : null;
 
 if ($action === 'register') {
-    $authController = new AuthController();
     $authController->handleRegister();
     exit;
 } elseif ($action === 'login') {
-    $authController = new AuthController();
     $authController->handleLogin();
     exit;
 } elseif ($action === 'logout') {
-    $authController = new AuthController();
     $authController->logout();
     exit;
 }
@@ -25,12 +36,18 @@ if ($action === 'register') {
 // Nếu không có action, kiểm tra page
 $page = isset($_GET['page']) ? $_GET['page'] : 'home';
 
+// Kiểm tra quyền admin
+if ($page === 'admin' || $page === 'admin_dashboard') {
+    if (!isset($_SESSION['userid']) || !isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'administrator') {
+        header('Location: ' . BASE_URL . '/public/index.php?page=login&error=unauthorized');
+        exit;
+    }
+}
+
 if ($page === 'login') {
-    $authController = new AuthController();
     $authController->showLoginForm();
     exit;
 } elseif ($page === 'register') {
-    $authController = new AuthController();
     $authController->showRegisterForm();
     exit;
 }
@@ -57,11 +74,20 @@ switch ($page) {
         $view_content = '../app/views/pages/contact.php';
         $pageTitle = 'Liên hệ';
         break;
+    case 'admin':
+        $view_content = '../app/views/admin/adminLayout.php';
+        $pageTitle = 'Admin Dashboard';
+        break;
     default:
         $view_content = '../app/views/pages/404.php';
         $pageTitle = 'Lỗi 404';
         break;
 }
 
-require_once '../app/views/template.php';
+if ($page == 'admin') {
+    require_once '../app/views/admin/adminLayout.php';
+}
+else {
+    require_once '../app/views/template.php';
+}
 ?>

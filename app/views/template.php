@@ -1,6 +1,6 @@
 <?php
 if (!defined('BASE_URL')) {
-    define('BASE_URL', 'http://localhost/MobileS');
+    define('BASE_URL', 'http://localhost/BookTab');
 }
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -30,7 +30,7 @@ if (session_status() === PHP_SESSION_NONE) {
 </head>
 <body class="bg-white">
     <!-- HEADER -->
-    <?php include dirname(__FILE__) . '/components/Header.php'; ?>
+    <?php include __DIR__ . '/components/Header.php'; ?>
 
     <!-- MAIN CONTENT -->
     <main class="max-w-6xl mx-auto px-4 lg:px-8 py-8 min-h-screen">
@@ -42,6 +42,6 @@ if (session_status() === PHP_SESSION_NONE) {
     </main>
 
     <!-- FOOTER -->
-    <?php include dirname(__FILE__) . '/components/Footer.php'; ?>
+    <?php include __DIR__ . '/components/Footer.php'; ?>
 </body>
 </html>

@@ -16,6 +16,13 @@
             </div>
         <?php endif; ?>
 
+            <!-- Unauthorized Access Message -->
+            <?php if (!empty($_GET['error']) && $_GET['error'] === 'unauthorized'): ?>
+                <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded-lg mb-6">
+                    <p>! Bạn không có quyền truy cập trang Admin. Vui lòng đăng nhập bằng tài khoản Admin.</p>
+                </div>
+            <?php endif; ?>
+
         <!-- Error Messages -->
         <?php if (!empty($errors)): ?>
             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6">
@@ -29,6 +36,9 @@
 
         <!-- Login Form -->
         <form action="<?php echo BASE_URL; ?>/public/index.php?action=login" method="POST" class="space-y-4">
+            <!-- CSRF Token -->
+            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8'); ?>">
+
             <!-- Username Field -->
             <div>
                 <label for="username" class="block text-sm font-semibold text-gray-900 mb-2">Tên đăng nhập</label>
@@ -102,7 +112,7 @@
         <!-- Back to Home -->
         <p class="text-center text-gray-600 mt-4">
             <a href="<?php echo BASE_URL; ?>/public/index.php?page=home" class="text-gray-600 hover:text-gray-900 transition">
-                ← Quay lại trang chủ
+                Quay lại trang chủ
             </a>
         </p>
     </div>

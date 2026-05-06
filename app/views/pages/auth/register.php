@@ -1,9 +1,3 @@
-<?php
-/**
- * Register.php - Form Đăng ký
- */
-?>
-
 <div class="max-w-md mx-auto my-12">
     <div class="bg-white rounded-lg shadow-lg p-8 border border-gray-200">
         <h1 class="text-3xl font-bold text-gray-900 mb-2 text-center">Đăng ký tài khoản</h1>
@@ -22,7 +16,10 @@
 
         <!-- Register Form -->
         <form action="<?php echo BASE_URL; ?>/public/index.php?action=register" method="POST" class="space-y-4">
-            <!-- Username Field -->
+            <!-- CSRF Token -->
+            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8'); ?>">
+
+            <!-- Username -->
             <div>
                 <label for="username" class="block text-sm font-semibold text-gray-900 mb-2">Tên đăng nhập</label>
                 <input 
@@ -80,7 +77,7 @@
                 >
             </div>
 
-            <!-- Password Field -->
+            <!-- Password -->
             <div>
                 <label for="mat_khau" class="block text-sm font-semibold text-gray-900 mb-2">Mật khẩu</label>
                 <input 
@@ -95,7 +92,7 @@
                 <p class="text-sm text-gray-500 mt-1">- Lưu ý: Sử dụng mật khẩu mạnh: kết hợp chữ cái, số, và ký tự đặc biệt</p>
             </div>
 
-            <!-- Password Confirm Field -->
+            <!-- Xác nhận Password -->
             <div>
                 <label for="mat_khau_confirm" class="block text-sm font-semibold text-gray-900 mb-2">Xác nhận mật khẩu</label>
                 <input 
@@ -109,7 +106,7 @@
                 >
             </div>
 
-            <!-- Submit Button -->
+            <!-- Submit -->
             <button 
                 type="submit"
                 class="w-full bg-red-500 text-white py-3 rounded-full font-bold text-lg hover:bg-red-600 transition-all transform hover:-translate-y-1 shadow-lg hover:shadow-xl mt-6"
@@ -118,7 +115,7 @@
             </button>
         </form>
 
-        <!-- Already have account -->
+        <!-- Đã có tài khoản rồi -> chuyển qua login -->
         <p class="text-center text-gray-600 mt-6">
             Đã có tài khoản? 
             <a href="<?php echo BASE_URL; ?>/public/index.php?action=login" class="text-red-500 font-bold hover:text-red-600 transition">
@@ -126,7 +123,7 @@
             </a>
         </p>
 
-        <!-- Back to Home -->
+        <!-- Quay lại trang chủ -->
         <p class="text-center text-gray-600 mt-4">
             <a href="<?php echo BASE_URL; ?>/public/index.php?page=home" class="text-gray-600 hover:text-gray-900 transition">
                 Quay lại trang chủ
