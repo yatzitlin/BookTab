@@ -30,6 +30,7 @@ if (session_status() === PHP_SESSION_NONE) {
 </head>
 <body class="bg-white">
     <!-- HEADER -->
+    <div id="preloader"><div class="loader"></div></div>
     <?php include __DIR__ . '/components/Header.php'; ?>
 
     <!-- MAIN CONTENT -->

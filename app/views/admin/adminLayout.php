@@ -41,7 +41,7 @@ $adminPageBreadcrumb = $adminPage['breadcrumb'];
 <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
     <div id="preloader"><div class="loader"></div></div>
-
+    
     <div class="page-container">
         <?php include __DIR__ . '/adminComponents/AdminSidebar.php'; ?>
 

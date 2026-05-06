@@ -2,15 +2,18 @@
 
 // Register, Login, Logout
 
-require_once dirname(__FILE__) . '/../models/UserModel.php';
+require_once __DIR__ . '/BaseController.php';
 
-class AuthController {
+class AuthController extends BaseController{
     private $userModel;
     private $errors = [];
     private $success_message = '';
 
-    public function __construct() {
-        $this->userModel = new UserModel();
+    public function __construct($dbConnection) {
+        parent::__construct($dbConnection); // Kế thừa kết nối từ BaseController
+        
+        // Gọi UserModel
+        $this->userModel = $this->loadModel('UserModel');
     }
 
     // Form Register

@@ -2,6 +2,10 @@
 define('BASE_URL', 'http://localhost/BookTab');
 
 require_once '../app/controllers/AuthController.php';
+require_once '../app/core/Database.php'; 
+
+$database = new Database();
+$dbConnection = $database->connect();
 
 // Cấu hình cài đặt cookie session bảo mật
 AuthController::configureSessionSecurity();
@@ -9,7 +13,7 @@ AuthController::configureSessionSecurity();
 session_start();
 
 // Tạo một thực thể AuthController duy nhất để xử lý session và yêu cầu.
-$authController = new AuthController();
+$authController = new AuthController($dbConnection);
 
 // Kiểm tra session timeout trước khi xử lý
 $authController->checkSessionTimeout();

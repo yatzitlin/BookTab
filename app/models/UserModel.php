@@ -1,13 +1,12 @@
 <?php
 
-require_once dirname(__FILE__) . '/../core/Database.php';
+require_once __DIR__ . '/../core/Database.php';
 
 class UserModel {
     private $db;
 
-    public function __construct() {
-        $database = new Database();
-        $this->db = $database->connect();
+    public function __construct($dbConnection) {
+        $this->db = $dbConnection;
     }
 
     /**
