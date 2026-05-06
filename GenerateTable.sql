@@ -107,7 +107,7 @@ CREATE TABLE cau_hoi (
     ma_loai BIGINT,
     userid BIGINT NOT NULL,
     FOREIGN KEY (ma_loai) REFERENCES loai_cau_hoi(ma_loai) ON DELETE SET NULL,
-    FOREIGN KEY (userid) REFERENCES nguoi_dung(userid) ON DELETE CASCADE
+    FOREIGN KEY (userid) REFERENCES administrator(userid) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE cau_tra_loi (
