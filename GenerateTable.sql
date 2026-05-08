@@ -9,7 +9,7 @@ USE BookTab;
 -- =========================================================
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS chi_tiet_don_hang, don_hang, chi_tiet_gio_hang, gio_hang, danh_gia, anh_san_pham, san_pham, loai_san_pham,
-                     cau_tra_loi, cau_hoi, loai_cau_hoi, binh_luan, bai_viet, loai_bai_viet, lien_he,
+                     cau_tra_loi, cau_hoi, loai_cau_hoi, binh_luan, bai_viet, loai_bai_viet, gioi_thieu, lien_he,
                      member, `rank`, administrator, nguoi_dung;
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -80,6 +80,18 @@ CREATE TABLE bai_viet (
     FOREIGN KEY (administrator_userid) REFERENCES administrator(userid) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE gioi_thieu (
+    ma_section BIGINT AUTO_INCREMENT PRIMARY KEY,
+    tieu_de VARCHAR(255) NOT NULL,
+    mo_ta_ngan VARCHAR(500),
+    noi_dung TEXT,
+    hinh_anh_url VARCHAR(500),
+    so_thu_tu INT NOT NULL DEFAULT 1,
+    trang_thai VARCHAR(50) NOT NULL DEFAULT 'active',
+    ngay_tao DATETIME DEFAULT CURRENT_TIMESTAMP,
+    ngay_cap_nhat DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE binh_luan (
     ma_binh_luan BIGINT AUTO_INCREMENT PRIMARY KEY,
     noi_dung TEXT NOT NULL,
@@ -106,8 +118,9 @@ CREATE TABLE cau_hoi (
     is_active BOOLEAN DEFAULT TRUE,
     ma_loai BIGINT,
     userid BIGINT NOT NULL,
+    ngay_tao DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (ma_loai) REFERENCES loai_cau_hoi(ma_loai) ON DELETE SET NULL,
-    FOREIGN KEY (userid) REFERENCES administrator(userid) ON DELETE CASCADE
+    FOREIGN KEY (userid) REFERENCES nguoi_dung(userid) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE cau_tra_loi (
@@ -199,4 +212,32 @@ CREATE TABLE chi_tiet_don_hang (
     PRIMARY KEY (ma_don, ma_san_pham),
     FOREIGN KEY (ma_don) REFERENCES don_hang(ma_don) ON DELETE CASCADE,
     FOREIGN KEY (ma_san_pham) REFERENCES san_pham(ma_san_pham) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `anh` (
+    `ma_anh` BIGINT AUTO_INCREMENT PRIMARY KEY,
+    `url_anh` VARCHAR(500) NOT NULL,
+    `ten_file` VARCHAR(255) DEFAULT NULL,
+    `so_thu_tu` INT DEFAULT 0,
+    `ngay_tao` DATETIME DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `anh_cau_hoi` (
+    `ma_cau_hoi` BIGINT NOT NULL,
+    `ma_anh` BIGINT NOT NULL,
+    `so_thu_tu` INT DEFAULT 0,
+    PRIMARY KEY (`ma_cau_hoi`, `ma_anh`),
+    KEY `idx_acq_ma_anh` (`ma_anh`),
+    CONSTRAINT `fk_anh_cau_hoi_cau_hoi` FOREIGN KEY (`ma_cau_hoi`) REFERENCES `cau_hoi`(`ma_cau_hoi`) ON DELETE CASCADE,
+    CONSTRAINT `fk_anh_cau_hoi_anh` FOREIGN KEY (`ma_anh`) REFERENCES `anh`(`ma_anh`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `anh_cau_tra_loi` (
+    `ma_cau_tra_loi` BIGINT NOT NULL,
+    `ma_anh` BIGINT NOT NULL,
+    `so_thu_tu` INT DEFAULT 0,
+    PRIMARY KEY (`ma_cau_tra_loi`, `ma_anh`),
+    KEY `idx_actl_ma_anh` (`ma_anh`),
+    CONSTRAINT `fk_anh_cau_tra_loi_cau_tra_loi` FOREIGN KEY (`ma_cau_tra_loi`) REFERENCES `cau_tra_loi`(`ma_cau_tra_loi`) ON DELETE CASCADE,
+    CONSTRAINT `fk_anh_cau_tra_loi_anh` FOREIGN KEY (`ma_anh`) REFERENCES `anh`(`ma_anh`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

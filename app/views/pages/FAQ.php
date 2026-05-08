@@ -1,18 +1,13 @@
 <?php
 $qnaCategories = isset($qnaCategories) && is_array($qnaCategories) ? $qnaCategories : [];
-$qnaItems = isset($qnaItems) && is_array($qnaItems) ? $qnaItems : [];
-$qnaPagination = isset($qnaPagination) && is_array($qnaPagination) ? $qnaPagination : [
+$faqItems = isset($faqItems) && is_array($faqItems) ? $faqItems : [];
+$faqPagination = isset($faqPagination) && is_array($faqPagination) ? $faqPagination : [
 	'currentPage' => 1,
 	'totalPages' => 1,
 	'totalItems' => 0,
 	'itemsPerPage' => 10
 ];
 $selectedCategory = isset($selectedCategory) ? (int) $selectedCategory : (isset($_GET['category']) ? (int) $_GET['category'] : 0);
-$askUrl = BASE_URL . '/public/index.php?page=qna_ask';
-$faqUrl = BASE_URL . '/public/index.php?page=qna&tab=faq';
-
-$successMessage = $_SESSION['qna_form_success'] ?? '';
-unset($_SESSION['qna_form_success']);
 
 // Build category query parameter
 $categoryParam = $selectedCategory > 0 ? '&category=' . $selectedCategory : '';
@@ -21,40 +16,31 @@ $categoryParam = $selectedCategory > 0 ? '&category=' . $selectedCategory : '';
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lazysizes@5/lazysizes.min.css" />
 
 <section class="mb-8">
-	<div class="rounded-2xl bg-gray-900 text-white p-8 md:p-10">
-		<p class="text-red-400 font-semibold uppercase tracking-wider text-sm mb-2">Hỏi đáp người dùng</p>
-		<h1 class="text-3xl md:text-4xl font-bold mb-4">Câu hỏi của người dùng và trả lời của quản trị viên</h1>
-		<p class="text-gray-300 max-w-3xl">
-			Trang này hiển thị các câu hỏi đã được gửi lên cùng câu trả lời từ quản trị viên. Khách vẫn có thể xem nội dung, nhưng muốn đặt câu hỏi mới thì phải đăng nhập.
+	<div class="rounded-2xl bg-gradient-to-r from-red-500 to-orange-500 text-white p-8 md:p-10 shadow-lg">
+		<p class="text-red-50 font-semibold uppercase tracking-wider text-sm mb-2">FAQ</p>
+		<h1 class="text-3xl md:text-4xl font-bold mb-4">Câu hỏi thường gặp</h1>
+		<p class="text-red-50 max-w-3xl">
+			Trang FAQ chỉ để tra cứu nhanh. Khách và tài khoản đã đăng nhập đều xem được nội dung ở đây.
 		</p>
 		<div class="mt-6 flex flex-wrap gap-3">
-			<a href="<?php echo $faqUrl; ?>" class="inline-flex items-center px-5 py-3 rounded-full border border-gray-600 text-gray-200 hover:bg-gray-800 transition">
-				<i class="fas fa-book-open mr-2"></i> Xem FAQ
-			</a>
-			<a href="<?php echo $askUrl; ?>" class="inline-flex items-center px-5 py-3 rounded-full bg-red-500 text-white font-semibold hover:bg-red-600 transition">
-				<i class="fas fa-pen-to-square mr-2"></i> Đặt câu hỏi
+			<a href="<?php echo BASE_URL; ?>/public/index.php?page=qna" class="inline-flex items-center px-5 py-3 rounded-full bg-gray-900 text-white font-semibold hover:bg-black transition">
+				<i class="fas fa-comments mr-2"></i> Về phần hỏi đáp
 			</a>
 		</div>
 	</div>
 </section>
 
-<?php if (!empty($successMessage)): ?>
-	<div class="mb-8 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-green-700 animate-fade-in">
-		<?php echo htmlspecialchars($successMessage, ENT_QUOTES, 'UTF-8'); ?>
-	</div>
-<?php endif; ?>
-
 <section class="mb-8">
 	<h2 class="text-xl font-bold text-gray-900 mb-4">Lọc theo chủ đề</h2>
 	<div class="flex flex-wrap gap-3">
-		<a href="<?php echo BASE_URL; ?>/public/index.php?page=qna"
+		<a href="<?php echo BASE_URL; ?>/public/index.php?page=qna&tab=faq"
 		   class="px-4 py-2 rounded-full border <?php echo $selectedCategory === 0 ? 'bg-red-500 border-red-500 text-white' : 'bg-white border-gray-300 text-gray-700 hover:border-red-400'; ?> transition">
 			Tất cả
 		</a>
 
 		<?php foreach ($qnaCategories as $category): ?>
 			<?php $isActive = $selectedCategory === (int) $category['ma_loai']; ?>
-			<a href="<?php echo BASE_URL; ?>/public/index.php?page=qna&category=<?php echo (int) $category['ma_loai']; ?>"
+			<a href="<?php echo BASE_URL; ?>/public/index.php?page=qna&tab=faq&category=<?php echo (int) $category['ma_loai']; ?>"
 			   class="px-4 py-2 rounded-full border <?php echo $isActive ? 'bg-red-500 border-red-500 text-white' : 'bg-white border-gray-300 text-gray-700 hover:border-red-400'; ?> transition">
 				<?php echo htmlspecialchars($category['ten_loai'], ENT_QUOTES, 'UTF-8'); ?>
 			</a>
@@ -62,20 +48,20 @@ $categoryParam = $selectedCategory > 0 ? '&category=' . $selectedCategory : '';
 	</div>
 </section>
 
-<?php if ($qnaPagination['totalItems'] > 0): ?>
+<?php if ($faqPagination['totalItems'] > 0): ?>
 	<div class="mb-4 flex items-center justify-between text-sm text-gray-600">
-		<span>Hiển thị trang <?php echo (int)$qnaPagination['currentPage']; ?> của <?php echo (int)$qnaPagination['totalPages']; ?> (<?php echo (int)$qnaPagination['totalItems']; ?> câu hỏi)</span>
+		<span>Hiển thị trang <?php echo (int)$faqPagination['currentPage']; ?> của <?php echo (int)$faqPagination['totalPages']; ?> (<?php echo (int)$faqPagination['totalItems']; ?> FAQ)</span>
 	</div>
 <?php endif; ?>
 
 <section>
 	<div class="space-y-4">
-		<?php if (empty($qnaItems)): ?>
+		<?php if (empty($faqItems)): ?>
 			<div class="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-gray-600">
-				Chưa có câu hỏi/đáp phù hợp với bộ lọc hiện tại.
+				Chưa có FAQ nào phù hợp với bộ lọc hiện tại.
 			</div>
 		<?php else: ?>
-			<?php foreach ($qnaItems as $item): ?>
+			<?php foreach ($faqItems as $item): ?>
 				<article class="bg-white rounded-xl border border-gray-100 p-6 shadow-sm animate-fade-in hover:shadow-md transition">
 					<div class="flex flex-wrap items-center gap-3 mb-3">
 						<span class="text-xs font-semibold bg-red-50 text-red-600 border border-red-100 px-3 py-1 rounded-full">
@@ -88,13 +74,9 @@ $categoryParam = $selectedCategory > 0 ? '&category=' . $selectedCategory : '';
 						<?php endif; ?>
 					</div>
 
-					<h3 class="text-lg md:text-xl font-semibold text-gray-900 mb-2">
+					<h3 class="text-lg md:text-xl font-semibold text-gray-900 mb-3">
 						<?php echo htmlspecialchars($item['ten_cau_hoi'], ENT_QUOTES, 'UTF-8'); ?>
 					</h3>
-
-					<p class="text-sm text-gray-500 mb-4">
-						Người hỏi: <?php echo htmlspecialchars(trim(($item['ho_va_ten_dem'] ?? '') . ' ' . ($item['ten'] ?? '')), ENT_QUOTES, 'UTF-8'); ?>
-					</p>
 
 					<?php if (!empty($item['images'])): ?>
 						<div class="mb-4 grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -114,38 +96,27 @@ $categoryParam = $selectedCategory > 0 ? '&category=' . $selectedCategory : '';
 						</div>
 					<?php endif; ?>
 
-					<?php if (!empty($item['cau_tra_loi'])): ?>
-						<div class="bg-gray-50 border border-gray-100 rounded-lg p-4 text-gray-700 leading-7 mb-3 flex flex-col gap-4">
-							<div class="answer-content">
-								<?php echo $item['cau_tra_loi']; ?>
-							</div>
+					<div class="bg-gray-50 border border-gray-100 rounded-lg p-4 text-gray-700 leading-7 mb-3 flex flex-col gap-4">
+						<div class="answer-content">
+							<?php echo $item['cau_tra_loi'] ?? ''; ?>
+						</div>
 
-							<?php if (!empty($item['admin_ho_va_ten_dem']) || !empty($item['admin_ten'])): ?>
-								<div class="mt-auto flex justify-end">
-									<p class="text-sm text-gray-500 text-right">
-										<span class="block font-semibold text-gray-700">Người trả lời</span>
-										<?php echo htmlspecialchars(trim(($item['admin_ho_va_ten_dem'] ?? '') . ' ' . ($item['admin_ten'] ?? '')), ENT_QUOTES, 'UTF-8'); ?>
-									</p>
-								</div>
-							<?php endif; ?>
-
-						<?php if (!empty($item['answer_images'])): ?>
-							<div class="mt-3 grid grid-cols-2 sm:grid-cols-3 gap-3">
-								<?php foreach ($item['answer_images'] as $img): ?>
-									<?php $answerImageUrl = BASE_URL . '/' . htmlspecialchars(ltrim($img['url_anh'], '/'), ENT_QUOTES, 'UTF-8'); ?>
-									<button type="button" class="group overflow-hidden rounded-lg bg-white border text-left image-zoom-trigger" data-lightbox-src="<?php echo $answerImageUrl; ?>" data-lightbox-alt="<?php echo htmlspecialchars($img['ten_file'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
-										<figure class="relative">
-											<img src="<?php echo $answerImageUrl; ?>" 
-											     alt="<?php echo htmlspecialchars($img['ten_file'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" 
-											     class="w-full h-36 object-cover lazyload transition duration-300 group-hover:scale-105" 
-											     loading="lazy" 
-											     data-src="<?php echo $answerImageUrl; ?>" />
-											<span class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition"></span>
-										</figure>
-									</button>
-								<?php endforeach; ?>
-							</div>
-						<?php endif; ?>
+					<?php if (!empty($item['answer_images'])): ?>
+						<div class="mt-3 grid grid-cols-2 sm:grid-cols-3 gap-3">
+							<?php foreach ($item['answer_images'] as $img): ?>
+								<?php $answerImageUrl = BASE_URL . '/' . htmlspecialchars(ltrim($img['url_anh'], '/'), ENT_QUOTES, 'UTF-8'); ?>
+								<button type="button" class="group overflow-hidden rounded-lg bg-white border text-left image-zoom-trigger" data-lightbox-src="<?php echo $answerImageUrl; ?>" data-lightbox-alt="<?php echo htmlspecialchars($img['ten_file'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
+									<figure class="relative">
+										<img src="<?php echo $answerImageUrl; ?>" 
+										     alt="<?php echo htmlspecialchars($img['ten_file'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" 
+										     class="w-full h-36 object-cover lazyload transition duration-300 group-hover:scale-105" 
+										     loading="lazy" 
+										     data-src="<?php echo $answerImageUrl; ?>" />
+										<span class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition"></span>
+									</figure>
+								</button>
+							<?php endforeach; ?>
+						</div>
 					<?php endif; ?>
 				</article>
 			<?php endforeach; ?>
@@ -153,34 +124,34 @@ $categoryParam = $selectedCategory > 0 ? '&category=' . $selectedCategory : '';
 	</div>
 </section>
 
-<?php if ($qnaPagination['totalPages'] > 1): ?>
+<?php if ($faqPagination['totalPages'] > 1): ?>
 	<nav class="mt-8 flex items-center justify-center gap-2">
-		<?php if ($qnaPagination['currentPage'] > 1): ?>
-			<a href="<?php echo BASE_URL; ?>/public/index.php?page=qna&qna_page=<?php echo $qnaPagination['currentPage'] - 1; ?><?php echo $categoryParam; ?>"
+		<?php if ($faqPagination['currentPage'] > 1): ?>
+			<a href="<?php echo BASE_URL; ?>/public/index.php?page=qna&tab=faq&qna_page=<?php echo $faqPagination['currentPage'] - 1; ?><?php echo $categoryParam; ?>"
 			   class="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition">
 				<i class="fas fa-chevron-left text-sm"></i> Trang trước
 			</a>
 		<?php endif; ?>
 
 		<div class="flex gap-1">
-			<?php for ($i = 1; $i <= $qnaPagination['totalPages']; $i++): ?>
-				<?php if ($i === $qnaPagination['currentPage']): ?>
+			<?php for ($i = 1; $i <= $faqPagination['totalPages']; $i++): ?>
+				<?php if ($i === $faqPagination['currentPage']): ?>
 					<span class="px-3 py-2 rounded-lg bg-red-500 text-white font-semibold">
 						<?php echo $i; ?>
 					</span>
-				<?php elseif ($i === 1 || $i === $qnaPagination['totalPages'] || abs($i - $qnaPagination['currentPage']) <= 2): ?>
-					<a href="<?php echo BASE_URL; ?>/public/index.php?page=qna&qna_page=<?php echo $i; ?><?php echo $categoryParam; ?>"
+				<?php elseif ($i === 1 || $i === $faqPagination['totalPages'] || abs($i - $faqPagination['currentPage']) <= 2): ?>
+					<a href="<?php echo BASE_URL; ?>/public/index.php?page=qna&tab=faq&qna_page=<?php echo $i; ?><?php echo $categoryParam; ?>"
 					   class="px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition">
 						<?php echo $i; ?>
 					</a>
-				<?php elseif ($i === 2 || $i === $qnaPagination['totalPages'] - 1): ?>
+				<?php elseif ($i === 2 || $i === $faqPagination['totalPages'] - 1): ?>
 					<span class="px-3 py-2 text-gray-400">...</span>
 				<?php endif; ?>
 			<?php endfor; ?>
 		</div>
 
-		<?php if ($qnaPagination['currentPage'] < $qnaPagination['totalPages']): ?>
-			<a href="<?php echo BASE_URL; ?>/public/index.php?page=qna&qna_page=<?php echo $qnaPagination['currentPage'] + 1; ?><?php echo $categoryParam; ?>"
+		<?php if ($faqPagination['currentPage'] < $faqPagination['totalPages']): ?>
+			<a href="<?php echo BASE_URL; ?>/public/index.php?page=qna&tab=faq&qna_page=<?php echo $faqPagination['currentPage'] + 1; ?><?php echo $categoryParam; ?>"
 			   class="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition">
 				Trang sau <i class="fas fa-chevron-right text-sm"></i>
 			</a>

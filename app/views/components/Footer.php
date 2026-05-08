@@ -27,6 +27,7 @@
                 <h4 class="text-white text-lg font-bold mb-4">Liên kết nhanh</h4>
                 <ul class="space-y-2">
                     <li><a href="<?php echo BASE_URL; ?>/public/index.php?page=home" class="text-gray-400 hover:text-red-500 text-sm transition">Trang chủ</a></li>
+                    <li><a href="<?php echo BASE_URL; ?>/public/index.php?page=about" class="text-gray-400 hover:text-red-500 text-sm transition">Giới thiệu</a></li>
                     <li><a href="<?php echo BASE_URL; ?>/public/index.php?page=products" class="text-gray-400 hover:text-red-500 text-sm transition">Cửa hàng</a></li>
                     <li><a href="<?php echo BASE_URL; ?>/public/index.php?page=news" class="text-gray-400 hover:text-red-500 text-sm transition">Tin tức</a></li>
                     <li><a href="<?php echo BASE_URL; ?>/public/index.php?page=qna" class="text-gray-400 hover:text-red-500 text-sm transition">Hỏi/Đáp</a></li>

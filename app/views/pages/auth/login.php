@@ -23,6 +23,12 @@
                 </div>
             <?php endif; ?>
 
+            <?php if (!empty($_GET['error']) && $_GET['error'] === 'qna_login_required'): ?>
+                <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded-lg mb-6">
+                    <p>Bạn cần đăng nhập để đặt câu hỏi.</p>
+                </div>
+            <?php endif; ?>
+
         <!-- Error Messages -->
         <?php if (!empty($errors)): ?>
             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6">

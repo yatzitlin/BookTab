@@ -17,6 +17,10 @@ $current_page = isset($_GET['page']) ? $_GET['page'] : 'home';
                    class="<?php echo $current_page === 'home' ? 'text-red-500 font-bold' : 'text-gray-600 hover:text-gray-900'; ?> transition">
                     Trang chủ
                 </a>
+                <a href="<?php echo BASE_URL; ?>/public/index.php?page=about" 
+                   class="<?php echo $current_page === 'about' ? 'text-red-500 font-bold' : 'text-gray-600 hover:text-gray-900'; ?> transition">
+                    Giới thiệu
+                </a>
                 <a href="<?php echo BASE_URL; ?>/public/index.php?page=products" 
                    class="<?php echo $current_page === 'products' ? 'text-red-500 font-bold' : 'text-gray-600 hover:text-gray-900'; ?> transition">
                     Sản phẩm
@@ -87,6 +91,7 @@ $current_page = isset($_GET['page']) ? $_GET['page'] : 'home';
         <!-- Mobile Navigation Menu -->
         <nav id="navLinks" class="hidden md:hidden pb-4 space-y-2 border-t border-gray-200">
             <a href="<?php echo BASE_URL; ?>/public/index.php?page=home" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Trang chủ</a>
+            <a href="<?php echo BASE_URL; ?>/public/index.php?page=about" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Giới thiệu</a>
             <a href="<?php echo BASE_URL; ?>/public/index.php?page=products" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Sản phẩm</a>
             <a href="<?php echo BASE_URL; ?>/public/index.php?page=news" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Tin tức</a>
             <a href="<?php echo BASE_URL; ?>/public/index.php?page=qna" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Hỏi đáp</a>
