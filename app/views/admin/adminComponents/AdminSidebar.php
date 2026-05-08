@@ -57,13 +57,27 @@ $currentAction = isset($_GET['admin_action']) ? $_GET['admin_action'] : 'dashboa
                         </ul>
                     </li>
 
+                    <li class="<?php echo ($currentAction == 'about') ? 'active' : ''; ?>">
+                        <a href="javascript:void(0)" aria-expanded="<?php echo ($currentAction == 'about') ? 'true' : 'false'; ?>">
+                            <i class="ti-info-alt"></i><span>Giới thiệu</span>
+                        </a>
+                        <ul class="collapse <?php echo ($currentAction == 'about') ? 'in show' : ''; ?>">
+                            <li class="<?php echo ($currentAction == 'about') ? 'active' : ''; ?>">
+                                <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=about">Sửa nội dung</a>
+                            </li>
+                        </ul>
+                    </li>
+
                     <li class="<?php echo ($currentAction == 'qna') ? 'active' : ''; ?>">
                         <a href="javascript:void(0)" aria-expanded="<?php echo ($currentAction == 'qna') ? 'true' : 'false'; ?>">
-                            <i class="ti-layout-sidebar-right"></i><span>QnA</span>
+                            <i class="ti-layout-sidebar-right"></i><span>Hỏi đáp</span>
                         </a>
                         <ul class="collapse <?php echo ($currentAction == 'qna') ? 'in show' : ''; ?>">
-                            <li class="<?php echo ($currentAction == 'qna') ? 'active' : ''; ?>">
-                                <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna">AdminQnA</a>
+                            <li>
+                                <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna&act=questions">Câu hỏi</a>
+                            </li>
+                            <li>
+                                <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna&act=faq">FAQ</a>
                             </li>
                         </ul>
                     </li>

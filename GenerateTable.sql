@@ -9,7 +9,7 @@ USE BookTab;
 -- =========================================================
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS chi_tiet_don_hang, don_hang, chi_tiet_gio_hang, gio_hang, danh_gia, anh_san_pham, san_pham, loai_san_pham,
-                     cau_tra_loi, cau_hoi, loai_cau_hoi, binh_luan, bai_viet, loai_bai_viet, gioi_thieu, lien_he,
+                     cau_tra_loi, cau_hoi, loai_cau_hoi, binh_luan, bai_viet, loai_bai_viet, thong_tin, lien_he,
                      member, `rank`, administrator, nguoi_dung;
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -80,14 +80,13 @@ CREATE TABLE bai_viet (
     FOREIGN KEY (administrator_userid) REFERENCES administrator(userid) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE gioi_thieu (
-    ma_section BIGINT AUTO_INCREMENT PRIMARY KEY,
-    tieu_de VARCHAR(255) NOT NULL,
-    mo_ta_ngan VARCHAR(500),
+CREATE TABLE thong_tin (
+    ma_thong_tin BIGINT AUTO_INCREMENT PRIMARY KEY,
+    loai VARCHAR(50) NOT NULL,
     noi_dung TEXT,
-    hinh_anh_url VARCHAR(500),
-    so_thu_tu INT NOT NULL DEFAULT 1,
+    hinh_anh_nen VARCHAR(500),
     trang_thai VARCHAR(50) NOT NULL DEFAULT 'active',
+    so_thu_tu INT NOT NULL DEFAULT 1,
     ngay_tao DATETIME DEFAULT CURRENT_TIMESTAMP,
     ngay_cap_nhat DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -109,13 +108,14 @@ CREATE TABLE binh_luan (
 
 CREATE TABLE loai_cau_hoi (
     ma_loai BIGINT AUTO_INCREMENT PRIMARY KEY,
-    ten_loai VARCHAR(255) NOT NULL
+    ten_loai VARCHAR(255) NOT NULL UNIQUE,
+    so_thu_tu INT NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE cau_hoi (
     ma_cau_hoi BIGINT AUTO_INCREMENT PRIMARY KEY,
     ten_cau_hoi VARCHAR(255) NOT NULL,
-    is_active BOOLEAN DEFAULT TRUE,
+    trang_thai VARCHAR(50) NOT NULL DEFAULT 'chua_tra_loi',
     ma_loai BIGINT,
     userid BIGINT NOT NULL,
     ngay_tao DATETIME DEFAULT CURRENT_TIMESTAMP,

@@ -35,7 +35,7 @@ unset($_SESSION['qna_form_error']);
 				<select id="ma_loai" name="ma_loai" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-red-500 focus:ring-2 focus:ring-red-200 focus:outline-none transition" data-error="">
 					<option value="">-- Chọn chủ đề --</option>
 					<?php foreach ($qnaCategories as $category): ?>
-						<option value="<?php echo (int) $category['ma_loai']; ?>"><?php echo htmlspecialchars($category['ten_loai'], ENT_QUOTES, 'UTF-8'); ?></option>
+						<option value="<?php echo (int)$category['ma_loai']; ?>"><?php echo htmlspecialchars($category['ten_loai'], ENT_QUOTES, 'UTF-8'); ?></option>
 					<?php endforeach; ?>
 				</select>
 				<span class="errorMsg text-xs text-red-600 mt-1 hidden"></span>

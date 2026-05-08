@@ -6,7 +6,8 @@ $adminPages = array(
     'home' => array('document_title' => 'AdminHome', 'heading' => 'AdminHome', 'breadcrumb' => 'AdminHome', 'file' => '/adminPages/AdminHome.php'),
     'products' => array('document_title' => 'AdminProducts', 'heading' => 'AdminProducts', 'breadcrumb' => 'AdminProducts', 'file' => '/adminPages/AdminProducts.php'),
     'news' => array('document_title' => 'AdminNews', 'heading' => 'AdminNews', 'breadcrumb' => 'AdminNews', 'file' => '/adminPages/AdminNews.php'),
-    'qna' => array('document_title' => 'AdminQnA', 'heading' => 'AdminQnA', 'breadcrumb' => 'AdminQnA', 'file' => '/adminPages/AdminQnA.php'),
+    'about' => array('document_title' => 'Giới thiệu', 'heading' => 'Quản lý Giới thiệu', 'breadcrumb' => 'Giới thiệu', 'file' => '/adminPages/AdminAbout.php'),
+    'qna' => array('document_title' => 'Hỏi đáp', 'heading' => 'Quản lý Hỏi đáp', 'breadcrumb' => 'Hỏi đáp', 'file' => '/adminPages/AdminQnA.php'),
     'contact' => array('document_title' => 'AdminContact', 'heading' => 'AdminContact', 'breadcrumb' => 'AdminContact', 'file' => '/adminPages/AdminContact.php')
 );
 $adminPage = isset($adminPages[$admin_action]) ? $adminPages[$admin_action] : $adminPages['dashboard'];

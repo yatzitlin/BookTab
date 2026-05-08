@@ -7,7 +7,7 @@ $faqPagination = isset($faqPagination) && is_array($faqPagination) ? $faqPaginat
 	'totalItems' => 0,
 	'itemsPerPage' => 10
 ];
-$selectedCategory = isset($selectedCategory) ? (int) $selectedCategory : (isset($_GET['category']) ? (int) $_GET['category'] : 0);
+$selectedCategory = isset($selectedCategory) ? (int)$selectedCategory : (isset($_GET['category']) ? (int)$_GET['category'] : 0);
 
 // Build category query parameter
 $categoryParam = $selectedCategory > 0 ? '&category=' . $selectedCategory : '';
@@ -20,11 +20,11 @@ $categoryParam = $selectedCategory > 0 ? '&category=' . $selectedCategory : '';
 		<p class="text-red-50 font-semibold uppercase tracking-wider text-sm mb-2">FAQ</p>
 		<h1 class="text-3xl md:text-4xl font-bold mb-4">Câu hỏi thường gặp</h1>
 		<p class="text-red-50 max-w-3xl">
-			Trang FAQ chỉ để tra cứu nhanh. Khách và tài khoản đã đăng nhập đều xem được nội dung ở đây.
+			Ở đây là các câu hỏi thường gặp của người dùng.
 		</p>
 		<div class="mt-6 flex flex-wrap gap-3">
 			<a href="<?php echo BASE_URL; ?>/public/index.php?page=qna" class="inline-flex items-center px-5 py-3 rounded-full bg-gray-900 text-white font-semibold hover:bg-black transition">
-				<i class="fas fa-comments mr-2"></i> Về phần hỏi đáp
+				<i class="fas fa-comments mr-2"></i> Hỏi đáp
 			</a>
 		</div>
 	</div>
@@ -39,8 +39,8 @@ $categoryParam = $selectedCategory > 0 ? '&category=' . $selectedCategory : '';
 		</a>
 
 		<?php foreach ($qnaCategories as $category): ?>
-			<?php $isActive = $selectedCategory === (int) $category['ma_loai']; ?>
-			<a href="<?php echo BASE_URL; ?>/public/index.php?page=qna&tab=faq&category=<?php echo (int) $category['ma_loai']; ?>"
+			<?php $isActive = $selectedCategory === (int)$category['ma_loai']; ?>
+			<a href="<?php echo BASE_URL; ?>/public/index.php?page=qna&tab=faq&category=<?php echo (int)$category['ma_loai']; ?>"
 			   class="px-4 py-2 rounded-full border <?php echo $isActive ? 'bg-red-500 border-red-500 text-white' : 'bg-white border-gray-300 text-gray-700 hover:border-red-400'; ?> transition">
 				<?php echo htmlspecialchars($category['ten_loai'], ENT_QUOTES, 'UTF-8'); ?>
 			</a>
@@ -48,17 +48,11 @@ $categoryParam = $selectedCategory > 0 ? '&category=' . $selectedCategory : '';
 	</div>
 </section>
 
-<?php if ($faqPagination['totalItems'] > 0): ?>
-	<div class="mb-4 flex items-center justify-between text-sm text-gray-600">
-		<span>Hiển thị trang <?php echo (int)$faqPagination['currentPage']; ?> của <?php echo (int)$faqPagination['totalPages']; ?> (<?php echo (int)$faqPagination['totalItems']; ?> FAQ)</span>
-	</div>
-<?php endif; ?>
-
 <section>
 	<div class="space-y-4">
 		<?php if (empty($faqItems)): ?>
 			<div class="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-gray-600">
-				Chưa có FAQ nào phù hợp với bộ lọc hiện tại.
+				Chưa có câu hỏi nào phù hợp với bộ lọc hiện tại.
 			</div>
 		<?php else: ?>
 			<?php foreach ($faqItems as $item): ?>
@@ -67,11 +61,6 @@ $categoryParam = $selectedCategory > 0 ? '&category=' . $selectedCategory : '';
 						<span class="text-xs font-semibold bg-red-50 text-red-600 border border-red-100 px-3 py-1 rounded-full">
 							<?php echo htmlspecialchars($item['ten_loai'], ENT_QUOTES, 'UTF-8'); ?>
 						</span>
-						<?php if (!empty($item['ngay_dang'])): ?>
-							<span class="text-xs text-gray-500">
-								Cập nhật: <?php echo htmlspecialchars(date('d/m/Y', strtotime($item['ngay_dang'])), ENT_QUOTES, 'UTF-8'); ?>
-							</span>
-						<?php endif; ?>
 					</div>
 
 					<h3 class="text-lg md:text-xl font-semibold text-gray-900 mb-3">
@@ -96,8 +85,8 @@ $categoryParam = $selectedCategory > 0 ? '&category=' . $selectedCategory : '';
 						</div>
 					<?php endif; ?>
 
-					<div class="bg-gray-50 border border-gray-100 rounded-lg p-4 text-gray-700 leading-7 mb-3 flex flex-col gap-4">
-						<div class="answer-content">
+					<div class="bg-gray-50 border border-gray-100 rounded-lg p-4 text-gray-700 mb-3 flex flex-col gap-4">
+						<div class="answer-content prose max-w-none">
 							<?php echo $item['cau_tra_loi'] ?? ''; ?>
 						</div>
 
@@ -128,9 +117,13 @@ $categoryParam = $selectedCategory > 0 ? '&category=' . $selectedCategory : '';
 	<nav class="mt-8 flex items-center justify-center gap-2">
 		<?php if ($faqPagination['currentPage'] > 1): ?>
 			<a href="<?php echo BASE_URL; ?>/public/index.php?page=qna&tab=faq&qna_page=<?php echo $faqPagination['currentPage'] - 1; ?><?php echo $categoryParam; ?>"
-			   class="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition">
-				<i class="fas fa-chevron-left text-sm"></i> Trang trước
+			   class="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition">
+				<i class="fas fa-chevron-left text-sm"></i> <span class="hidden sm:inline">Trang trước</span>
 			</a>
+		<?php else: ?>
+			<span class="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg border border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed">
+				<i class="fas fa-chevron-left text-sm"></i> <span class="hidden sm:inline">Trang trước</span>
+			</span>
 		<?php endif; ?>
 
 		<div class="flex gap-1">
@@ -152,9 +145,13 @@ $categoryParam = $selectedCategory > 0 ? '&category=' . $selectedCategory : '';
 
 		<?php if ($faqPagination['currentPage'] < $faqPagination['totalPages']): ?>
 			<a href="<?php echo BASE_URL; ?>/public/index.php?page=qna&tab=faq&qna_page=<?php echo $faqPagination['currentPage'] + 1; ?><?php echo $categoryParam; ?>"
-			   class="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition">
-				Trang sau <i class="fas fa-chevron-right text-sm"></i>
+			   class="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition">
+				<span class="hidden sm:inline">Trang sau</span> <i class="fas fa-chevron-right text-sm"></i>
 			</a>
+		<?php else: ?>
+			<span class="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg border border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed">
+				<span class="hidden sm:inline">Trang sau</span> <i class="fas fa-chevron-right text-sm"></i>
+			</span>
 		<?php endif; ?>
 	</nav>
 <?php endif; ?>

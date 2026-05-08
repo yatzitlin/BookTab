@@ -26,7 +26,7 @@ SET time_zone = "+00:00";
 --
 
 INSERT INTO `nguoi_dung` (`userid`, `username`, `mat_khau`, `ho_va_ten_dem`, `ten`, `so_dien_thoai`, `trang_thai`, `ngay_tao`) VALUES
-(1, 'admin', '$2a$12$UHRC2flycgjyh/bpatCJDO14bC/ap99VXEFV/WAXmXuCRbFlIDHyG', 'Quản Trị', 'Viên', '0123456789', 'active', '2026-05-05 20:23:28'),
+(1, 'admin', '$2a$12$UHRC2flycgjyh/bpatCJDO14bC/ap99VXEFV/WAXmXuCRbFlIDHyG', 'Khá Là', 'Bảnh', '0123456789', 'active', '2026-05-05 20:23:28'),
 (2, 'user1', '$2y$10$J1nTsf6mrr0hEbfODkCFHOdZfkdMRy.UOjJM4pHYPXz1Ocutm0dyi', 'Bành Phú', 'Hội', '1234567899', 'active', '2026-05-05 20:24:39');
 
 --
@@ -44,62 +44,97 @@ INSERT INTO `member` (`userid`, `diem_tich_luy`, `ten_rank`) VALUES
 (2, 0, NULL);
 
 --
--- Đang đổ dữ liệu cho bảng `gioi_thieu`
+-- Đang đổ dữ liệu cho bảng `thong_tin`
 --
 
-INSERT INTO `gioi_thieu` (`ma_section`, `tieu_de`, `mo_ta_ngan`, `noi_dung`, `hinh_anh_url`, `so_thu_tu`, `trang_thai`) VALUES
-(1, 'BookTab - Nơi sách gặp công nghệ', 'Xây dựng trải nghiệm mua sách trực tuyến rõ ràng, nhanh và đáng tin cậy cho mọi độc giả.', 'BookTab là dự án thương mại điện tử sách được phát triển theo kiến trúc MVC tự xây dựng. Chúng tôi tập trung vào trải nghiệm tìm kiếm dễ dùng, thông tin minh bạch và quy trình đặt hàng đơn giản để ai cũng có thể mua sách thuận tiện.', NULL, 1, 'active'),
-(2, 'Sứ mệnh', 'Giúp người đọc tiếp cận tri thức nhanh hơn mỗi ngày.', 'Chúng tôi mong muốn rút ngắn khoảng cách giữa người đọc và những đầu sách chất lượng thông qua một nền tảng ổn định, dễ truy cập và thân thiện với cả người dùng mới.', NULL, 2, 'active'),
-(3, 'Giá trị cốt lõi', 'Lấy người dùng làm trung tâm trong mọi quyết định thiết kế.', 'BookTab ưu tiên ba giá trị chính: minh bạch thông tin, tối ưu hiệu năng và cải tiến liên tục dựa trên phản hồi thực tế từ người dùng.', NULL, 3, 'active');
+INSERT INTO `thong_tin` (`loai`, `noi_dung`, `hinh_anh_nen`, `so_thu_tu`, `trang_thai`) VALUES
+('about',
+'<div class="not-prose" style="text-align:center; padding: 40px 20px; background: linear-gradient(135deg, #ef4444, #f97316); border-radius: 16px; color: white; margin-bottom: 32px;">
+<p style="text-transform:uppercase; letter-spacing:2px; font-size:14px; margin-bottom:8px; opacity:0.9;">Về chúng tôi</p>
+<h1 style="font-size:36px; font-weight:bold; margin:0;">BookTab &mdash; Nơi sách gặp công nghệ</h1>
+<p style="margin-top:12px; font-size:18px; opacity:0.9;">Xây dựng trải nghiệm mua sách trực tuyến nhanh, rõ ràng và đáng tin cậy cho mọi độc giả.</p>
+</div>
+
+<h2>BookTab l&agrave; g&igrave;?</h2>
+<p>BookTab l&agrave; dự &aacute;n thương mại điện tử s&aacute;ch được ph&aacute;t triển theo kiến tr&uacute;c MVC tự x&acirc;y dựng. Ch&uacute;ng t&ocirc;i tập trung v&agrave;o trải nghiệm t&igrave;m kiếm dễ d&ugrave;ng, th&ocirc;ng tin minh bạch v&agrave; quy tr&igrave;nh đặt h&agrave;ng đơn giản để ai cũng c&oacute; thể mua s&aacute;ch thuận tiện.</p>
+<p>Với kho s&aacute;ch đa dạng từ văn học trong nước đến s&aacute;ch ngoại văn, từ s&aacute;ch gi&aacute;o khoa đến tiểu thuyết, BookTab mong muốn trở th&agrave;nh điểm đến tin cậy cho mọi đối tượng độc giả &mdash; từ học sinh, sinh vi&ecirc;n đến những người y&ecirc;u s&aacute;ch ở mọi lứa tuổi.</p>
+
+<h2>Sứ mệnh của ch&uacute;ng t&ocirc;i</h2>
+<p>Ch&uacute;ng t&ocirc;i mong muốn r&uacute;t ngắn khoảng c&aacute;ch giữa người đọc v&agrave; những đầu s&aacute;ch chất lượng th&ocirc;ng qua một nền tảng ổng định, dễ truy cập v&agrave; th&acirc;n thiện với cả người d&ugrave;ng mới.</p>
+<p>Mỗi ng&agrave;y, h&agrave;ng ng&agrave;n cuốn s&aacute;ch mới được xuất bản tr&ecirc;n thế giới. Nhiệm vụ của BookTab l&agrave; gi&uacute;p bạn tiếp cận những cuốn s&aacute;ch đ&oacute; một c&aacute;ch nhanh nhất, với gi&aacute; cả hợp l&yacute; nhất v&agrave; dịch vụ chuy&ecirc;n nghiệp nhất.</p>
+
+<h2>Gi&aacute; trị cốt l&otilde;i</h2>
+<p>BookTab ưu ti&ecirc;n ba gi&aacute; trị ch&iacute;nh trong mọi hoạt động:</p>
+<ul>
+<li><strong>Minh bạch th&ocirc;ng tin:</strong> M&otilde;i cuốn s&aacute;ch đều c&oacute; m&ocirc; tả chi tiết, h&igrave;nh ảnh thực tế v&agrave; đ&aacute;nh gi&aacute; từ người mua. Kh&ocirc;ng c&oacute; th&ocirc;ng tin ẩn hay ph&iacute; ph&aacute;t sinh.</li>
+<li><strong>Tối ưu hiệu năng:</strong> Trang web tải nhanh, t&igrave;m kiếm ch&iacute;nh x&aacute;c, quy tr&iacute;nh đặt h&agrave;ng gọn g&agrave;ng. Ch&uacute;ng t&ocirc;i li&ecirc;n tục cải thiện tốc độ v&agrave; trải nghiệm người d&ugrave;ng.</li>
+<li><strong>Cải tiến li&ecirc;n tục:</strong> Phản hồi từ người d&ugrave;ng l&agrave; nguồn cảm hứng cho mọi cập nhật. Ch&uacute;ng t&ocirc;i lắng nghe, học hỏi v&agrave; cải thiện mỗi ng&agrave;y.</li>
+</ul>
+
+<h2>Đội ngũ đằng sau BookTab</h2>
+<p>BookTab được x&acirc;y dựng bởi đội ngũ nhỏ gọn nhưng đam m&ecirc;, bao gồm c&aacute;c lập tr&igrave;nh vi&ecirc;n, thiết kế vi&ecirc;n v&agrave; những người y&ecirc;u s&aacute;ch. Ch&uacute;ng t&ocirc;i tin rằng c&ocirc;ng nghệ phải phục vụ con người, v&agrave; m&otilde;i d&ograve;ng code đều hướng tới trải nghiệm tốt hơn cho người đọc.</p>
+
+<h2>Li&ecirc;n hệ với ch&uacute;ng t&ocirc;i</h2>
+<p>Bạn c&oacute; thắ̂c măc, đề xuất hay muốn hợp t&aacute;c? Đừng ngần ngại li&ecirc;n hệ:</p>
+<ul>
+<li><strong>Email:</strong> support@booktab.vn</li>
+<li><strong>Hotline:</strong> 0123 456 789 (8:00 &ndash; 21:00 h&agrave;ng ng&agrave;y)</li>
+<li><strong>Địa chỉ:</strong> 123 Đường S&aacute;ch, Quận 1, TP. Hồ Ch&iacute; Minh</li>
+</ul>
+
+<blockquote><p>&ldquo;Mỗi cuốn s&aacute;ch l&agrave; một c&aacute;nh cửa. BookTab gi&uacute;p bạn mở c&aacute;nh cửa đ&oacute; dễ d&agrave;ng hơn.&rdquo;</p></blockquote>',
+NULL, 1, 'active'),
+('footer', '<p>Nhà sách trực tuyến - Nơi sách gặp công nghệ.</p>', NULL, 1, 'active'),
+('footer', '<p>Email: support@booktab.vn<br>Hotline: 0123 456 789</p>', NULL, 2, 'active');
 
 --
 -- Đang đổ dữ liệu cho bảng `loai_cau_hoi`
 --
 
-INSERT INTO `loai_cau_hoi` (`ma_loai`, `ten_loai`) VALUES
-(1, 'Đặt hàng'),
-(2, 'Thanh toán'),
-(3, 'Vận chuyển'),
-(4, 'Sản phẩm & sách'),
-(5, 'Tài khoản & đơn hàng'),
-(6, 'Ưu đãi & khuyến mãi'),
-(7, 'Khác');
+INSERT INTO `loai_cau_hoi` (`ten_loai`, `so_thu_tu`) VALUES
+('Đặt hàng', 1000),
+('Thanh toán', 2000),
+('Vận chuyển', 3000),
+('Sản phẩm & sách', 4000),
+('Tài khoản & đơn hàng', 5000),
+('Ưu đãi & khuyến mãi', 6000),
+('Khác', 7000);
 
 --
 -- Đang đổ dữ liệu cho bảng `cau_hoi`
 --
 
-INSERT INTO `cau_hoi` (`ma_cau_hoi`, `ten_cau_hoi`, `is_active`, `ma_loai`, `userid`) VALUES
-(1, 'Làm sao để đặt mua một cuốn sách trên BookTab?', 1, 1, 2),
-(2, 'BookTab hỗ trợ những hình thức thanh toán nào?', 1, 2, 2),
-(3, 'Bao lâu tôi sẽ nhận được hàng sau khi đặt?', 1, 3, 2),
-(4, 'BookTab có giao hàng toàn quốc không?', 1, 3, 1),
-(5, 'Có thể đổi trả sách trong bao lâu?', 1, 1, 1),
-(6, 'Tôi có thể thay đổi địa chỉ giao hàng sau khi đặt không?', 1, 3, 2),
-(7, 'BookTab có bọc sách plastic không?', 1, 1, 1),
-(8, 'Làm sao để biết sách còn hàng hay hết?', 1, 4, 2),
-(9, 'Tôi quên mật khẩu, làm thế nào để lấy lại?', 1, 5, 1),
-(10, 'Làm sao để sử dụng mã giảm giá?', 1, 6, 1),
-(11, 'BookTab có bán sách điện tử (ebook) không?', 1, 4, 2),
-(12, 'Phí vận chuyển được tính như thế nào?', 1, 3, 1),
-(13, 'Tôi có được kiểm tra hàng trước khi thanh toán không?', 1, 2, 1),
-(14, 'BookTab có xuất hóa đơn đỏ (VAT) không?', 1, 7, 2),
-(15, 'Làm sao để xóa tài khoản?', 1, 5, 2),
-(16, 'Sách mua về bị rách trang, tôi phải làm sao?', 1, 1, 1),
-(17, 'BookTab có chương trình khách hàng thân thiết không?', 1, 6, 2),
-(18, 'Tôi có thể hủy đơn hàng đã đặt được không?', 1, 5, 1),
-(19, 'Sách ngoại văn trên BookTab có phải bản gốc không?', 1, 4, 1),
-(20, 'Tôi muốn hợp tác bán sách trên BookTab thì liên hệ ai?', 1, 7, 2),
-(21, 'Làm sao để đăng ký nhận bản tin khuyến mãi từ BookTab?', 1, 6, 2),
-(22, 'Tôi có thể mua sách số lượng lớn để làm quà tặng không?', 1, 1, 2),
-(23, 'BookTab có xuất bản sách không hay chỉ phân phối?', 1, 7, 2),
-(24, 'Nếu tôi nhận được sách không đúng như mô tả, tôi cần làm gì?', 1, 4, 2),
-(25, 'Thời gian làm việc của tổng đài chăm sóc khách hàng là khi nào?', 1, 7, 2),
-(26, 'Tôi có thể bảo lưu giỏ hàng cho lần đăng nhập sau không?', 1, 5, 2),
-(27, 'Có phụ phí gì khi thanh toán bằng thẻ tín dụng không?', 1, 2, 2),
-(28, 'Tôi có thể thay đổi số điện thoại nhận hàng được không?', 1, 3, 2),
-(29, 'Sách combo có được tách lẻ ra để đổi trả không?', 1, 4, 2),
-(30, 'Làm sao để đánh giá và viết nhận xét cho sách đã mua?', 1, 5, 2);
+INSERT INTO `cau_hoi` (`ma_cau_hoi`, `ten_cau_hoi`, `trang_thai`, `ma_loai`, `userid`) VALUES
+(1, 'Làm sao để đặt mua một cuốn sách trên BookTab?', 'da_tra_loi', 1, 2),
+(2, 'BookTab hỗ trợ những hình thức thanh toán nào?', 'da_tra_loi', 2, 2),
+(3, 'Bao lâu tôi sẽ nhận được hàng sau khi đặt?', 'da_tra_loi', 3, 2),
+(4, 'BookTab có giao hàng toàn quốc không?', 'da_tra_loi', 3, 1),
+(5, 'Có thể đổi trả sách trong bao lâu?', 'da_tra_loi', 1, 1),
+(6, 'Tôi có thể thay đổi địa chỉ giao hàng sau khi đặt không?', 'da_tra_loi', 3, 2),
+(7, 'BookTab có bọc sách plastic không?', 'da_tra_loi', 1, 1),
+(8, 'Làm sao để biết sách còn hàng hay hết?', 'da_tra_loi', 4, 2),
+(9, 'Tôi quên mật khẩu, làm thế nào để lấy lại?', 'da_tra_loi', 5, 1),
+(10, 'Làm sao để sử dụng mã giảm giá?', 'da_tra_loi', 6, 1),
+(11, 'BookTab có bán sách điện tử (ebook) không?', 'da_tra_loi', 4, 2),
+(12, 'Phí vận chuyển được tính như thế nào?', 'da_tra_loi', 3, 1),
+(13, 'Tôi có được kiểm tra hàng trước khi thanh toán không?', 'da_tra_loi', 2, 1),
+(14, 'BookTab có xuất hóa đơn đỏ (VAT) không?', 'da_tra_loi', 7, 2),
+(15, 'Làm sao để xóa tài khoản?', 'da_tra_loi', 5, 2),
+(16, 'Sách mua về bị rách trang, tôi phải làm sao?', 'da_tra_loi', 1, 1),
+(17, 'BookTab có chương trình khách hàng thân thiết không?', 'da_tra_loi', 6, 2),
+(18, 'Tôi có thể hủy đơn hàng đã đặt được không?', 'da_tra_loi', 5, 1),
+(19, 'Sách ngoại văn trên BookTab có phải bản gốc không?', 'da_tra_loi', 4, 1),
+(20, 'Tôi muốn hợp tác bán sách trên BookTab thì liên hệ ai?', 'da_tra_loi', 7, 2),
+(21, 'Làm sao để đăng ký nhận bản tin khuyến mãi từ BookTab?', 'da_tra_loi', 6, 2),
+(22, 'Tôi có thể mua sách số lượng lớn để làm quà tặng không?', 'da_tra_loi', 1, 2),
+(23, 'BookTab có xuất bản sách không hay chỉ phân phối?', 'da_tra_loi', 7, 2),
+(24, 'Nếu tôi nhận được sách không đúng như mô tả, tôi cần làm gì?', 'da_tra_loi', 4, 2),
+(25, 'Thời gian làm việc của tổng đài chăm sóc khách hàng là khi nào?', 'da_tra_loi', 7, 2),
+(26, 'Tôi có thể bảo lưu giỏ hàng cho lần đăng nhập sau không?', 'da_tra_loi', 5, 2),
+(27, 'Có phụ phí gì khi thanh toán bằng thẻ tín dụng không?', 'da_tra_loi', 2, 2),
+(28, 'Tôi có thể thay đổi số điện thoại nhận hàng được không?', 'da_tra_loi', 3, 2),
+(29, 'Sách combo có được tách lẻ ra để đổi trả không?', 'da_tra_loi', 4, 2),
+(30, 'Làm sao để đánh giá và viết nhận xét cho sách đã mua?', 'da_tra_loi', 5, 2);
 
 --
 -- Đang đổ dữ liệu cho bảng `cau_tra_loi`
