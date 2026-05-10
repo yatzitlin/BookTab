@@ -27,7 +27,7 @@ unset($_SESSION['qna_form_error']);
 	</div>
 
 	<div class="bg-white border border-gray-100 rounded-2xl p-6 md:p-8 shadow-sm">
-		<form id="qnaAskForm" action="<?php echo BASE_URL; ?>/public/index.php?page=qna_ask" method="POST" enctype="multipart/form-data" class="space-y-5" novalidate>
+		<form id="qnaAskForm" action="<?php echo BASE_URL; ?>/public/index.php?page=qna&tab=ask" method="POST" enctype="multipart/form-data" class="space-y-5" novalidate>
 			<input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8'); ?>">
 
 			<div class="animate-fade-in" style="animation-delay: 50ms;">

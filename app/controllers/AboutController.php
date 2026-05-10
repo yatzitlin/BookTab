@@ -11,11 +11,14 @@ class AboutController extends BaseController {
     }
 
     public function getAboutPage() {
-        return $this->thongTinModel->getFirstByLoai('about');
+        $about = $this->thongTinModel->getFirstByLoai('about');
+        if (!$about) return null;
+        $about['noi_dung'] = $this->thongTinModel->getFirstNoiDung('about');
+        return $about;
     }
 
     public function getAboutForEdit() {
-        return $this->thongTinModel->getFirstByLoai('about');
+        return $this->getAboutPage();
     }
 
     public function updateAboutPage($noiDung) {
@@ -23,7 +26,7 @@ class AboutController extends BaseController {
         if (!$about) {
             return ['error' => 'Không tìm thấy nội dung Giới thiệu.'];
         }
-        $this->thongTinModel->updateNoiDung($about['ma_thong_tin'], $noiDung);
+        $this->thongTinModel->replaceChiTiet($about['ma_thong_tin'], [['noi_dung' => $noiDung]]);
         return ['success' => true];
     }
 }

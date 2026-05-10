@@ -15,7 +15,7 @@ unset($_SESSION['admin_about_success'], $_SESSION['admin_about_error']);
         <div class="col-12">
             <div class="card mt-4">
                 <div class="card-body">
-                    <h4 class="header-title mb-4">Chỉnh sửa trang Giới thiệu</h4>
+                    <h4 class="header-title mb-4">Chỉnh sửa giới thiệu</h4>
 
                     <?php if (!empty($successMsg)): ?>
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -39,7 +39,7 @@ unset($_SESSION['admin_about_success'], $_SESSION['admin_about_error']);
                             <input type="hidden" name="ma_thong_tin" value="<?php echo (int)$aboutPage['ma_thong_tin']; ?>">
 
                             <div class="form-group mb-4">
-                                <label class="font-weight-bold">Nội dung trang Giới thiệu</label>
+                                <label class="font-weight-bold">Nội dung</label>
                                 <textarea id="noi_dung" name="noi_dung"><?php echo htmlspecialchars($aboutPage['noi_dung'] ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
                             </div>
 
@@ -63,7 +63,15 @@ document.addEventListener('DOMContentLoaded', function() {
     tinymce.init({
         selector: '#noi_dung',
         height: 600,
-        menubar: 'file edit view insert format table tools',
+        menubar: 'edit view insert format table tools',
+        menu: {
+            edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall | searchreplace' },
+            view: { title: 'View', items: 'code | visualblocks visualchars | preview fullscreen' },
+            insert: { title: 'Insert', items: 'link image media | charmap emoticons codesample insertdatetime nonbreaking | template | anchor' },
+            format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats | align | forecolor backcolor | removeformat' },
+            table: { title: 'Table', items: 'inserttable | cell row column | tableprops deletetable' },
+            tools: { title: 'Tools', items: 'code wordcount' }
+        },
         plugins: 'advlist lists link image table code fullscreen preview searchreplace wordcount autolink emoticons media codesample charmap insertdatetime template visualblocks anchor accordion nonbreaking',
         toolbar: 'undo redo | blocks | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | table accordion | charmap emoticons codesample insertdatetime nonbreaking | template visualblocks | searchreplace code fullscreen preview',
         content_style: 'body { font-family: "Be Vietnam Pro", sans-serif; font-size: 16px; line-height: 1.75; color: #374151; } h1 { font-size: 2em; font-weight: 800; line-height: 1.25; margin-top: 0; margin-bottom: 0.5em; color: #111827; } h2 { font-size: 1.5em; font-weight: 700; line-height: 1.333; margin-top: 1.5em; margin-bottom: 0.75em; padding-bottom: 0.3em; border-bottom: 1px solid #e5e7eb; color: #111827; } h3 { font-size: 1.25em; font-weight: 600; line-height: 1.6; margin-top: 1.25em; margin-bottom: 0.5em; color: #111827; } p { margin-top: 0.75em; margin-bottom: 0.75em; } ul, ol { margin-top: 0.75em; margin-bottom: 0.75em; padding-left: 1.5em; } ul { list-style-type: disc; } ol { list-style-type: decimal; } li { margin-top: 0.25em; margin-bottom: 0.25em; } blockquote { margin-top: 1em; margin-bottom: 1em; padding-left: 1em; border-left: 4px solid #ef4444; color: #6b7280; font-style: italic; } a { color: #ef4444; text-decoration: underline; } strong { font-weight: 600; } img { max-width: 100%; height: auto; } table { border-collapse: collapse; width: 100%; } table th, table td { border: 1px solid #d1d5db; padding: 0.5em 0.75em; }',

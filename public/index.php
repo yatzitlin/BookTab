@@ -79,6 +79,45 @@ if ($page === 'admin' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    if ($adminAction === 'info') {
+        require_once __DIR__ . '/../app/models/ThongTinModel.php';
+        $thongTinModel = new ThongTinModel($dbConnection);
+        $act = $_POST['act'] ?? '';
+
+        if ($act === 'add_info') {
+            $loai = trim($_POST['loai_thong_tin'] ?? '');
+            $type = ($_POST['type'] ?? 'text') === 'link' ? 'link' : 'text';
+            if ($loai === '') {
+                $_SESSION['admin_info_error'] = 'Tên loại không được để trống.';
+            } else {
+                $thongTinModel->create($loai, $type);
+                $newId = (int)$thongTinModel->getFirstByLoai($loai)['ma_thong_tin'];
+                $thongTinModel->replaceChiTiet($newId, $_POST['chi_tiet'] ?? []);
+                $_SESSION['admin_info_success'] = 'Đã thêm trường thông tin mới.';
+            }
+        } elseif ($act === 'update_info') {
+            $id = (int)($_POST['id'] ?? 0);
+            $loai = trim($_POST['loai_thong_tin'] ?? '');
+            $type = ($_POST['type'] ?? 'text') === 'link' ? 'link' : 'text';
+            if ($id <= 0 || $loai === '') {
+                $_SESSION['admin_info_error'] = 'Dữ liệu không hợp lệ.';
+            } else {
+                $thongTinModel->update($id, $loai, $type);
+                $thongTinModel->replaceChiTiet($id, $_POST['chi_tiet'] ?? []);
+                $_SESSION['admin_info_success'] = 'Đã cập nhật thành công.';
+            }
+        } elseif ($act === 'delete_info') {
+            $id = (int)($_POST['id'] ?? 0);
+            if ($id > 0) {
+                $thongTinModel->deleteById($id);
+                $_SESSION['admin_info_success'] = 'Đã xoá trường thông tin.';
+            }
+        }
+
+        header('Location: ' . BASE_URL . '/public/index.php?page=admin&admin_action=info');
+        exit;
+    }
+
     if ($adminAction === 'qna') {
         $qnaCtrl = new QnAController($dbConnection);
         $act = $_POST['act'] ?? '';
@@ -208,7 +247,7 @@ switch ($page) {
     case 'qna':
         $qnaTab = isset($_GET['tab']) ? trim($_GET['tab']) : 'qna';
         $selectedCategory = isset($_GET['category']) ? (int)$_GET['category'] : 0;
-        $currentPage = isset($_GET['qna_page']) ? max(1, (int)$_GET['qna_page']) : 1;
+        $currentPage = isset($_GET['p']) ? max(1, (int)$_GET['p']) : 1;
         $itemsPerPage = 10;
         $qnaCategories = $qnaController->getCategories();
         if ($qnaTab === 'faq') {
@@ -222,7 +261,7 @@ switch ($page) {
             ];
             $view_content = '../app/views/pages/FAQ.php';
             $pageTitle = 'FAQ';
-        } elseif ($qnaTab === 'my_questions') {
+        } elseif ($qnaTab === 'my') {
             if (!isset($_SESSION['userid'])) {
                 header('Location: ' . BASE_URL . '/public/index.php?page=login&error=qna_login_required');
                 exit;
@@ -235,9 +274,95 @@ switch ($page) {
                 'totalItems' => $myData['totalItems'],
                 'itemsPerPage' => $myData['itemsPerPage']
             ];
-            $isMyQuestions = true;
-            $view_content = '../app/views/pages/QnA.php';
+            $view_content = '../app/views/pages/My.php';
             $pageTitle = 'Câu hỏi của tôi';
+        } elseif ($qnaTab === 'ask') {
+            if (!isset($_SESSION['userid'])) {
+                header('Location: ' . BASE_URL . '/public/index.php?page=login&error=qna_login_required');
+                exit;
+            }
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+                    $_SESSION['qna_form_error'] = 'CSRF token không hợp lệ. Vui lòng thử lại.';
+                    header('Location: ' . BASE_URL . '/public/index.php?page=qna&tab=ask');
+                    exit;
+                }
+
+                $tenCauHoi = trim($_POST['ten_cau_hoi'] ?? '');
+                $maLoai = (int)($_POST['ma_loai'] ?? 0);
+
+                $errors = [];
+                if ($tenCauHoi === '') {
+                    $errors[] = 'Vui lòng nhập nội dung câu hỏi.';
+                } elseif (strlen($tenCauHoi) < 10) {
+                    $errors[] = 'Câu hỏi phải có ít nhất 10 ký tự.';
+                } elseif (strlen($tenCauHoi) > 255) {
+                    $errors[] = 'Câu hỏi không được vượt quá 255 ký tự.';
+                }
+
+                if ($maLoai <= 0) {
+                    $errors[] = 'Vui lòng chọn chủ đề hợp lệ.';
+                } else {
+                    $allCategories = $qnaController->getCategories();
+                    $categoryExists = false;
+                    foreach ($allCategories as $cat) {
+                        if ((int)$cat['ma_loai'] === $maLoai) {
+                            $categoryExists = true;
+                            break;
+                        }
+                    }
+                    if (!$categoryExists) {
+                        $errors[] = 'Chủ đề được chọn không tồn tại.';
+                    }
+                }
+
+                if (!empty($_FILES['images']['name'][0])) {
+                    $maxFiles = 5;
+                    $maxSize = 3 * 1024 * 1024;
+                    $allowedMimes = ['image/jpeg', 'image/png', 'image/webp'];
+                    $fileCount = count(array_filter($_FILES['images']['name']));
+
+                    if ($fileCount > $maxFiles) {
+                        $errors[] = "Không được tải lên quá $maxFiles ảnh (hiện tại: $fileCount).";
+                    }
+
+                    for ($i = 0; $i < count($_FILES['images']['name']); $i++) {
+                        if (empty($_FILES['images']['name'][$i])) continue;
+                        if ($_FILES['images']['error'][$i] !== UPLOAD_ERR_OK) {
+                            $errors[] = "Lỗi tải lên ảnh {$_FILES['images']['name'][$i]}: " .
+                                ($_FILES['images']['error'][$i] === UPLOAD_ERR_INI_SIZE ?
+                                'Tệp quá lớn' : 'Lỗi hệ thống');
+                            continue;
+                        }
+
+                        $fileSize = $_FILES['images']['size'][$i];
+                        $fileMime = mime_content_type($_FILES['images']['tmp_name'][$i]);
+
+                        if ($fileSize > $maxSize) {
+                            $errors[] = "Ảnh '{$_FILES['images']['name'][$i]}' vượt quá 3MB.";
+                        }
+                        if (!in_array($fileMime, $allowedMimes)) {
+                            $errors[] = "Ảnh '{$_FILES['images']['name'][$i]}' không phải định dạng hỗ trợ (PNG, JPEG, WebP).";
+                        }
+                    }
+                }
+
+                if (!empty($errors)) {
+                    $_SESSION['qna_form_error'] = implode(' ', $errors);
+                    header('Location: ' . BASE_URL . '/public/index.php?page=qna&tab=ask');
+                    exit;
+                }
+
+                $qnaController->createQuestion($tenCauHoi, $maLoai, (int)$_SESSION['userid']);
+                $_SESSION['qna_form_success'] = 'Câu hỏi của bạn đã được ghi nhận. Chúng tôi sẽ cập nhật phần trả lời khi có phản hồi.';
+                header('Location: ' . BASE_URL . '/public/index.php?page=qna');
+                exit;
+            }
+
+            $qnaCategories = $qnaController->getCategories();
+            $view_content = '../app/views/pages/Ask.php';
+            $pageTitle = 'Đặt câu hỏi';
         } else {
             $qnaData = $qnaController->getQuestions($selectedCategory, $currentPage, $itemsPerPage);
             $qnaItems = $qnaData['items'];
@@ -250,97 +375,6 @@ switch ($page) {
             $view_content = '../app/views/pages/QnA.php';
             $pageTitle = 'Hỏi đáp';
         }
-        break;
-    case 'qna_ask':
-        if (!isset($_SESSION['userid'])) {
-            header('Location: ' . BASE_URL . '/public/index.php?page=login&error=qna_login_required');
-            exit;
-        }
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-                $_SESSION['qna_form_error'] = 'CSRF token không hợp lệ. Vui lòng thử lại.';
-                header('Location: ' . BASE_URL . '/public/index.php?page=qna_ask');
-                exit;
-            }
-
-            $tenCauHoi = trim($_POST['ten_cau_hoi'] ?? '');
-            $maLoai = (int)($_POST['ma_loai'] ?? 0);
-
-            // Validate question text
-            $errors = [];
-            if ($tenCauHoi === '') {
-                $errors[] = 'Vui lòng nhập nội dung câu hỏi.';
-            } elseif (strlen($tenCauHoi) < 10) {
-                $errors[] = 'Câu hỏi phải có ít nhất 10 ký tự.';
-            } elseif (strlen($tenCauHoi) > 255) {
-                $errors[] = 'Câu hỏi không được vượt quá 255 ký tự.';
-            }
-
-            // Validate category
-            if ($maLoai <= 0) {
-                $errors[] = 'Vui lòng chọn chủ đề hợp lệ.';
-            } else {
-                $allCategories = $qnaController->getCategories();
-                $categoryExists = false;
-                foreach ($allCategories as $cat) {
-                    if ((int)$cat['ma_loai'] === $maLoai) {
-                        $categoryExists = true;
-                        break;
-                    }
-                }
-                if (!$categoryExists) {
-                    $errors[] = 'Chủ đề được chọn không tồn tại.';
-                }
-            }
-
-            // Validate images if uploaded
-            if (!empty($_FILES['images']['name'][0])) {
-                $maxFiles = 5;
-                $maxSize = 3 * 1024 * 1024;
-                $allowedMimes = ['image/jpeg', 'image/png', 'image/webp'];
-                $fileCount = count(array_filter($_FILES['images']['name']));
-                
-                if ($fileCount > $maxFiles) {
-                    $errors[] = "Không được tải lên quá $maxFiles ảnh (hiện tại: $fileCount).";
-                }
-
-                for ($i = 0; $i < count($_FILES['images']['name']); $i++) {
-                    if (empty($_FILES['images']['name'][$i])) continue;
-                    if ($_FILES['images']['error'][$i] !== UPLOAD_ERR_OK) {
-                        $errors[] = "Lỗi tải lên ảnh {$_FILES['images']['name'][$i]}: " . 
-                            ($_FILES['images']['error'][$i] === UPLOAD_ERR_INI_SIZE ? 
-                            'Tệp quá lớn' : 'Lỗi hệ thống');
-                        continue;
-                    }
-
-                    $fileSize = $_FILES['images']['size'][$i];
-                    $fileMime = mime_content_type($_FILES['images']['tmp_name'][$i]);
-                    
-                    if ($fileSize > $maxSize) {
-                        $errors[] = "Ảnh '{$_FILES['images']['name'][$i]}' vượt quá 3MB.";
-                    }
-                    if (!in_array($fileMime, $allowedMimes)) {
-                        $errors[] = "Ảnh '{$_FILES['images']['name'][$i]}' không phải định dạng hỗ trợ (PNG, JPEG, WebP).";
-                    }
-                }
-            }
-
-            if (!empty($errors)) {
-                $_SESSION['qna_form_error'] = implode(' ', $errors);
-                header('Location: ' . BASE_URL . '/public/index.php?page=qna_ask');
-                exit;
-            }
-
-            $qnaController->createQuestion($tenCauHoi, $maLoai, (int)$_SESSION['userid']);
-            $_SESSION['qna_form_success'] = 'Câu hỏi của bạn đã được ghi nhận. Chúng tôi sẽ cập nhật phần trả lời khi có phản hồi.';
-            header('Location: ' . BASE_URL . '/public/index.php?page=qna');
-            exit;
-        }
-
-        $qnaCategories = $qnaController->getCategories();
-        $view_content = '../app/views/pages/QnAAsk.php';
-        $pageTitle = 'Đặt câu hỏi';
         break;
     case 'contact':
         $view_content = '../app/views/pages/Contact.php';

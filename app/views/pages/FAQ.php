@@ -116,7 +116,7 @@ $categoryParam = $selectedCategory > 0 ? '&category=' . $selectedCategory : '';
 <?php if ($faqPagination['totalPages'] > 1): ?>
 	<nav class="mt-8 flex items-center justify-center gap-2">
 		<?php if ($faqPagination['currentPage'] > 1): ?>
-			<a href="<?php echo BASE_URL; ?>/public/index.php?page=qna&tab=faq&qna_page=<?php echo $faqPagination['currentPage'] - 1; ?><?php echo $categoryParam; ?>"
+			<a href="<?php echo BASE_URL; ?>/public/index.php?page=qna&tab=faq&p=<?php echo $faqPagination['currentPage'] - 1; ?><?php echo $categoryParam; ?>"
 			   class="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition">
 				<i class="fas fa-chevron-left text-sm"></i> <span class="hidden sm:inline">Trang trước</span>
 			</a>
@@ -133,7 +133,7 @@ $categoryParam = $selectedCategory > 0 ? '&category=' . $selectedCategory : '';
 						<?php echo $i; ?>
 					</span>
 				<?php elseif ($i === 1 || $i === $faqPagination['totalPages'] || abs($i - $faqPagination['currentPage']) <= 2): ?>
-					<a href="<?php echo BASE_URL; ?>/public/index.php?page=qna&tab=faq&qna_page=<?php echo $i; ?><?php echo $categoryParam; ?>"
+					<a href="<?php echo BASE_URL; ?>/public/index.php?page=qna&tab=faq&p=<?php echo $i; ?><?php echo $categoryParam; ?>"
 					   class="px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition">
 						<?php echo $i; ?>
 					</a>
@@ -144,7 +144,7 @@ $categoryParam = $selectedCategory > 0 ? '&category=' . $selectedCategory : '';
 		</div>
 
 		<?php if ($faqPagination['currentPage'] < $faqPagination['totalPages']): ?>
-			<a href="<?php echo BASE_URL; ?>/public/index.php?page=qna&tab=faq&qna_page=<?php echo $faqPagination['currentPage'] + 1; ?><?php echo $categoryParam; ?>"
+			<a href="<?php echo BASE_URL; ?>/public/index.php?page=qna&tab=faq&p=<?php echo $faqPagination['currentPage'] + 1; ?><?php echo $categoryParam; ?>"
 			   class="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition">
 				<span class="hidden sm:inline">Trang sau</span> <i class="fas fa-chevron-right text-sm"></i>
 			</a>

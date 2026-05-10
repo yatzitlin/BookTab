@@ -19,7 +19,7 @@
             <!-- Unauthorized Access Message -->
             <?php if (!empty($_GET['error']) && $_GET['error'] === 'unauthorized'): ?>
                 <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded-lg mb-6">
-                    <p>! Bạn không có quyền truy cập trang Admin. Vui lòng đăng nhập bằng tài khoản Admin.</p>
+                    <p>Bạn không có quyền truy cập trang Admin. Vui lòng đăng nhập bằng tài khoản Admin.</p>
                 </div>
             <?php endif; ?>
 

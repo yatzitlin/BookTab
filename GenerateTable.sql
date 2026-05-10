@@ -82,13 +82,18 @@ CREATE TABLE bai_viet (
 
 CREATE TABLE thong_tin (
     ma_thong_tin BIGINT AUTO_INCREMENT PRIMARY KEY,
-    loai VARCHAR(50) NOT NULL,
-    noi_dung TEXT,
-    hinh_anh_nen VARCHAR(500),
-    trang_thai VARCHAR(50) NOT NULL DEFAULT 'active',
-    so_thu_tu INT NOT NULL DEFAULT 1,
+    loai_thong_tin VARCHAR(50) NOT NULL,
+    type ENUM('text','link') NOT NULL DEFAULT 'text',
     ngay_tao DATETIME DEFAULT CURRENT_TIMESTAMP,
     ngay_cap_nhat DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE thong_tin_chi_tiet (
+    ma_chi_tiet BIGINT AUTO_INCREMENT PRIMARY KEY,
+    ma_thong_tin BIGINT NOT NULL,
+    noi_dung TEXT NOT NULL,
+    url VARCHAR(500) DEFAULT NULL,
+    FOREIGN KEY (ma_thong_tin) REFERENCES thong_tin(ma_thong_tin) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE binh_luan (
@@ -232,7 +237,7 @@ CREATE TABLE `anh_cau_hoi` (
     CONSTRAINT `fk_anh_cau_hoi_anh` FOREIGN KEY (`ma_anh`) REFERENCES `anh`(`ma_anh`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `anh_cau_tra_loi` (
+CREATE TABLE anh_cau_tra_loi (
     `ma_cau_tra_loi` BIGINT NOT NULL,
     `ma_anh` BIGINT NOT NULL,
     `so_thu_tu` INT DEFAULT 0,
