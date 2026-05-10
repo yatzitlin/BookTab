@@ -77,7 +77,7 @@ if ($page === 'login') {
 // Routing cho các page thường
 switch ($page) {
     case 'home':
-        require_once '../app/controllers/HomeController.php';
+        // require_once '../app/controllers/HomeController.php';
         $view_content = '../app/views/pages/Home.php';
         $pageTitle = 'Trang chủ';
         break;
@@ -106,6 +106,28 @@ switch ($page) {
     case 'admin':
         $view_content = '../app/views/admin/adminLayout.php';
         $pageTitle = 'Admin Dashboard';
+        break;
+    case 'profile':
+        require_once '../app/controllers/UserController.php';
+        $controller = new UserController($dbConnection);
+        $user = $controller->information();
+        $view_content = '../app/views/user/information.php';
+        break;
+    case 'change-password':
+        require_once '../app/controllers/UserController.php';
+        $controller = new UserController($dbConnection);
+        $controller->changePassword();
+        $view_content = '../app/views/user/change_password.php';
+        break;
+    case 'update-profile':
+        require_once '../app/controllers/UserController.php';
+        $controller = new UserController($dbConnection);
+        $controller->updateProfile();
+        break;
+    case 'update-avatar':
+        require_once '../app/controllers/UserController.php';
+        $controller = new UserController($dbConnection);
+        $controller->updateAvatar();
         break;
     default:
         $view_content = '../app/views/pages/404.php';

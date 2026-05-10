@@ -141,7 +141,7 @@ class UserModel {
     // Lấy thông tin User
     public function getUserById($userid) {
         try {
-            $sql = "SELECT userid, username, ho_va_ten_dem, ten, so_dien_thoai, trang_thai, ngay_tao FROM nguoi_dung WHERE userid = ? LIMIT 1";
+            $sql = "SELECT userid, username, ho_va_ten_dem, ten, so_dien_thoai, trang_thai, ngay_tao, avatar_url FROM nguoi_dung WHERE userid = ? LIMIT 1";
             $stmt = $this->db->prepare($sql);
             $stmt->execute([$userid]);
             return $stmt->fetch();
@@ -220,6 +220,35 @@ class UserModel {
             return ['success' => true, 'message' => 'Đổi mật khẩu thành công'];
         } catch (Exception $e) {
             return ['success' => false, 'message' => 'Lỗi: ' . $e->getMessage()];
+        }
+    }
+
+    public function updateAvatar($userid, $newAvatar)
+    {
+        try {
+            // 1. Lấy avatar cũ
+            $sql = "SELECT avatar_url FROM nguoi_dung WHERE userid = ?";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([$userid]);
+            $old = $stmt->fetch();
+
+            // 2. Xoá file cũ nếu tồn tại
+            if (!empty($old['avatar_url'])) {
+                $oldPath = __DIR__ . '/../../public/uploads/avatars/' . $old['avatar_url'];
+
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
+                }
+            }
+
+            // 3. Update DB avatar mới
+            $sql = "UPDATE nguoi_dung SET avatar_url = ? WHERE userid = ?";
+            $stmt = $this->db->prepare($sql);
+
+            return $stmt->execute([$newAvatar, $userid]);
+
+        } catch (Exception $e) {
+            return false;
         }
     }
 }
