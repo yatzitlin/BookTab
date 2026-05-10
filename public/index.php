@@ -2,7 +2,8 @@
 define('BASE_URL', 'http://localhost/BookTab');
 
 require_once '../app/controllers/AuthController.php';
-require_once '../app/core/Database.php'; 
+require_once '../app/core/Database.php';
+require_once '../app/controllers/ProductController.php';
 
 $database = new Database();
 $dbConnection = $database->connect();
@@ -35,6 +36,9 @@ if ($action === 'register') {
 } elseif ($action === 'logout') {
     $authController->logout();
     exit;
+} elseif ($action === 'add_review') {
+    $productCtrl = new ProductController($dbConnection);
+    $productCtrl->handleAddReview(); exit;
 }
 
 // Nếu không có action, kiểm tra page
@@ -56,15 +60,21 @@ if ($page === 'login') {
     exit;
 }
 
+// PRODUCT MODULE
+if ($page === 'products') {
+    $productCtrl = new ProductController($dbConnection);
+    $productCtrl->showProducts(); exit;
+} elseif ($page === 'product_detail') {
+    $productCtrl = new ProductController($dbConnection);
+    $productCtrl->showProductDetail(); exit;
+}
+
+
 // Routing cho các page thường
 switch ($page) {
     case 'home':
         $view_content = '../app/views/pages/Home.php';
         $pageTitle = 'Trang chủ';
-        break;
-    case 'products':
-        $view_content = '../app/views/pages/Products.php';
-        $pageTitle = 'Sản phẩm';
         break;
     case 'news':
         $view_content = '../app/views/pages/News.php';

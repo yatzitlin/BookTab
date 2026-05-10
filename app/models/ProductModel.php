@@ -175,5 +175,40 @@ class ProductModel {
         return $this->db->lastInsertId();
     }
 
+    public function getProductReviews($productId) {
+        $sql = "SELECT dg.*, nd.username, nd.ho_va_ten_dem, nd.ten 
+                FROM danh_gia dg
+                JOIN nguoi_dung nd ON dg.member_userid = nd.userid
+                WHERE dg.ma_san_pham = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$productId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getAverageRating($productId) {
+        $sql = "SELECT AVG(diem) as avg_rating, COUNT(*) as total_reviews FROM danh_gia WHERE ma_san_pham = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$productId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function addReview($userId, $productId, $score, $content) {
+        try {
+            // kiểm tra xem user này đã đánh giá sản phẩm này chưa
+            $check = $this->db->prepare("SELECT COUNT(*) as cnt FROM danh_gia WHERE member_userid = ? AND ma_san_pham = ?");
+            $check->execute([$userId, $productId]);
+            if ($check->fetch(PDO::FETCH_ASSOC)['cnt'] > 0) {
+                return ['success' => false, 'message' => 'Bạn đã đánh giá sản phẩm này rồi'];
+            }
+            
+            $stmt = $this->db->prepare("INSERT INTO danh_gia (member_userid, ma_san_pham, diem, noi_dung) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$userId, $productId, $score, $content]);
+            return ['success' => true, 'message' => 'Đánh giá thành công'];
+        } catch (Exception $e) {
+            return ['success' => false, 'message' => 'Lỗi: ' . $e->getMessage()];
+        }
+    }
+
+
 }
 ?>
