@@ -67,6 +67,17 @@ $currentAction = isset($_GET['admin_action']) ? $_GET['admin_action'] : 'dashboa
                             </li>
                         </ul>
                     </li>
+
+                    <li class="<?php echo ($currentAction == 'contact') ? 'active' : ''; ?>">
+                        <a href="javascript:void(0)" aria-expanded="<?php echo ($currentAction == 'contact') ? 'true' : 'false'; ?>">
+                            <i class="ti-email"></i><span>Contact</span>
+                        </a>
+                        <ul class="collapse <?php echo ($currentAction == 'contact') ? 'in show' : ''; ?>">
+                            <li class="<?php echo ($currentAction == 'contact') ? 'active' : ''; ?>">
+                                <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=contact">AdminContact</a>
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
             </nav>
         </div>

@@ -50,18 +50,40 @@
             <div>
                 <h4 class="text-white text-lg font-bold mb-4">Thông tin liên hệ</h4>
                 <div class="space-y-3 mb-4">
+
+                    <!-- Address -->
                     <div class="flex items-start gap-2">
                         <i class="fas fa-map-marker-alt text-red-500 mt-1 flex-shrink-0"></i>
-                        <p class="text-gray-400 text-sm">Trường Đại học Bách khoa - ĐHQG-HCM, cơ sở Dĩ An, Bình Dương</p>
+
+                        <p class="text-gray-400 text-sm">
+                            <?php echo htmlspecialchars($contact['Address'] ?? 'Chưa cập nhật'); ?>
+                        </p>
                     </div>
+
+                    <!-- Phone -->
                     <div class="flex items-start gap-2">
                         <i class="fas fa-phone text-red-500 mt-1 flex-shrink-0"></i>
-                        <a href="tel:+84123456789" class="text-gray-400 hover:text-red-500 text-sm transition\">+84 (123) 456-789</a>
+
+                        <a 
+                            href="tel:<?php echo htmlspecialchars($contact['PhoneNumber'] ?? ''); ?>"
+                            class="text-gray-400 hover:text-red-500 text-sm transition"
+                        >
+                            <?php echo htmlspecialchars($contact['PhoneNumber'] ?? 'Chưa cập nhật'); ?>
+                        </a>
                     </div>
+
+                    <!-- Email -->
                     <div class="flex items-start gap-2">
                         <i class="fas fa-envelope text-red-500 mt-1 flex-shrink-0"></i>
-                        <a href="mailto:support@BookTab.com" class="text-gray-400 hover:text-red-500 text-sm transition">support@BookTab.com</a>
+
+                        <a 
+                            href="mailto:<?php echo htmlspecialchars($contact['Email'] ?? ''); ?>"
+                            class="text-gray-400 hover:text-red-500 text-sm transition"
+                        >
+                            <?php echo htmlspecialchars($contact['Email'] ?? 'Chưa cập nhật'); ?>
+                        </a>
                     </div>
+
                 </div>
                 
                 <!-- Newsletter -->

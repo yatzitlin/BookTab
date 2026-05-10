@@ -13,6 +13,13 @@ DROP TABLE IF EXISTS chi_tiet_don_hang, don_hang, chi_tiet_gio_hang, gio_hang, d
                      member, `rank`, administrator, nguoi_dung;
 SET FOREIGN_KEY_CHECKS = 1;
 
+
+CREATE TABLE CompanyContact (
+    PhoneNumber VARCHAR(20),            -- Số điện thoại
+    Address NVARCHAR(500),              -- Địa chỉ (hỗ trợ tiếng Việt có dấu)
+    Email VARCHAR(255)                  -- Địa chỉ Email
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- =========================================================
 -- 2. Nhóm người dùng & liên hệ
 -- =========================================================
@@ -23,6 +30,9 @@ CREATE TABLE nguoi_dung (
     ho_va_ten_dem VARCHAR(50) NOT NULL,
     ten VARCHAR(50) NOT NULL,
     so_dien_thoai VARCHAR(20),
+    email VARCHAR(100) UNIQUE NOT NULL, -- Thêm email
+    avatar_url VARCHAR(500),            -- Thêm avatar
+    vai_tro ENUM('guest','member','admin') DEFAULT 'member',    -- Thêm vai trò
     trang_thai VARCHAR(50),
     ngay_tao DATETIME DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -50,7 +60,7 @@ CREATE TABLE lien_he (
     ho_va_ten VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
     noi_dung TEXT NOT NULL,
-    trang_thai VARCHAR(50),
+    trang_thai ENUM('unread','read','replied') DEFAULT 'unread',
     thoi_gian_tao DATETIME DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

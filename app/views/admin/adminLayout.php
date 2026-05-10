@@ -1,6 +1,14 @@
 <?php
 $adminAssetBase = (defined('BASE_URL') ? rtrim(BASE_URL, '/') : 'http://localhost/BookTab') . '/public/admin_assets';
 $admin_action = isset($_GET['admin_action']) ? $_GET['admin_action'] : 'dashboard';
+if ($admin_action == 'contact') {
+
+    require_once "../app/models/ContactModel.php";
+
+    $contactModel = new ContactModel($dbConnection);
+
+    $contacts = $contactModel->getAll();
+}
 $adminPages = array(
     'dashboard' => array('document_title' => 'Dashboard', 'heading' => 'Dashboard', 'breadcrumb' => 'Dashboard', 'file' => '/adminPages/AdminDashboard.php'),
     'home' => array('document_title' => 'AdminHome', 'heading' => 'AdminHome', 'breadcrumb' => 'AdminHome', 'file' => '/adminPages/AdminHome.php'),

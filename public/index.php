@@ -2,6 +2,8 @@
 define('BASE_URL', 'http://localhost/BookTab');
 
 require_once '../app/controllers/AuthController.php';
+require_once '../app/controllers/AdminController.php';
+require_once '../app/controllers/CompanyContact.php';
 require_once '../app/core/Database.php'; 
 
 $database = new Database();
@@ -48,6 +50,21 @@ if ($page === 'admin' || $page === 'admin_dashboard') {
     }
 }
 
+$contactModel = new CompanyContactModel($dbConnection);
+$contact = $contactModel->getContactInfo();
+
+// Xử lý admin actions TRƯỚC khi include adminLayout
+if ($page === 'admin' && isset($_GET['action'])) {
+    require_once '../app/controllers/AdminController.php';
+    $adminController = new AdminController($dbConnection);
+    $action = $_GET['action'];
+    
+    if (method_exists($adminController, $action)) {
+        $adminController->$action();
+        exit;
+    }
+}
+
 if ($page === 'login') {
     $authController->showLoginForm();
     exit;
@@ -56,9 +73,11 @@ if ($page === 'login') {
     exit;
 }
 
+
 // Routing cho các page thường
 switch ($page) {
     case 'home':
+        require_once '../app/controllers/HomeController.php';
         $view_content = '../app/views/pages/Home.php';
         $pageTitle = 'Trang chủ';
         break;
@@ -78,6 +97,12 @@ switch ($page) {
         $view_content = '../app/views/pages/contact.php';
         $pageTitle = 'Liên hệ';
         break;
+    // Xử lý submit form
+    case 'contact-send':
+        require_once '../app/controllers/ContactController.php';
+        $controller = new ContactController($dbConnection);
+        $controller->send();
+        break;
     case 'admin':
         $view_content = '../app/views/admin/adminLayout.php';
         $pageTitle = 'Admin Dashboard';
@@ -88,10 +113,12 @@ switch ($page) {
         break;
 }
 
+
 if ($page == 'admin') {
     require_once '../app/views/admin/adminLayout.php';
 }
 else {
     require_once '../app/views/template.php';
 }
+
 ?>
