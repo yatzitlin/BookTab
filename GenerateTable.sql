@@ -120,7 +120,8 @@ CREATE TABLE loai_cau_hoi (
 CREATE TABLE cau_hoi (
     ma_cau_hoi BIGINT AUTO_INCREMENT PRIMARY KEY,
     ten_cau_hoi VARCHAR(255) NOT NULL,
-    trang_thai VARCHAR(50) NOT NULL DEFAULT 'chua_tra_loi',
+    trang_thai ENUM('cho_duyet','chua_tra_loi','da_tra_loi','da_an') NOT NULL DEFAULT 'chua_tra_loi',
+    is_faq ENUM('Yes','No') NOT NULL DEFAULT 'No',
     ma_loai BIGINT,
     userid BIGINT NOT NULL,
     ngay_tao DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -137,6 +138,26 @@ CREATE TABLE cau_tra_loi (
     FOREIGN KEY (ma_cau_hoi) REFERENCES cau_hoi(ma_cau_hoi) ON DELETE CASCADE,
     FOREIGN KEY (administrator_userid) REFERENCES administrator(userid) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DELIMITER $$
+CREATE TRIGGER trg_after_insert_cau_tra_loi
+AFTER INSERT ON cau_tra_loi
+FOR EACH ROW
+BEGIN
+    UPDATE cau_hoi SET trang_thai = 'da_tra_loi'
+    WHERE ma_cau_hoi = NEW.ma_cau_hoi AND trang_thai NOT IN ('da_an');
+END$$
+
+CREATE TRIGGER trg_after_delete_cau_tra_loi
+AFTER DELETE ON cau_tra_loi
+FOR EACH ROW
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM cau_tra_loi WHERE ma_cau_hoi = OLD.ma_cau_hoi) THEN
+        UPDATE cau_hoi SET trang_thai = 'chua_tra_loi'
+        WHERE ma_cau_hoi = OLD.ma_cau_hoi AND trang_thai = 'da_tra_loi';
+    END IF;
+END$$
+DELIMITER ;
 
 -- =========================================================
 -- 4. Nhóm sản phẩm

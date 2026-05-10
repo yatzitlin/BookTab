@@ -15,10 +15,10 @@ unset($_SESSION['admin_qna_success'], $_SESSION['admin_qna_error']);
 
 function statusBadge($trangThai) {
     switch ($trangThai) {
-        case 'cho_duyet':   return '<span class="badge bg-warning text-dark">Chờ duyệt</span>';
-        case 'chua_tra_loi': return '<span class="badge bg-info">Chưa trả lời</span>';
-        case 'da_tra_loi':   return '<span class="badge bg-success">Đã trả lời</span>';
-        case 'da_an':        return '<span class="badge bg-secondary">Đã ẩn</span>';
+        case 'cho_duyet':   return '<span class="badge bg-warning text-dark"><i class="ti-time"></i> Chờ duyệt</span>';
+        case 'chua_tra_loi': return '<span class="badge bg-info"><i class="ti-comment"></i> Chưa trả lời</span>';
+        case 'da_tra_loi':   return '<span class="badge bg-success"><i class="ti-check"></i> Đã trả lời</span>';
+        case 'da_an':        return '<span class="badge bg-secondary"><i class="ti-eye-slash"></i> Đã ẩn</span>';
         default:             return '<span class="badge bg-light text-dark">' . htmlspecialchars($trangThai) . '</span>';
     }
 }
@@ -31,6 +31,91 @@ function statusRowClass($trangThai) {
     }
 }
 ?>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/css/glightbox.min.css">
+<style>
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.table tbody tr {
+    animation: fadeInUp 0.3s ease forwards;
+    opacity: 0;
+    transition: all 0.2s ease;
+}
+.table tbody tr:nth-child(1) { animation-delay: 0.02s; }
+.table tbody tr:nth-child(2) { animation-delay: 0.04s; }
+.table tbody tr:nth-child(3) { animation-delay: 0.06s; }
+.table tbody tr:nth-child(4) { animation-delay: 0.08s; }
+.table tbody tr:nth-child(5) { animation-delay: 0.10s; }
+.table tbody tr:nth-child(6) { animation-delay: 0.12s; }
+.table tbody tr:nth-child(7) { animation-delay: 0.14s; }
+.table tbody tr:nth-child(8) { animation-delay: 0.16s; }
+.table tbody tr:nth-child(9) { animation-delay: 0.18s; }
+.table tbody tr:nth-child(10) { animation-delay: 0.20s; }
+.table tbody tr:nth-child(11) { animation-delay: 0.22s; }
+.table tbody tr:nth-child(12) { animation-delay: 0.24s; }
+.table tbody tr:nth-child(13) { animation-delay: 0.26s; }
+.table tbody tr:nth-child(14) { animation-delay: 0.28s; }
+.table tbody tr:nth-child(15) { animation-delay: 0.30s; }
+.table tbody tr:hover {
+    transform: translateX(4px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.card {
+    transition: box-shadow 0.3s ease;
+}
+.card:hover {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+.btn {
+    transition: all 0.2s ease;
+}
+.btn:active {
+    transform: scale(0.97);
+}
+.badge.bg-info {
+    animation: pulse 2s infinite;
+}
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+.img-thumb {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+.img-thumb:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.img-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.img-counter {
+    position: relative;
+}
+.img-counter .badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    font-size: 0.6rem;
+    padding: 2px 5px;
+    border-radius: 50%;
+}
+.category-btn {
+    transition: all 0.2s ease;
+}
+.category-btn:hover {
+    transform: translateY(-1px);
+}
+</style>
 
 <div class="main-content-inner">
     <?php if (!empty($successMsg)): ?>
@@ -62,9 +147,9 @@ function statusRowClass($trangThai) {
                         <i class="ti-arrow-left"></i> Quay lại danh sách
                     </a>
 
-                    <h4 class="header-title mb-3">Chi tiết câu hỏi #<?php echo $questionId; ?></h4>
+                    <h4 class="header-title mb-3"><i class="ti-help-alt"></i> Chi tiết câu hỏi #<?php echo $questionId; ?></h4>
 
-                    <div class="row mb-4">
+                    <div class="row mb-4 p-3 bg-light rounded" style="border-left: 4px solid #17a2b8;">
                         <div class="col-md-8">
                             <table class="table table-borderless">
                                 <tr><th style="width:140px">Câu hỏi:</th><td><strong><?php echo htmlspecialchars($detail['ten_cau_hoi'], ENT_QUOTES, 'UTF-8'); ?></strong></td></tr>
@@ -72,18 +157,10 @@ function statusRowClass($trangThai) {
                                 <tr><th>Người hỏi:</th><td><?php echo htmlspecialchars(trim($detail['user_ho_ten_dem'] . ' ' . $detail['user_ten']), ENT_QUOTES, 'UTF-8'); ?></td></tr>
                                 <tr><th>Ngày tạo:</th><td><?php echo htmlspecialchars($detail['ngay_tao'], ENT_QUOTES, 'UTF-8'); ?></td></tr>
                                 <tr><th>Trạng thái:</th><td><?php echo statusBadge($detail['trang_thai']); ?></td></tr>
+                                <tr><th>Loại:</th><td><?php echo $detail['is_faq'] === 'Yes' ? '<span class="badge bg-warning text-dark"><i class="ti-star"></i> FAQ</span>' : '<span class="badge bg-secondary">Câu hỏi thường</span>'; ?></td></tr>
                             </table>
                         </div>
                         <div class="col-md-4 text-end">
-                            <?php if ($detail['trang_thai'] === 'cho_duyet'): ?>
-                                <form method="POST" action="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna" class="d-inline mb-2">
-                                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
-                                    <input type="hidden" name="act" value="approve">
-                                    <input type="hidden" name="id" value="<?php echo $questionId; ?>">
-                                    <button type="submit" class="btn btn-success btn-sm"><i class="ti-check"></i> Duyệt</button>
-                                </form>
-                            <?php endif; ?>
-
                             <?php if ($detail['trang_thai'] === 'da_an'): ?>
                                 <form method="POST" action="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna" class="d-inline mb-2">
                                     <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
@@ -91,7 +168,7 @@ function statusRowClass($trangThai) {
                                     <input type="hidden" name="id" value="<?php echo $questionId; ?>">
                                     <button type="submit" class="btn btn-outline-warning btn-sm"><i class="ti-eye"></i> Hiện</button>
                                 </form>
-                            <?php elseif ($detail['trang_thai'] !== 'cho_duyet'): ?>
+                            <?php else: ?>
                                 <form method="POST" action="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna" class="d-inline mb-2">
                                     <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
                                     <input type="hidden" name="act" value="hide">
@@ -112,12 +189,12 @@ function statusRowClass($trangThai) {
 
                     <?php if (!empty($detail['images'])): ?>
                         <div class="mb-4">
-                            <h6>Ảnh đính kèm câu hỏi:</h6>
-                            <div class="d-flex flex-wrap gap-2">
+                            <h6><i class="ti-image"></i> Ảnh đính kèm câu hỏi <span class="badge bg-light text-dark"><?php echo count($detail['images']); ?></span></h6>
+                            <div class="img-gallery">
                                 <?php foreach ($detail['images'] as $img): ?>
                                     <?php $imgUrl = BASE_URL . '/' . htmlspecialchars(ltrim($img['url_anh'], '/'), ENT_QUOTES, 'UTF-8'); ?>
-                                    <a href="<?php echo $imgUrl; ?>" target="_blank">
-                                        <img src="<?php echo $imgUrl; ?>" class="rounded" style="width:120px;height:120px;object-fit:cover;" alt="">
+                                    <a href="<?php echo $imgUrl; ?>" class="glightbox" data-gallery="qna-images">
+                                        <img src="<?php echo $imgUrl; ?>" loading="lazy" class="img-thumb" alt="">
                                     </a>
                                 <?php endforeach; ?>
                             </div>
@@ -127,8 +204,8 @@ function statusRowClass($trangThai) {
                     <hr>
 
                     <?php if (!empty($detail['ma_cau_tra_loi'])): ?>
-                        <h5 class="mb-3">Câu trả lời</h5>
-                        <div class="card bg-light mb-3">
+                        <h5 class="mb-3"><i class="ti-comment-alt"></i> Câu trả lời</h5>
+                        <div class="card bg-light mb-3" style="border-left: 4px solid #28a745;">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <small class="text-muted">
@@ -152,11 +229,11 @@ function statusRowClass($trangThai) {
                                 <div class="mb-3"><?php echo $detail['cau_tra_loi']; ?></div>
 
                                 <?php if (!empty($detail['answer_images'])): ?>
-                                    <div class="d-flex flex-wrap gap-2 mb-3">
+                                    <div class="img-gallery mb-3">
                                         <?php foreach ($detail['answer_images'] as $img): ?>
                                             <?php $aImgUrl = BASE_URL . '/' . htmlspecialchars(ltrim($img['url_anh'], '/'), ENT_QUOTES, 'UTF-8'); ?>
-                                            <a href="<?php echo $aImgUrl; ?>" target="_blank">
-                                                <img src="<?php echo $aImgUrl; ?>" class="rounded" style="width:100px;height:100px;object-fit:cover;" alt="">
+                                            <a href="<?php echo $aImgUrl; ?>" class="glightbox" data-gallery="answer-images">
+                                                <img src="<?php echo $aImgUrl; ?>" loading="lazy" class="img-thumb" style="width:100px;height:100px;" alt="">
                                             </a>
                                         <?php endforeach; ?>
                                     </div>
@@ -203,17 +280,55 @@ function statusRowClass($trangThai) {
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h4 class="header-title mb-0">Quản lý FAQ</h4>
-                    <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna&act=questions" class="btn btn-outline-secondary btn-sm">
-                        <i class="ti-arrow-left"></i> Câu hỏi
-                    </a>
+                    <div>
+                        <button type="button" class="btn btn-success btn-sm me-1" data-bs-toggle="collapse" data-bs-target="#createFaqForm">
+                            <i class="ti-plus"></i> Tạo FAQ
+                        </button>
+                        <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna&act=questions" class="btn btn-outline-secondary btn-sm">
+                            <i class="ti-arrow-left"></i> Câu hỏi
+                        </a>
+                    </div>
+                </div>
+
+                <div class="collapse mb-4" id="createFaqForm">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <form method="POST" action="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna">
+                                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
+                                <input type="hidden" name="act" value="create_faq">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Câu hỏi</label>
+                                        <input type="text" name="ten_cau_hoi" class="form-control" placeholder="Nhập câu hỏi FAQ..." required minlength="10" maxlength="255">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Chủ đề</label>
+                                        <select name="ma_loai" class="form-select" required>
+                                            <option value="">-- Chọn chủ đề --</option>
+                                            <?php foreach ($categories as $cat): ?>
+                                                <option value="<?php echo (int)$cat['ma_loai']; ?>"><?php echo htmlspecialchars($cat['ten_loai'], ENT_QUOTES, 'UTF-8'); ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 d-flex align-items-end">
+                                        <button type="submit" class="btn btn-primary w-100"><i class="ti-save"></i> Tạo</button>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Câu trả lời</label>
+                                        <textarea name="noi_dung" class="form-control" rows="4" placeholder="Nhập nội dung trả lời..." required></textarea>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="mb-3">
                     <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna&act=faq"
-                       class="btn btn-sm <?php echo $selectedCategory === 0 ? 'btn-primary' : 'btn-outline-primary'; ?> me-1">Tất cả</a>
+                       class="btn btn-sm category-btn <?php echo $selectedCategory === 0 ? 'btn-primary' : 'btn-outline-primary'; ?> me-1">Tất cả</a>
                     <?php foreach ($categories as $cat): ?>
                         <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna&act=faq&category=<?php echo (int)$cat['ma_loai']; ?>"
-                           class="btn btn-sm <?php echo $selectedCategory === (int)$cat['ma_loai'] ? 'btn-primary' : 'btn-outline-primary'; ?> me-1">
+                           class="btn btn-sm category-btn <?php echo $selectedCategory === (int)$cat['ma_loai'] ? 'btn-primary' : 'btn-outline-primary'; ?> me-1">
                             <?php echo htmlspecialchars($cat['ten_loai'], ENT_QUOTES, 'UTF-8'); ?>
                         </a>
                     <?php endforeach; ?>
@@ -353,13 +468,7 @@ function statusRowClass($trangThai) {
                                         <td>
                                             <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna&act=categories&edit_cat=<?php echo (int)$cat['ma_loai']; ?>"
                                                class="btn btn-sm btn-outline-primary"><i class="ti-pencil"></i></a>
-                                            <form method="POST" action="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna" class="d-inline"
-                                                  onsubmit="return confirm('Xoá chủ đề này?');">
-                                                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
-                                                <input type="hidden" name="act" value="delete_category">
-                                                <input type="hidden" name="id" value="<?php echo (int)$cat['ma_loai']; ?>">
-                                                <button type="submit" class="btn btn-sm btn-outline-danger"><i class="ti-trash"></i></button>
-                                            </form>
+                                            <button type="button" class="btn btn-sm btn-outline-danger delete-cat-btn" data-id="<?php echo (int)$cat['ma_loai']; ?>" title="Xoá"><i class="ti-trash"></i></button>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -367,6 +476,14 @@ function statusRowClass($trangThai) {
                         </table>
                     </div>
                 </form>
+
+                <?php foreach ($categories as $cat): ?>
+                    <form method="POST" action="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna" class="d-none delete-cat-form" id="delete-cat-<?php echo (int)$cat['ma_loai']; ?>">
+                        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
+                        <input type="hidden" name="act" value="delete_category">
+                        <input type="hidden" name="id" value="<?php echo (int)$cat['ma_loai']; ?>">
+                    </form>
+                <?php endforeach; ?>
             </div>
         </div>
 
@@ -388,6 +505,15 @@ function statusRowClass($trangThai) {
                     });
                     document.getElementById('reorder-input').value = JSON.stringify(order);
                 }
+            });
+
+            document.querySelectorAll('.delete-cat-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var id = this.dataset.id;
+                    if (confirm('Xoá chủ đề này?')) {
+                        document.getElementById('delete-cat-' + id).submit();
+                    }
+                });
             });
         })();
         </script>
@@ -414,10 +540,10 @@ function statusRowClass($trangThai) {
 
                 <div class="mb-3">
                     <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna&act=questions"
-                       class="btn btn-sm <?php echo $selectedCategory === 0 ? 'btn-primary' : 'btn-outline-primary'; ?> me-1">Tất cả</a>
+                       class="btn btn-sm category-btn <?php echo $selectedCategory === 0 ? 'btn-primary' : 'btn-outline-primary'; ?> me-1">Tất cả</a>
                     <?php foreach ($categories as $cat): ?>
                         <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna&act=questions&category=<?php echo (int)$cat['ma_loai']; ?>"
-                           class="btn btn-sm <?php echo $selectedCategory === (int)$cat['ma_loai'] ? 'btn-primary' : 'btn-outline-primary'; ?> me-1">
+                           class="btn btn-sm category-btn <?php echo $selectedCategory === (int)$cat['ma_loai'] ? 'btn-primary' : 'btn-outline-primary'; ?> me-1">
                             <?php echo htmlspecialchars($cat['ten_loai'], ENT_QUOTES, 'UTF-8'); ?>
                         </a>
                     <?php endforeach; ?>
@@ -433,7 +559,7 @@ function statusRowClass($trangThai) {
                                 <th>Người hỏi</th>
                                 <th>Trạng thái</th>
                                 <th>Ngày tạo</th>
-                                <th>Hành động</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -449,6 +575,15 @@ function statusRowClass($trangThai) {
                                         <td><?php echo statusBadge($item['trang_thai']); ?></td>
                                         <td><?php echo htmlspecialchars($item['ngay_tao'], ENT_QUOTES, 'UTF-8'); ?></td>
                                         <td>
+                                            <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna&act=view&id=<?php echo (int)$item['ma_cau_hoi']; ?><?php echo $catParam; ?>"
+                                               class="btn btn-sm btn-outline-primary" title="Chỉnh sửa"><i class="ti-pencil"></i></a>
+                                            <form method="POST" action="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna" class="d-inline"
+                                                  onsubmit="return confirm('Xoá câu hỏi này?');">
+                                                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
+                                                <input type="hidden" name="act" value="delete">
+                                                <input type="hidden" name="id" value="<?php echo (int)$item['ma_cau_hoi']; ?>">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Xoá"><i class="ti-trash"></i></button>
+                                            </form>
                                             <?php if ($item['trang_thai'] === 'cho_duyet'): ?>
                                                 <form method="POST" action="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna" class="d-inline">
                                                     <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
@@ -457,30 +592,6 @@ function statusRowClass($trangThai) {
                                                     <button type="submit" class="btn btn-sm btn-success" title="Duyệt"><i class="ti-check"></i></button>
                                                 </form>
                                             <?php endif; ?>
-                                            <?php if ($item['trang_thai'] === 'da_an'): ?>
-                                                <form method="POST" action="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna" class="d-inline">
-                                                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
-                                                    <input type="hidden" name="act" value="unhide">
-                                                    <input type="hidden" name="id" value="<?php echo (int)$item['ma_cau_hoi']; ?>">
-                                                    <button type="submit" class="btn btn-sm btn-outline-warning" title="Hiện"><i class="ti-eye"></i></button>
-                                                </form>
-                                            <?php elseif ($item['trang_thai'] !== 'cho_duyet'): ?>
-                                                <form method="POST" action="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna" class="d-inline">
-                                                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
-                                                    <input type="hidden" name="act" value="hide">
-                                                    <input type="hidden" name="id" value="<?php echo (int)$item['ma_cau_hoi']; ?>">
-                                                    <button type="submit" class="btn btn-sm btn-outline-secondary" title="Ẩn"><i class="ti-eye-slash"></i></button>
-                                                </form>
-                                            <?php endif; ?>
-                                            <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna&act=view&id=<?php echo (int)$item['ma_cau_hoi']; ?><?php echo $catParam; ?>"
-                                               class="btn btn-sm btn-outline-primary" title="Xem"><i class="ti-eye"></i></a>
-                                            <form method="POST" action="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna" class="d-inline"
-                                                  onsubmit="return confirm('Xoá câu hỏi này?');">
-                                                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
-                                                <input type="hidden" name="act" value="delete">
-                                                <input type="hidden" name="id" value="<?php echo (int)$item['ma_cau_hoi']; ?>">
-                                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Xoá"><i class="ti-trash"></i></button>
-                                            </form>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -510,3 +621,15 @@ function statusRowClass($trangThai) {
         </div>
     <?php endif; ?>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/js/glightbox.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    GLightbox({ selector: '.glightbox', touchNavigation: true, loop: true });
+    document.querySelectorAll('[title]').forEach(function(el) {
+        if (el.closest('.table')) {
+            new bootstrap.Tooltip(el, { trigger: 'hover', placement: 'top' });
+        }
+    });
+});
+</script>

@@ -30,11 +30,10 @@ class QnAModel {
                 FROM cau_hoi ch
                 INNER JOIN loai_cau_hoi lch ON ch.ma_loai = lch.ma_loai
                 INNER JOIN nguoi_dung nd ON nd.userid = ch.userid
-                LEFT JOIN administrator ad ON ad.userid = ch.userid
                 INNER JOIN cau_tra_loi ctr ON ctr.ma_cau_hoi = ch.ma_cau_hoi
                 LEFT JOIN administrator adm2 ON adm2.userid = ctr.administrator_userid
                 LEFT JOIN nguoi_dung ngu_ad ON ngu_ad.userid = adm2.userid
-                WHERE ch.trang_thai = 'da_tra_loi' AND ad.userid IS NULL";
+                WHERE ch.trang_thai = 'da_tra_loi' AND ch.is_faq = 'No'";
 
         $params = [];
         if ($categoryId > 0) {
@@ -51,8 +50,7 @@ class QnAModel {
     public function countQuestionsWithAnswers($categoryId = 0) {
         $sql = "SELECT COUNT(DISTINCT ch.ma_cau_hoi) as total
                 FROM cau_hoi ch
-                LEFT JOIN administrator ad ON ad.userid = ch.userid
-                WHERE ch.trang_thai = 'da_tra_loi' AND ad.userid IS NULL";
+                WHERE ch.trang_thai = 'da_tra_loi' AND ch.is_faq = 'No'";
         $params = [];
         if ($categoryId > 0) {
             $sql .= " AND ch.ma_loai = ?";
@@ -75,8 +73,7 @@ class QnAModel {
                 FROM cau_hoi ch
                 INNER JOIN loai_cau_hoi lch ON ch.ma_loai = lch.ma_loai
                 INNER JOIN nguoi_dung nd ON nd.userid = ch.userid
-                LEFT JOIN administrator ad ON ad.userid = ch.userid
-                WHERE ch.trang_thai = 'chua_tra_loi' AND ad.userid IS NULL";
+                WHERE ch.trang_thai = 'chua_tra_loi' AND ch.is_faq = 'No'";
 
         $params = [];
         if ($categoryId > 0) {
@@ -93,8 +90,7 @@ class QnAModel {
     public function countUnansweredQuestions($categoryId = 0) {
         $sql = "SELECT COUNT(ch.ma_cau_hoi) as total
                 FROM cau_hoi ch
-                LEFT JOIN administrator ad ON ad.userid = ch.userid
-                WHERE ch.trang_thai = 'chua_tra_loi' AND ad.userid IS NULL";
+                WHERE ch.trang_thai = 'chua_tra_loi' AND ch.is_faq = 'No'";
         $params = [];
         if ($categoryId > 0) {
             $sql .= " AND ch.ma_loai = ?";
@@ -105,7 +101,7 @@ class QnAModel {
         return (int)(($stmt->fetch(PDO::FETCH_ASSOC))['total'] ?? 0);
     }
 
-    // FAQ guest — chỉ câu hỏi admin đã tạo + đã trả lời
+    // FAQ guest — câu hỏi đánh dấu is_faq = 1
     public function getPublicFaqItems($categoryId = 0, $page = 1, $itemsPerPage = 10) {
         $page = max(1, (int)$page);
         $itemsPerPage = max(1, (int)$itemsPerPage);
@@ -116,11 +112,10 @@ class QnAModel {
                        ngu_ad.ho_va_ten_dem AS admin_ho_va_ten_dem, ngu_ad.ten AS admin_ten
                 FROM cau_hoi ch
                 INNER JOIN loai_cau_hoi lch ON ch.ma_loai = lch.ma_loai
-                INNER JOIN administrator ad ON ad.userid = ch.userid
                 INNER JOIN cau_tra_loi ctr ON ctr.ma_cau_hoi = ch.ma_cau_hoi
                 LEFT JOIN administrator adm2 ON adm2.userid = ctr.administrator_userid
                 LEFT JOIN nguoi_dung ngu_ad ON ngu_ad.userid = adm2.userid
-                WHERE ch.trang_thai = 'da_tra_loi'";
+                WHERE ch.trang_thai = 'da_tra_loi' AND ch.is_faq = 'Yes'";
 
         $params = [];
         if ($categoryId > 0) {
@@ -137,9 +132,8 @@ class QnAModel {
     public function countPublicFaqItems($categoryId = 0) {
         $sql = "SELECT COUNT(DISTINCT ch.ma_cau_hoi) as total
                 FROM cau_hoi ch
-                INNER JOIN administrator ad ON ad.userid = ch.userid
                 INNER JOIN cau_tra_loi ctr ON ctr.ma_cau_hoi = ch.ma_cau_hoi
-                WHERE ch.trang_thai = 'da_tra_loi'";
+                WHERE ch.trang_thai = 'da_tra_loi' AND ch.is_faq = 'Yes'";
         $params = [];
         if ($categoryId > 0) {
             $sql .= " AND ch.ma_loai = ?";
@@ -168,7 +162,7 @@ class QnAModel {
                 LEFT JOIN cau_tra_loi ctr ON ctr.ma_cau_hoi = ch.ma_cau_hoi
                 LEFT JOIN administrator adm ON adm.userid = ctr.administrator_userid
                 LEFT JOIN nguoi_dung ngu_ad ON ngu_ad.userid = adm.userid
-                WHERE ch.userid = ?
+                WHERE ch.userid = ? AND ch.is_faq = 'No'
                 ORDER BY ch.ngay_tao DESC
                 LIMIT ? OFFSET ?";
 
@@ -181,7 +175,7 @@ class QnAModel {
     }
 
     public function countMyQuestions($userId) {
-        $sql = "SELECT COUNT(ma_cau_hoi) as total FROM cau_hoi WHERE userid = ?";
+        $sql = "SELECT COUNT(ma_cau_hoi) as total FROM cau_hoi WHERE userid = ? AND is_faq = 'No'";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([$userId]);
         return (int)(($stmt->fetch(PDO::FETCH_ASSOC))['total'] ?? 0);
@@ -191,11 +185,11 @@ class QnAModel {
     // Create question
     // ============================================================
 
-    public function createQuestion($tenCauHoi, $maLoai, $userId) {
-        $sql = "INSERT INTO cau_hoi (ten_cau_hoi, trang_thai, ma_loai, userid)
-                VALUES (?, 'cho_duyet', ?, ?)";
+    public function createQuestion($tenCauHoi, $maLoai, $userId, $isFaq = 'No') {
+        $sql = "INSERT INTO cau_hoi (ten_cau_hoi, trang_thai, is_faq, ma_loai, userid)
+                VALUES (?, 'cho_duyet', ?, ?, ?)";
         $stmt = $this->conn->prepare($sql);
-        $success = $stmt->execute([$tenCauHoi, $maLoai, $userId]);
+        $success = $stmt->execute([$tenCauHoi, $isFaq === 'Yes' ? 'Yes' : 'No', $maLoai, $userId]);
         if ($success) {
             return (int)$this->conn->lastInsertId();
         }
@@ -281,8 +275,7 @@ class QnAModel {
                 FROM cau_hoi ch
                 INNER JOIN loai_cau_hoi lch ON ch.ma_loai = lch.ma_loai
                 INNER JOIN nguoi_dung nd ON nd.userid = ch.userid
-                LEFT JOIN administrator ad ON ad.userid = ch.userid
-                WHERE ad.userid IS NULL";
+                WHERE ch.is_faq = 'No'";
 
         $params = [];
         if ($categoryId > 0) {
@@ -301,8 +294,7 @@ class QnAModel {
     public function countAllQuestionsAdmin($categoryId = 0) {
         $sql = "SELECT COUNT(ch.ma_cau_hoi) as total
                 FROM cau_hoi ch
-                LEFT JOIN administrator ad ON ad.userid = ch.userid
-                WHERE ad.userid IS NULL";
+                WHERE ch.is_faq = 'No'";
         $params = [];
         if ($categoryId > 0) {
             $sql .= " AND ch.ma_loai = ?";
@@ -314,7 +306,7 @@ class QnAModel {
     }
 
     public function getQuestionDetailAdmin($id) {
-        $sql = "SELECT ch.ma_cau_hoi, ch.ten_cau_hoi, ch.trang_thai, ch.ma_loai,
+        $sql = "SELECT ch.ma_cau_hoi, ch.ten_cau_hoi, ch.trang_thai, ch.is_faq, ch.ma_loai,
                        lch.ten_loai,
                        nd.ho_va_ten_dem AS user_ho_ten_dem, nd.ten AS user_ten, nd.userid AS user_id,
                        ch.ngay_tao,
@@ -349,12 +341,11 @@ class QnAModel {
                        ngu_ad.ho_va_ten_dem AS admin_ho_ten_dem, ngu_ad.ten AS admin_ten
                 FROM cau_hoi ch
                 INNER JOIN loai_cau_hoi lch ON ch.ma_loai = lch.ma_loai
-                INNER JOIN administrator ad ON ad.userid = ch.userid
                 INNER JOIN nguoi_dung nd_asker ON nd_asker.userid = ch.userid
                 LEFT JOIN cau_tra_loi ctr ON ctr.ma_cau_hoi = ch.ma_cau_hoi
                 LEFT JOIN administrator adm2 ON adm2.userid = ctr.administrator_userid
                 LEFT JOIN nguoi_dung ngu_ad ON ngu_ad.userid = adm2.userid
-                WHERE 1=1";
+                WHERE ch.is_faq = 'Yes'";
 
         $params = [];
         if ($categoryId > 0) {
@@ -371,8 +362,7 @@ class QnAModel {
     public function countFaqItemsAdmin($categoryId = 0) {
         $sql = "SELECT COUNT(ch.ma_cau_hoi) as total
                 FROM cau_hoi ch
-                INNER JOIN administrator ad ON ad.userid = ch.userid
-                WHERE 1=1";
+                WHERE ch.is_faq = 'Yes'";
         $params = [];
         if ($categoryId > 0) {
             $sql .= " AND ch.ma_loai = ?";
@@ -392,7 +382,6 @@ class QnAModel {
         $stmt = $this->conn->prepare($sql);
         $success = $stmt->execute([$cauHoiId, $adminUserId, $noiDung]);
         if ($success) {
-            $this->updateQuestionStatus($cauHoiId, 'da_tra_loi');
             return (int)$this->conn->lastInsertId();
         }
         return false;
@@ -404,20 +393,17 @@ class QnAModel {
         return $stmt->execute([$noiDung, $cauTraLoiId]);
     }
 
-    public function deleteAnswer($cauTraLoiId) {
-        $sql = "SELECT ma_cau_hoi FROM cau_tra_loi WHERE ma_cau_tra_loi = ?";
+    public function questionHasAnswer($cauHoiId) {
+        $sql = "SELECT COUNT(*) FROM cau_tra_loi WHERE ma_cau_hoi = ?";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute([$cauTraLoiId]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->execute([$cauHoiId]);
+        return (int)$stmt->fetchColumn() > 0;
+    }
 
+    public function deleteAnswer($cauTraLoiId) {
         $sql = "DELETE FROM cau_tra_loi WHERE ma_cau_tra_loi = ?";
         $stmt = $this->conn->prepare($sql);
-        $result = $stmt->execute([$cauTraLoiId]);
-
-        if ($result && $row) {
-            $this->updateQuestionStatus($row['ma_cau_hoi'], 'chua_tra_loi');
-        }
-        return $result;
+        return $stmt->execute([$cauTraLoiId]);
     }
 
     // ============================================================

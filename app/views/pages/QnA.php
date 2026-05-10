@@ -83,13 +83,9 @@ $paginationBase = $qnaBaseUrl . ($categoryParam ? '&' . ltrim($categoryParam, '&
 						<span class="text-xs font-semibold bg-red-50 text-red-600 border border-red-100 px-3 py-1 rounded-full">
 							<?php echo htmlspecialchars($item['ten_loai'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
 						</span>
-						<?php if (!empty($item['ngay_dang'])): ?>
+						<?php if (!empty($item['ngay_tao'])): ?>
 							<span class="text-xs text-gray-500">
-								Ngày gửi: <?php echo htmlspecialchars(date('d/m/Y', strtotime($item['ngay_dang'])), ENT_QUOTES, 'UTF-8'); ?>
-							</span>
-						<?php elseif (!empty($item['ngay_tao'])): ?>
-							<span class="text-xs text-gray-500">
-								Ngày gửi: <?php echo htmlspecialchars(date('d/m/Y', strtotime($item['ngay_tao'])), ENT_QUOTES, 'UTF-8'); ?>
+								Ngày gửi: <?php echo htmlspecialchars(date('d/m/Y H:i:s', strtotime($item['ngay_tao'])), ENT_QUOTES, 'UTF-8'); ?>
 							</span>
 						<?php endif; ?>
 					</div>

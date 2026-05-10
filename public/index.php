@@ -126,7 +126,6 @@ if ($page === 'admin' && $_SERVER['REQUEST_METHOD'] === 'POST') {
             case 'answer':
                 $qId = (int)($_POST['id'] ?? 0);
                 $result = $qnaCtrl->adminCreateAnswer($qId, $_POST['noi_dung'] ?? '', $adminUserId);
-                $_SESSION['admin_qna_success'] = isset($result['error']) ? $result['error'] : 'Đã gửi trả lời thành công.';
                 if (isset($result['error'])) $_SESSION['admin_qna_error'] = $result['error'];
                 else $_SESSION['admin_qna_success'] = 'Đã gửi trả lời thành công.';
                 header('Location: ' . BASE_URL . '/public/index.php?page=admin&admin_action=qna&act=view&id=' . $qId);
@@ -172,9 +171,21 @@ if ($page === 'admin' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
             case 'unhide':
                 $qId = (int)($_POST['id'] ?? 0);
-                $qnaCtrl->adminUpdateStatus($qId, 'chua_tra_loi');
+                $qnaCtrl->adminUnhideQuestion($qId);
                 $_SESSION['admin_qna_success'] = 'Đã hiện câu hỏi.';
                 header('Location: ' . BASE_URL . '/public/index.php?page=admin&admin_action=qna&act=questions');
+                exit;
+
+            case 'create_faq':
+                $result = $qnaCtrl->adminCreateFaq(
+                    $_POST['ten_cau_hoi'] ?? '',
+                    (int)($_POST['ma_loai'] ?? 0),
+                    $adminUserId,
+                    $_POST['noi_dung'] ?? ''
+                );
+                if (isset($result['error'])) $_SESSION['admin_qna_error'] = $result['error'];
+                else $_SESSION['admin_qna_success'] = 'Đã tạo FAQ mới.';
+                header('Location: ' . BASE_URL . '/public/index.php?page=admin&admin_action=qna&act=faq');
                 exit;
 
             case 'add_category':

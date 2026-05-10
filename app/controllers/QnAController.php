@@ -125,7 +125,7 @@ class QnAController extends BaseController {
             $allowedMimes = ['image/jpeg', 'image/png', 'image/webp'];
             $maxSize = 3 * 1024 * 1024;
 
-            $publicDir = dirname(__DIR__,2) . '/public/upload/qna/questions';
+            $publicDir = dirname(__DIR__,2) . '/public/upload/qna';
             if (!is_dir($publicDir)) {
                 @mkdir($publicDir, 0755, true);
             }
@@ -152,7 +152,7 @@ class QnAController extends BaseController {
                 $destPath = $publicDir . '/' . $safe;
 
                 if (move_uploaded_file($tmp, $destPath)) {
-                    $webPath = 'public/upload/qna/questions/' . $safe;
+                    $webPath = 'public/upload/qna' . $safe;
                     $imageId = $this->qnaModel->createImage($webPath, $origName, $uploadedCount);
                     if ($imageId) {
                         $this->qnaModel->linkImageToQuestion($insertId, $imageId, $uploadedCount);
@@ -241,11 +241,12 @@ class QnAController extends BaseController {
         if (empty($noiDung)) {
             return ['error' => 'Nội dung trả lời không được để trống.'];
         }
-        $result = $this->qnaModel->createAnswer($cauHoiId, $adminUserId, $noiDung);
-        if (!$result) {
-            return ['error' => 'Không thể tạo câu trả lời.'];
+        try {
+            $result = $this->qnaModel->createAnswer($cauHoiId, $adminUserId, $noiDung);
+            return ['success' => true, 'id' => $result];
+        } catch (\Exception $e) {
+            return ['error' => 'Lỗi: ' . $e->getMessage()];
         }
-        return ['success' => true];
     }
 
     public function adminUpdateAnswer($cauTraLoiId, $noiDung) {
@@ -270,6 +271,36 @@ class QnAController extends BaseController {
     public function adminUpdateStatus($id, $trangThai) {
         $this->qnaModel->updateQuestionStatus($id, $trangThai);
         return ['success' => true];
+    }
+
+    public function adminUnhideQuestion($id) {
+        $hasAnswer = $this->qnaModel->questionHasAnswer($id);
+        $newStatus = $hasAnswer ? 'da_tra_loi' : 'chua_tra_loi';
+        $this->qnaModel->updateQuestionStatus($id, $newStatus);
+        return ['success' => true];
+    }
+
+    public function adminCreateFaq($tenCauHoi, $maLoai, $adminUserId, $noiDung) {
+        $tenCauHoi = trim($tenCauHoi);
+        $noiDung = trim($noiDung);
+
+        if (empty($tenCauHoi) || strlen($tenCauHoi) < 10 || strlen($tenCauHoi) > 255) {
+            return ['error' => 'Nội dung câu hỏi không hợp lệ (10-255 ký tự).'];
+        }
+        if ((int)$maLoai <= 0) {
+            return ['error' => 'Chủ đề không hợp lệ.'];
+        }
+        if (empty($noiDung)) {
+            return ['error' => 'Nội dung trả lời không được để trống.'];
+        }
+
+        $insertId = $this->qnaModel->createQuestion($tenCauHoi, (int)$maLoai, (int)$adminUserId, 'Yes');
+        if (!$insertId) {
+            return ['error' => 'Không thể tạo FAQ.'];
+        }
+
+        $this->qnaModel->createAnswer($insertId, (int)$adminUserId, $noiDung);
+        return ['success' => true, 'id' => $insertId];
     }
 
     public function adminGetFaqItems($page = 1, $perPage = 15, $category = 0) {

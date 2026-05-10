@@ -81,7 +81,7 @@ function myStatusBadge($status) {
 						<?php echo myStatusBadge($item['trang_thai'] ?? ''); ?>
 						<?php if (!empty($item['ngay_tao'])): ?>
 							<span class="text-xs text-gray-500">
-								Gửi: <?php echo htmlspecialchars(date('d/m/Y', strtotime($item['ngay_tao'])), ENT_QUOTES, 'UTF-8'); ?>
+								Gửi: <?php echo htmlspecialchars(date('d/m/Y H:i:s', strtotime($item['ngay_tao'])), ENT_QUOTES, 'UTF-8'); ?>
 							</span>
 						<?php endif; ?>
 					</div>

@@ -1,14 +1,71 @@
 <?php
 require_once __DIR__ . '/../../../models/ThongTinModel.php';
 $thongTinModel = new ThongTinModel($dbConnection);
-$allThongTin = array_filter($thongTinModel->getAllWithChiTiet(), function ($row) {
+$allThongTin = array_values(array_filter($thongTinModel->getAllWithChiTiet(), function ($row) {
     return $row['loai_thong_tin'] !== 'about';
-});
+}));
+
+$infoPage = isset($_GET['p']) ? max(1, (int)$_GET['p']) : 1;
+$infoPerPage = 10;
+$infoTotal = count($allThongTin);
+$infoTotalPages = $infoPerPage > 0 ? ceil($infoTotal / $infoPerPage) : 1;
+$allThongTinPaginated = array_slice($allThongTin, ($infoPage - 1) * $infoPerPage, $infoPerPage);
 
 $successMsg = $_SESSION['admin_info_success'] ?? '';
 $errorMsg = $_SESSION['admin_info_error'] ?? '';
 unset($_SESSION['admin_info_success'], $_SESSION['admin_info_error']);
 ?>
+
+<style>
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.table tbody tr {
+    animation: fadeInUp 0.3s ease forwards;
+    opacity: 0;
+}
+.table tbody tr:nth-child(1) { animation-delay: 0.02s; }
+.table tbody tr:nth-child(2) { animation-delay: 0.04s; }
+.table tbody tr:nth-child(3) { animation-delay: 0.06s; }
+.table tbody tr:nth-child(4) { animation-delay: 0.08s; }
+.table tbody tr:nth-child(5) { animation-delay: 0.10s; }
+.table tbody tr:nth-child(6) { animation-delay: 0.12s; }
+.table tbody tr:nth-child(7) { animation-delay: 0.14s; }
+.table tbody tr:nth-child(8) { animation-delay: 0.16s; }
+.table tbody tr:nth-child(9) { animation-delay: 0.18s; }
+.table tbody tr:nth-child(10) { animation-delay: 0.20s; }
+.table tbody tr {
+    transition: all 0.2s ease;
+}
+.table tbody tr:hover {
+    transform: translateX(4px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.card {
+    transition: box-shadow 0.3s ease;
+}
+.card:hover {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+.btn {
+    transition: all 0.2s ease;
+}
+.btn:active {
+    transform: scale(0.97);
+}
+.type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.detail-count {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 10px;
+    vertical-align: middle;
+}
+</style>
 
 <div class="main-content-inner">
     <div class="card mt-4">
@@ -29,7 +86,7 @@ unset($_SESSION['admin_info_success'], $_SESSION['admin_info_error']);
             <?php endif; ?>
 
             <!-- Update/Delete forms -->
-            <?php foreach ($allThongTin as $row): ?>
+            <?php foreach ($allThongTinPaginated as $row): ?>
                 <form id="update-<?php echo (int)$row['ma_thong_tin']; ?>" method="POST"
                       action="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=info">
                     <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
@@ -57,7 +114,7 @@ unset($_SESSION['admin_info_success'], $_SESSION['admin_info_error']);
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($allThongTin as $row): ?>
+                        <?php foreach ($allThongTinPaginated as $row): ?>
                             <?php $id = (int)$row['ma_thong_tin']; ?>
                             <tr>
                                 <td>
@@ -66,9 +123,14 @@ unset($_SESSION['admin_info_success'], $_SESSION['admin_info_error']);
                                            value="<?php echo htmlspecialchars($row['loai_thong_tin'], ENT_QUOTES, 'UTF-8'); ?>" required>
                                 </td>
                                 <td>
-                                    <span class="badge <?php echo $row['type'] === 'link' ? 'bg-info' : 'bg-secondary'; ?>">
+                                    <span class="type-badge badge <?php echo $row['type'] === 'link' ? 'bg-info' : 'bg-secondary'; ?>">
+                                        <i class="<?php echo $row['type'] === 'link' ? 'ti-link' : 'ti-text'; ?>"></i>
                                         <?php echo $row['type'] === 'link' ? 'Link' : 'Text'; ?>
                                     </span>
+                                    <?php $ctCount = count($row['chi_tiet'] ?? []); ?>
+                                    <?php if ($ctCount > 0): ?>
+                                        <span class="detail-count badge bg-light text-dark"><?php echo $ctCount; ?></span>
+                                    <?php endif; ?>
                                 </td>
                                 <td>
                                     <?php $chiTiet = $row['chi_tiet'] ?? []; ?>
@@ -134,15 +196,37 @@ unset($_SESSION['admin_info_success'], $_SESSION['admin_info_error']);
                                 </td>
                             </tr>
                         <?php endforeach; ?>
-                        <?php if (empty($allThongTin)): ?>
+                        <?php if (empty($allThongTinPaginated)): ?>
                             <tr><td colspan="4" class="text-center text-muted">Chưa có dữ liệu</td></tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
             </div>
 
+            <div class="text-muted text-center small mt-2">
+                Hiển thị <?php echo ($infoPage - 1) * $infoPerPage + 1; ?>-<?php echo min($infoPage * $infoPerPage, $infoTotal); ?> trong <?php echo $infoTotal; ?> mục
+            </div>
+
+            <?php if ($infoTotalPages > 1): ?>
+                <nav class="mt-3">
+                    <ul class="pagination justify-content-center">
+                        <?php if ($infoPage > 1): ?>
+                            <li class="page-item"><a class="page-link" href="?page=admin&admin_action=info&p=<?php echo $infoPage - 1; ?>">&laquo; Trước</a></li>
+                        <?php endif; ?>
+                        <?php for ($i = 1; $i <= $infoTotalPages; $i++): ?>
+                            <li class="page-item <?php echo $i === $infoPage ? 'active' : ''; ?>">
+                                <a class="page-link" href="?page=admin&admin_action=info&p=<?php echo $i; ?>"><?php echo $i; ?></a>
+                            </li>
+                        <?php endfor; ?>
+                        <?php if ($infoPage < $infoTotalPages): ?>
+                            <li class="page-item"><a class="page-link" href="?page=admin&admin_action=info&p=<?php echo $infoPage + 1; ?>">Sau &raquo;</a></li>
+                        <?php endif; ?>
+                    </ul>
+                </nav>
+            <?php endif; ?>
+
             <hr class="my-4">
-            <h5 class="mb-3">Thêm trường thông tin mới</h5>
+            <h5 class="mb-3"><i class="ti-plus"></i> Thêm trường thông tin mới</h5>
             <form method="POST" action="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=info">
                 <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
                 <input type="hidden" name="act" value="add_info">
@@ -199,6 +283,17 @@ unset($_SESSION['admin_info_success'], $_SESSION['admin_info_error']);
 </div>
 
 <script>
+// Smooth row animation helper
+function animateNewRow(row) {
+    row.style.opacity = '0';
+    row.style.transform = 'translateY(-10px)';
+    row.style.transition = 'all 0.3s ease';
+    requestAnimationFrame(function() {
+        row.style.opacity = '1';
+        row.style.transform = 'translateY(0)';
+    });
+}
+
 // Toggle new field type
 document.getElementById('newType').addEventListener('change', function() {
     var isLink = this.value === 'link';
@@ -220,6 +315,7 @@ document.querySelectorAll('.add-row').forEach(function(btn) {
             '<div class="col-5"><input type="text" name="chi_tiet['+idx+'][url]" class="form-control form-control-sm" form="update-'+id+'" placeholder="URL"></div>' +
             '<div class="col-2"><button type="button" class="btn btn-outline-danger btn-sm remove-row" title="Xoá dòng"><i class="ti-close"></i></button></div>';
         container.appendChild(div);
+        animateNewRow(div);
         bindRemoveButtons();
     });
 });
@@ -237,6 +333,7 @@ document.querySelectorAll('.add-text-row').forEach(function(btn) {
             '<div class="col-10"><input type="text" name="chi_tiet['+idx+'][noi_dung]" class="form-control form-control-sm" form="update-'+id+'" placeholder="Nội dung"></div>' +
             '<div class="col-2"><button type="button" class="btn btn-outline-danger btn-sm remove-text-row" title="Xoá dòng"><i class="ti-close"></i></button></div>';
         container.appendChild(div);
+        animateNewRow(div);
         bindRemoveButtons();
     });
 });
@@ -248,8 +345,10 @@ function bindRemoveButtons() {
             var row = this.closest('.link-row');
             var container = row.parentElement;
             if (container.querySelectorAll('.link-row').length > 1) {
-                row.remove();
-                reindexRows(container);
+                row.style.transition = 'all 0.25s ease';
+                row.style.opacity = '0';
+                row.style.transform = 'translateX(20px)';
+                setTimeout(function() { row.remove(); reindexRows(container); }, 250);
             }
         };
     });
@@ -258,8 +357,10 @@ function bindRemoveButtons() {
             var row = this.closest('.text-row');
             var container = row.parentElement;
             if (container.querySelectorAll('.text-row').length > 1) {
-                row.remove();
-                reindexRows(container);
+                row.style.transition = 'all 0.25s ease';
+                row.style.opacity = '0';
+                row.style.transform = 'translateX(20px)';
+                setTimeout(function() { row.remove(); reindexRows(container); }, 250);
             }
         };
     });
@@ -284,6 +385,7 @@ document.getElementById('addNewRow').addEventListener('click', function() {
         '<div class="col-6"><input type="text" name="chi_tiet['+newLinkIdx+'][noi_dung]" class="form-control form-control-sm" placeholder="Tên hiển thị"></div>' +
         '<div class="col-6"><input type="text" name="chi_tiet['+newLinkIdx+'][url]" class="form-control form-control-sm" placeholder="URL"></div>';
     container.appendChild(div);
+    animateNewRow(div);
     newLinkIdx++;
 });
 
@@ -296,6 +398,7 @@ document.getElementById('addNewTextRow').addEventListener('click', function() {
     div.innerHTML =
         '<div class="col-12"><input type="text" name="chi_tiet['+newTextIdx+'][noi_dung]" class="form-control form-control-sm" placeholder="Nội dung"></div>';
     container.appendChild(div);
+    animateNewRow(div);
     newTextIdx++;
 });
 </script>
