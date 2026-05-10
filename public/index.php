@@ -4,6 +4,8 @@ define('BASE_URL', 'http://localhost/BookTab');
 require_once '../app/controllers/AuthController.php';
 require_once '../app/core/Database.php';
 require_once '../app/controllers/ProductController.php';
+require_once '../app/controllers/CartController.php';
+
 
 $database = new Database();
 $dbConnection = $database->connect();
@@ -39,7 +41,20 @@ if ($action === 'register') {
 } elseif ($action === 'add_review') {
     $productCtrl = new ProductController($dbConnection);
     $productCtrl->handleAddReview(); exit;
+} elseif ($action === 'add_to_cart') {
+    $cartCtrl = new CartController($dbConnection);
+    $cartCtrl->handleAddToCart(); exit;
+} elseif ($action === 'update_cart') {
+    $cartCtrl = new CartController($dbConnection);
+    $cartCtrl->handleUpdateCart(); exit;
+} elseif ($action === 'remove_cart') {
+    $cartCtrl = new CartController($dbConnection);
+    $cartCtrl->handleRemoveFromCart(); exit;
+} elseif ($action === 'checkout') {
+    $orderCtrl = new OrderController($dbConnection);
+    $orderCtrl->handleCheckout(); exit;
 }
+
 
 // Nếu không có action, kiểm tra page
 $page = isset($_GET['page']) ? $_GET['page'] : 'home';
@@ -68,6 +83,16 @@ if ($page === 'products') {
     $productCtrl = new ProductController($dbConnection);
     $productCtrl->showProductDetail(); exit;
 }
+
+// CART MODULE
+if ($page === 'cart') {
+    $cartCtrl = new CartController($dbConnection);
+    $cartCtrl->showCart(); exit;
+} elseif ($page === 'checkout') {
+    $cartCtrl = new CartController($dbConnection);
+    $cartCtrl->showCheckout(); exit;
+}
+
 
 
 // Routing cho các page thường
