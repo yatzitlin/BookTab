@@ -1,4 +1,3 @@
-<?php $contact = $GLOBALS['contact_data'] ?? []; ?>
 <div class="max-w-6xl mx-auto px-4 py-16">
 
     <!-- HEADER -->
@@ -64,7 +63,7 @@
                     <div>
                         <h3 class="font-bold text-lg">Địa chỉ</h3>
                         <p class="text-gray-700">
-                            <?php echo htmlspecialchars($contact['Address'] ?? 'Chưa cập nhật'); ?>
+                            <?php echo htmlspecialchars($contact['address'] ?? 'Chưa cập nhật'); ?>
                         </p>
                     </div>
                 </div>
@@ -76,10 +75,10 @@
                     <div>
                         <h3 class="font-bold text-lg">Hotline</h3>
 
-                        <a href="tel:<?php echo htmlspecialchars($contact['PhoneNumber'] ?? ''); ?>"
+                        <a href="tel:<?php echo htmlspecialchars($contact['hotline'] ?? ''); ?>"
                            class="text-xl font-semibold hover:text-orange-600 transition">
 
-                            <?php echo htmlspecialchars($contact['PhoneNumber'] ?? 'Chưa cập nhật'); ?>
+                            <?php echo htmlspecialchars($contact['hotline'] ?? 'Chưa cập nhật'); ?>
                         </a>
 
                         <p class="text-sm text-gray-500">Hỗ trợ 24/7</p>
@@ -93,10 +92,10 @@
                     <div>
                         <h3 class="font-bold text-lg">Email</h3>
 
-                        <a href="mailto:<?php echo htmlspecialchars($contact['Email'] ?? ''); ?>"
+                        <a href="mailto:<?php echo htmlspecialchars($contact['email'] ?? ''); ?>"
                            class="text-gray-700 hover:text-orange-600 transition">
 
-                            <?php echo htmlspecialchars($contact['Email'] ?? 'Chưa cập nhật'); ?>
+                            <?php echo htmlspecialchars($contact['email'] ?? 'Chưa cập nhật'); ?>
                         </a>
 
                         <p class="text-sm text-green-600">Phản hồi trong 24h</p>

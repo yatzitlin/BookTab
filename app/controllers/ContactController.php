@@ -1,17 +1,26 @@
 <?php
 
+require_once __DIR__ . '/BaseController.php';
+
 class ContactController extends BaseController
 {
-    public function index()
-    {
-        require_once "../app/models/CompanyContactModel.php";
-        
-        $companyContactModel = new CompanyContactModel($this->db);
-        $contact = $companyContactModel->getContactInfo() ?: [];
-        
-        // Make $contact available to the view
-        $GLOBALS['contact_data'] = $contact;
+    private $thongTinModel;
+
+    public function __construct($dbConnection) {
+        parent::__construct($dbConnection);
+        $this->thongTinModel = $this->loadModel('ThongTinModel');
     }
+
+    public function getContactInfo() {
+        $result = [];
+
+        $result['hotline'] = $this->thongTinModel->getFirstNoiDung('phone');
+        $result['email']   = $this->thongTinModel->getFirstNoiDung('email');
+        $result['address'] = $this->thongTinModel->getFirstNoiDung('address');
+
+        return $result;
+    }
+
 
     public function send()
     {
