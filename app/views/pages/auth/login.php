@@ -1,9 +1,3 @@
-<?php
-/**
- * Login.php - Form Đăng nhập
- */
-?>
-
 <div class="max-w-md mx-auto my-12">
     <div class="bg-white rounded-lg shadow-lg p-8 border border-gray-200">
         <h1 class="text-3xl font-bold text-gray-900 mb-2 text-center">Đăng nhập</h1>
@@ -19,7 +13,13 @@
             <!-- Unauthorized Access Message -->
             <?php if (!empty($_GET['error']) && $_GET['error'] === 'unauthorized'): ?>
                 <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded-lg mb-6">
-                    <p>! Bạn không có quyền truy cập trang Admin. Vui lòng đăng nhập bằng tài khoản Admin.</p>
+                    <p>Bạn không có quyền truy cập trang Admin. Vui lòng đăng nhập bằng tài khoản Admin.</p>
+                </div>
+            <?php endif; ?>
+
+            <?php if (!empty($_GET['error']) && $_GET['error'] === 'qna_login_required'): ?>
+                <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded-lg mb-6">
+                    <p>Bạn cần đăng nhập để đặt câu hỏi.</p>
                 </div>
             <?php endif; ?>
 

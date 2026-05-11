@@ -9,7 +9,7 @@ USE BookTab;
 -- =========================================================
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS chi_tiet_don_hang, don_hang, chi_tiet_gio_hang, gio_hang, danh_gia, anh_san_pham, san_pham, loai_san_pham,
-                     cau_tra_loi, cau_hoi, loai_cau_hoi, binh_luan, bai_viet, loai_bai_viet, lien_he,
+                     cau_tra_loi, cau_hoi, loai_cau_hoi, binh_luan, bai_viet, loai_bai_viet, thong_tin, lien_he,
                      member, `rank`, administrator, nguoi_dung;
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -67,22 +67,28 @@ CREATE TABLE lien_he (
 -- =========================================================
 -- 3. Nhóm bài viết
 -- =========================================================
+
+-- Bảng Loại bài viết (Danh mục)
 CREATE TABLE loai_bai_viet (
     ma_loai BIGINT AUTO_INCREMENT PRIMARY KEY,
     ten_loai VARCHAR(255) NOT NULL,
     slug VARCHAR(255) UNIQUE,
-    trang_thai VARCHAR(50),
+    trang_thai VARCHAR(50) DEFAULT 'active',
     loai_cha BIGINT,
     FOREIGN KEY (loai_cha) REFERENCES loai_bai_viet(ma_loai) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- Bảng Bài viết
 CREATE TABLE bai_viet (
     ma_bai_viet BIGINT AUTO_INCREMENT PRIMARY KEY,
     tieu_de VARCHAR(255) NOT NULL,
+    tom_tat TEXT,
     noi_dung TEXT NOT NULL,
     thumbnail_url VARCHAR(500),
-    trang_thai VARCHAR(50),
+    luot_xem INT DEFAULT 0,
+    trang_thai VARCHAR(50) DEFAULT 'ban_nhap',
     ngay_dang DATETIME DEFAULT CURRENT_TIMESTAMP,
+    ngay_cap_nhat DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     slug VARCHAR(255) UNIQUE,
     ma_loai BIGINT,
     administrator_userid BIGINT NOT NULL,
@@ -90,12 +96,29 @@ CREATE TABLE bai_viet (
     FOREIGN KEY (administrator_userid) REFERENCES administrator(userid) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE thong_tin (
+    ma_thong_tin BIGINT AUTO_INCREMENT PRIMARY KEY,
+    loai_thong_tin VARCHAR(50) NOT NULL,
+    type ENUM('text','link') NOT NULL DEFAULT 'text',
+    ngay_tao DATETIME DEFAULT CURRENT_TIMESTAMP,
+    ngay_cap_nhat DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE thong_tin_chi_tiet (
+    ma_chi_tiet BIGINT AUTO_INCREMENT PRIMARY KEY,
+    ma_thong_tin BIGINT NOT NULL,
+    noi_dung TEXT NOT NULL,
+    url VARCHAR(500) DEFAULT NULL,
+    FOREIGN KEY (ma_thong_tin) REFERENCES thong_tin(ma_thong_tin) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Bảng Bình luận
 CREATE TABLE binh_luan (
     ma_binh_luan BIGINT AUTO_INCREMENT PRIMARY KEY,
     noi_dung TEXT NOT NULL,
-    ngay_sau DATETIME DEFAULT CURRENT_TIMESTAMP,
+    ngay_tao DATETIME DEFAULT CURRENT_TIMESTAMP,
     luot_thich INT DEFAULT 0,
-    trang_thai VARCHAR(50),
+    trang_thai VARCHAR(50) DEFAULT 'ban_nhap',
     url_anh VARCHAR(500),
     ma_bai_viet BIGINT NOT NULL,
     userid BIGINT NOT NULL,
@@ -107,17 +130,20 @@ CREATE TABLE binh_luan (
 
 CREATE TABLE loai_cau_hoi (
     ma_loai BIGINT AUTO_INCREMENT PRIMARY KEY,
-    ten_loai VARCHAR(255) NOT NULL
+    ten_loai VARCHAR(255) NOT NULL UNIQUE,
+    so_thu_tu INT NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE cau_hoi (
     ma_cau_hoi BIGINT AUTO_INCREMENT PRIMARY KEY,
     ten_cau_hoi VARCHAR(255) NOT NULL,
-    is_active BOOLEAN DEFAULT TRUE,
+    trang_thai ENUM('cho_duyet','chua_tra_loi','da_tra_loi','da_an') NOT NULL DEFAULT 'chua_tra_loi',
+    is_faq ENUM('Yes','No') NOT NULL DEFAULT 'No',
     ma_loai BIGINT,
     userid BIGINT NOT NULL,
+    ngay_tao DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (ma_loai) REFERENCES loai_cau_hoi(ma_loai) ON DELETE SET NULL,
-    FOREIGN KEY (userid) REFERENCES administrator(userid) ON DELETE CASCADE
+    FOREIGN KEY (userid) REFERENCES nguoi_dung(userid) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE cau_tra_loi (
@@ -129,6 +155,26 @@ CREATE TABLE cau_tra_loi (
     FOREIGN KEY (ma_cau_hoi) REFERENCES cau_hoi(ma_cau_hoi) ON DELETE CASCADE,
     FOREIGN KEY (administrator_userid) REFERENCES administrator(userid) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DELIMITER $$
+CREATE TRIGGER trg_after_insert_cau_tra_loi
+AFTER INSERT ON cau_tra_loi
+FOR EACH ROW
+BEGIN
+    UPDATE cau_hoi SET trang_thai = 'da_tra_loi'
+    WHERE ma_cau_hoi = NEW.ma_cau_hoi AND trang_thai NOT IN ('da_an');
+END$$
+
+CREATE TRIGGER trg_after_delete_cau_tra_loi
+AFTER DELETE ON cau_tra_loi
+FOR EACH ROW
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM cau_tra_loi WHERE ma_cau_hoi = OLD.ma_cau_hoi) THEN
+        UPDATE cau_hoi SET trang_thai = 'chua_tra_loi'
+        WHERE ma_cau_hoi = OLD.ma_cau_hoi AND trang_thai = 'da_tra_loi';
+    END IF;
+END$$
+DELIMITER ;
 
 -- =========================================================
 -- 4. Nhóm sản phẩm
@@ -209,4 +255,22 @@ CREATE TABLE chi_tiet_don_hang (
     PRIMARY KEY (ma_don, ma_san_pham),
     FOREIGN KEY (ma_don) REFERENCES don_hang(ma_don) ON DELETE CASCADE,
     FOREIGN KEY (ma_san_pham) REFERENCES san_pham(ma_san_pham) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `anh` (
+    `ma_anh` BIGINT AUTO_INCREMENT PRIMARY KEY,
+    `url_anh` VARCHAR(500) NOT NULL,
+    `ten_file` VARCHAR(255) DEFAULT NULL,
+    `so_thu_tu` INT DEFAULT 0,
+    `ngay_tao` DATETIME DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `anh_cau_hoi` (
+    `ma_cau_hoi` BIGINT NOT NULL,
+    `ma_anh` BIGINT NOT NULL,
+    `so_thu_tu` INT DEFAULT 0,
+    PRIMARY KEY (`ma_cau_hoi`, `ma_anh`),
+    KEY `idx_acq_ma_anh` (`ma_anh`),
+    CONSTRAINT `fk_anh_cau_hoi_cau_hoi` FOREIGN KEY (`ma_cau_hoi`) REFERENCES `cau_hoi`(`ma_cau_hoi`) ON DELETE CASCADE,
+    CONSTRAINT `fk_anh_cau_hoi_anh` FOREIGN KEY (`ma_anh`) REFERENCES `anh`(`ma_anh`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

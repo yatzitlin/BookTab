@@ -1,9 +1,3 @@
-<?php
-/**
- * 404 Error Page
- */
-?>
-
 <div class="flex flex-col items-center justify-center min-h-96 text-center py-20">
     <!-- 404 Icon -->
     <div class="mb-8">

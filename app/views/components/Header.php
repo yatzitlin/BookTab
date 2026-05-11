@@ -17,13 +17,17 @@ $current_page = isset($_GET['page']) ? $_GET['page'] : 'home';
                    class="<?php echo $current_page === 'home' ? 'text-red-500 font-bold' : 'text-gray-600 hover:text-gray-900'; ?> transition">
                     Trang chủ
                 </a>
+                <a href="<?php echo BASE_URL; ?>/public/index.php?page=about" 
+                   class="<?php echo $current_page === 'about' ? 'text-red-500 font-bold' : 'text-gray-600 hover:text-gray-900'; ?> transition">
+                    Giới thiệu
+                </a>
                 <a href="<?php echo BASE_URL; ?>/public/index.php?page=products" 
                    class="<?php echo $current_page === 'products' ? 'text-red-500 font-bold' : 'text-gray-600 hover:text-gray-900'; ?> transition">
                     Sản phẩm
                 </a>
-                <a href="<?php echo BASE_URL; ?>/public/index.php?page=news" 
+                <a href="<?php echo BASE_URL; ?>/public/bai-viet" 
                    class="<?php echo $current_page === 'news' ? 'text-red-500 font-bold' : 'text-gray-600 hover:text-gray-900'; ?> transition">
-                    Tin tức
+                    Bài viết
                 </a>
                 <a href="<?php echo BASE_URL; ?>/public/index.php?page=qna" 
                    class="<?php echo $current_page === 'qna' ? 'text-red-500 font-bold' : 'text-gray-600 hover:text-gray-900'; ?> transition">
@@ -43,12 +47,13 @@ $current_page = isset($_GET['page']) ? $_GET['page'] : 'home';
                 </button>
 
                 <!-- Shopping Cart -->
-                <button class="relative text-gray-600 hover:text-gray-900 text-lg">
+                <a href="<?php echo BASE_URL; ?>/public/index.php?page=cart" class="relative text-gray-600 hover:text-gray-900 text-lg">
                     <i class="fas fa-shopping-cart"></i>
+                    <!-- tạm thời để số 0-->
                     <span id="cartCount" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
                         0
                     </span>
-                </button>
+                </a>
 
                 <!-- User Menu -->
                 <div class="relative group">
@@ -87,6 +92,7 @@ $current_page = isset($_GET['page']) ? $_GET['page'] : 'home';
         <!-- Mobile Navigation Menu -->
         <nav id="navLinks" class="hidden md:hidden pb-4 space-y-2 border-t border-gray-200">
             <a href="<?php echo BASE_URL; ?>/public/index.php?page=home" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Trang chủ</a>
+            <a href="<?php echo BASE_URL; ?>/public/index.php?page=about" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Giới thiệu</a>
             <a href="<?php echo BASE_URL; ?>/public/index.php?page=products" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Sản phẩm</a>
             <a href="<?php echo BASE_URL; ?>/public/index.php?page=news" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Tin tức</a>
             <a href="<?php echo BASE_URL; ?>/public/index.php?page=qna" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Hỏi đáp</a>

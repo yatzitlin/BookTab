@@ -59,11 +59,14 @@ $currentAction = isset($_GET['admin_action']) ? $_GET['admin_action'] : 'dashboa
 
                     <li class="<?php echo ($currentAction == 'qna') ? 'active' : ''; ?>">
                         <a href="javascript:void(0)" aria-expanded="<?php echo ($currentAction == 'qna') ? 'true' : 'false'; ?>">
-                            <i class="ti-layout-sidebar-right"></i><span>QnA</span>
+                            <i class="ti-layout-sidebar-right"></i><span>Hỏi đáp</span>
                         </a>
                         <ul class="collapse <?php echo ($currentAction == 'qna') ? 'in show' : ''; ?>">
-                            <li class="<?php echo ($currentAction == 'qna') ? 'active' : ''; ?>">
-                                <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna">AdminQnA</a>
+                            <li>
+                                <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna&act=questions">Câu hỏi</a>
+                            </li>
+                            <li>
+                                <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna&act=faq">FAQ</a>
                             </li>
                         </ul>
                     </li>
@@ -77,6 +80,7 @@ $currentAction = isset($_GET['admin_action']) ? $_GET['admin_action'] : 'dashboa
                                 <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=contact">AdminContact</a>
                             </li>
                         </ul>
+
                     </li>
                 </ul>
             </nav>

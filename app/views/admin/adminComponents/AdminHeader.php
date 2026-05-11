@@ -34,7 +34,21 @@ $adminPageBreadcrumb = $adminPageBreadcrumb ?? $adminPageTitle;
                 <h1 class="page-title float-start"><?php echo htmlspecialchars($adminPageHeading, ENT_QUOTES, 'UTF-8'); ?></h1>
                 <ul class="breadcrumbs float-start">
                     <li><a href="<?php echo BASE_URL; ?>/public/index.php?page=admin">Home</a></li>
-                    <li><span><?php echo htmlspecialchars($adminPageBreadcrumb, ENT_QUOTES, 'UTF-8'); ?></span></li>
+                    <?php if (is_array($adminPageBreadcrumb)): ?>
+                        <?php $bcCount = count($adminPageBreadcrumb); ?>
+                        <?php foreach ($adminPageBreadcrumb as $bcIdx => $bcItem): ?>
+                            <?php $isLast = ($bcIdx === $bcCount - 1); ?>
+                            <li>
+                                <?php if (!$isLast && !empty($bcItem['url'])): ?>
+                                    <a href="<?php echo htmlspecialchars($bcItem['url'], ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($bcItem['label'], ENT_QUOTES, 'UTF-8'); ?></a>
+                                <?php else: ?>
+                                    <span><?php echo htmlspecialchars($bcItem['label'], ENT_QUOTES, 'UTF-8'); ?></span>
+                                <?php endif; ?>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <li><span><?php echo htmlspecialchars($adminPageBreadcrumb, ENT_QUOTES, 'UTF-8'); ?></span></li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>

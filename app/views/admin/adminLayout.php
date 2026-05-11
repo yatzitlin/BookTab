@@ -14,13 +14,17 @@ $adminPages = array(
     'home' => array('document_title' => 'AdminHome', 'heading' => 'AdminHome', 'breadcrumb' => 'AdminHome', 'file' => '/adminPages/AdminHome.php'),
     'products' => array('document_title' => 'AdminProducts', 'heading' => 'AdminProducts', 'breadcrumb' => 'AdminProducts', 'file' => '/adminPages/AdminProducts.php'),
     'news' => array('document_title' => 'AdminNews', 'heading' => 'AdminNews', 'breadcrumb' => 'AdminNews', 'file' => '/adminPages/AdminNews.php'),
-    'qna' => array('document_title' => 'AdminQnA', 'heading' => 'AdminQnA', 'breadcrumb' => 'AdminQnA', 'file' => '/adminPages/AdminQnA.php'),
+    'about' => array('document_title' => 'Giới thiệu', 'heading' => 'Quản lý Giới thiệu', 'breadcrumb' => [['label'=>'Giới thiệu','url'=>BASE_URL.'/public/index.php?page=about']], 'file' => '/adminPages/AdminAbout.php'),
+    'qna' => array('document_title' => 'Hỏi đáp', 'heading' => 'Quản lý Hỏi đáp', 'breadcrumb' => [['label'=>'Hỏi đáp']], 'file' => '/adminPages/AdminQnA.php'),
+    'info' => array('document_title' => 'Thông tin', 'heading' => 'Chỉnh sửa thông tin trang web', 'breadcrumb' => [['label'=>'Thông tin']], 'file' => '/adminPages/AdminInfo.php'),
     'contact' => array('document_title' => 'AdminContact', 'heading' => 'AdminContact', 'breadcrumb' => 'AdminContact', 'file' => '/adminPages/AdminContact.php')
 );
 $adminPage = isset($adminPages[$admin_action]) ? $adminPages[$admin_action] : $adminPages['dashboard'];
 $adminPageTitle = $adminPage['document_title'];
 $adminPageHeading = $adminPage['heading'];
 $adminPageBreadcrumb = $adminPage['breadcrumb'];
+// Cho phép các trang con override breadcrumb trước khi Header được include
+$adminPageBreadcrumbOverride = null;
 ?>
 <!doctype html>
 <html lang="en">
@@ -54,8 +58,18 @@ $adminPageBreadcrumb = $adminPage['breadcrumb'];
         <?php include __DIR__ . '/adminComponents/AdminSidebar.php'; ?>
 
         <div class="main-content">
+            <?php
+            // Include trang con trước để nó có thể set $adminPageBreadcrumbOverride
+            ob_start();
+            include __DIR__ . $adminPage['file'];
+            $pageContent = ob_get_clean();
+            // Áp dụng override nếu có
+            if (!empty($adminPageBreadcrumbOverride)) {
+                $adminPageBreadcrumb = $adminPageBreadcrumbOverride;
+            }
+            ?>
             <?php include __DIR__ . '/adminComponents/AdminHeader.php'; ?>
-            <?php include __DIR__ . $adminPage['file']; ?>
+            <?php echo $pageContent; ?>
         </div>
 
         <?php include __DIR__ . '/adminComponents/AdminFooter.php'; ?>

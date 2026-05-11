@@ -20,9 +20,9 @@ class AuthController extends BaseController{
 
     public function showRegisterForm() {
         $errors = $this->errors;
-        $view_content = dirname(__FILE__) . '/../views/pages/auth/register.php';
+        $view_content = __DIR__ . '/../views/pages/auth/register.php';
         $pageTitle = 'Đăng ký';
-        require_once dirname(__FILE__) . '/../views/template.php';
+        require_once __DIR__ . '/../views/template.php';
     }
 
     public function handleRegister() {
@@ -35,9 +35,9 @@ class AuthController extends BaseController{
         if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
             $this->errors[] = 'CSRF token không hợp lệ. Vui lòng thử lại.';
             $errors = $this->errors;
-            $view_content = dirname(__FILE__) . '/../views/pages/auth/register.php';
+            $view_content = __DIR__ . '/../views/pages/auth/register.php';
             $pageTitle = 'Đăng ký';
-            require_once dirname(__FILE__) . '/../views/template.php';
+            require_once __DIR__ . '/../views/template.php';
             return;
         }
 
@@ -59,9 +59,9 @@ class AuthController extends BaseController{
 
         if (!empty($this->errors)) {
             $errors = $this->errors;
-            $view_content = dirname(__FILE__) . '/../views/pages/auth/register.php';
+            $view_content = __DIR__ . '/../views/pages/auth/register.php';
             $pageTitle = 'Đăng ký';
-            require_once dirname(__FILE__) . '/../views/template.php';
+            require_once __DIR__ . '/../views/template.php';
             return;
         }
 
@@ -75,9 +75,9 @@ class AuthController extends BaseController{
         } else {
             $this->errors[] = $result['message'];
             $errors = $this->errors;
-            $view_content = dirname(__FILE__) . '/../views/pages/auth/register.php';
+            $view_content = __DIR__ . '/../views/pages/auth/register.php';
             $pageTitle = 'Đăng ký';
-            require_once dirname(__FILE__) . '/../views/template.php';
+            require_once __DIR__ . '/../views/template.php';
         }
     }
     
@@ -85,9 +85,9 @@ class AuthController extends BaseController{
     
     public function showLoginForm() {
         $errors = $this->errors;
-        $view_content = dirname(__FILE__) . '/../views/pages/auth/login.php';
+        $view_content = __DIR__ . '/../views/pages/auth/login.php';
         $pageTitle = 'Đăng nhập';
-        require_once dirname(__FILE__) . '/../views/template.php';
+        require_once __DIR__ . '/../views/template.php';
     }
 
     public function handleLogin() {
@@ -100,9 +100,9 @@ class AuthController extends BaseController{
         if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
             $this->errors[] = 'CSRF token không hợp lệ. Vui lòng thử lại.';
             $errors = $this->errors;
-            $view_content = dirname(__FILE__) . '/../views/pages/auth/login.php';
+            $view_content = __DIR__ . '/../views/pages/auth/login.php';
             $pageTitle = 'Đăng nhập';
-            require_once dirname(__FILE__) . '/../views/template.php';
+            require_once __DIR__ . '/../views/template.php';
             return;
         }
 
@@ -116,9 +116,9 @@ class AuthController extends BaseController{
 
         if (!empty($this->errors)) {
             $errors = $this->errors;
-            $view_content = dirname(__FILE__) . '/../views/pages/auth/login.php';
+            $view_content = __DIR__ . '/../views/pages/auth/login.php';
             $pageTitle = 'Đăng nhập';
-            require_once dirname(__FILE__) . '/../views/template.php';
+            require_once __DIR__ . '/../views/template.php';
             return;
         }
 
@@ -152,9 +152,9 @@ class AuthController extends BaseController{
         } else {
             $this->errors[] = $result['message'];
             $errors = $this->errors;
-            $view_content = dirname(__FILE__) . '/../views/pages/auth/login.php';
+            $view_content = __DIR__ . '/../views/pages/auth/login.php';
             $pageTitle = 'Đăng nhập';
-            require_once dirname(__FILE__) . '/../views/template.php';
+            require_once __DIR__ . '/../views/template.php';
         }
     }
 
