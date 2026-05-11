@@ -24,34 +24,82 @@ class UserController
      */
     public function updateProfile()
     {
+        // Kiểm tra đăng nhập
         if (!isset($_SESSION['userid'])) {
+
             header("Location: index.php?page=login");
+            exit;
+        }
+
+        // Chỉ cho phép POST
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+
+            header("Location: index.php?page=profile");
             exit;
         }
 
         $userid = $_SESSION['userid'];
 
+        // Lấy dữ liệu
         $ho = trim($_POST['ho_va_ten_dem'] ?? '');
         $ten = trim($_POST['ten'] ?? '');
         $phone = trim($_POST['so_dien_thoai'] ?? '');
+        $email = trim($_POST['email'] ?? '');
 
-        if ($ho === '' || $ten === '' || $phone === '') {
+        // Validate rỗng
+        if (
+            $ho === '' ||
+            $ten === '' ||
+            $phone === '' ||
+            $email === ''
+        ) {
+
             $_SESSION['error'] = "Không được để trống dữ liệu";
-            header("Location: index.php?page=account-information");
+            header("Location: index.php?page=profile");
             exit;
         }
 
+        // Validate họ tên
+        if (strlen($ho) > 50 || strlen($ten) > 30) {
+
+            $_SESSION['error'] = "Họ tên quá dài";
+            header("Location: index.php?page=profile");
+            exit;
+        }
+
+        // Validate số điện thoại
         if (!preg_match('/^[0-9]{9,11}$/', $phone)) {
+
             $_SESSION['error'] = "Số điện thoại không hợp lệ";
-            header("Location: index.php?page=account-information");
+            header("Location: index.php?page=profile");
             exit;
         }
 
-        $result = $this->userModel->updateUser($userid, $ho, $ten, $phone);
+        // Validate email
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
-        $_SESSION['success'] = $result ? "Cập nhật thành công" : "Cập nhật thất bại";
+            $_SESSION['error'] = "Email không hợp lệ";
+            header("Location: index.php?page=profile");
+            exit;
+        }
 
-        header("Location: index.php?page=account-information");
+        // Gọi model
+        $result = $this->userModel->updateUser(
+            $userid,
+            $ho,
+            $ten,
+            $phone,
+            $email
+        );
+
+        // Kết quả
+        if ($result) {
+            $_SESSION['success'] = "Cập nhật thông tin thành công";
+        } else {
+            $_SESSION['error'] = $result['message'];
+        }
+
+        header("Location: index.php?page=profile");
         exit;
     }
 
@@ -66,8 +114,7 @@ class UserController
         }
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header("Location: index.php?page=change-password");
-            exit;
+            return;
         }
 
         $userid = $_SESSION['userid'];
@@ -76,28 +123,46 @@ class UserController
         $new = trim($_POST['new_password'] ?? '');
         $confirm = trim($_POST['confirm_password'] ?? '');
 
+        // Kiểm tra rỗng
         if ($old === '' || $new === '' || $confirm === '') {
+
             $_SESSION['error'] = "Vui lòng nhập đầy đủ thông tin";
+
             header("Location: index.php?page=change-password");
             exit;
         }
 
+        // Xác nhận mật khẩu
         if ($new !== $confirm) {
+
             $_SESSION['error'] = "Mật khẩu xác nhận không khớp";
+
             header("Location: index.php?page=change-password");
             exit;
         }
 
-        $result = $this->userModel->changePassword($userid, $old, $new);
+        // Gọi model
+        $result = $this->userModel->changePassword(
+            $userid,
+            $old,
+            $new
+        );
 
-        $_SESSION['success'] = $result['success']
-            ? "Đổi mật khẩu thành công"
-            : $result['message'];
+        // Nếu lỗi -> chỉ hiện 1 lỗi
+        if (!$result['success']) {
 
-        header("Location: index.php?page=change-password");
+            $_SESSION['error'] = $result['message'];
+
+            header("Location: index.php?page=change-password");
+            exit;
+        }
+
+        // Thành công
+        $_SESSION['success'] = "Đổi mật khẩu thành công";
+
+        header("Location: index.php?page=profile");
         exit;
     }
-
     /**
      * UPDATE AVATAR
      */

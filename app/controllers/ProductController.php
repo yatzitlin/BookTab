@@ -111,6 +111,14 @@ class ProductController extends BaseController {
         exit;
     }
 
+    public function showHome($quantity=4) {
+
+        $featuredProducts = $this->productModel->getFeaturedProducts($quantity);
+        $view_content = dirname(__FILE__) . '/../views/pages/Home.php';
+        $pageTitle = 'Trang chủ';
+        require dirname(__FILE__) . '/../views/template.php';
+    }
+
 }
 
 ?>

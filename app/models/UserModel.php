@@ -144,7 +144,7 @@ class UserModel {
     // Lấy thông tin User
     public function getUserById($userid) {
         try {
-            $sql = "SELECT userid, username, ho_va_ten_dem, ten, so_dien_thoai, trang_thai, ngay_tao, avatar_url FROM nguoi_dung WHERE userid = ? LIMIT 1";
+            $sql = "SELECT userid, username, ho_va_ten_dem, ten, so_dien_thoai, trang_thai, email, ngay_tao, avatar_url FROM nguoi_dung WHERE userid = ? LIMIT 1";
             $stmt = $this->db->prepare($sql);
             $stmt->execute([$userid]);
             return $stmt->fetch();
@@ -181,11 +181,11 @@ class UserModel {
     }
 
     // Update thông tin User
-    public function updateUser($userid, $ho_va_ten_dem, $ten, $so_dien_thoai) {
+    public function updateUser($userid, $ho_va_ten_dem, $ten, $so_dien_thoai, $email) {
         try {
-            $sql = "UPDATE nguoi_dung SET ho_va_ten_dem = ?, ten = ?, so_dien_thoai = ? WHERE userid = ?";
+            $sql = "UPDATE nguoi_dung SET ho_va_ten_dem = ?, ten = ?, so_dien_thoai = ?, email = ? WHERE userid = ?";
             $stmt = $this->db->prepare($sql);
-            return $stmt->execute([$ho_va_ten_dem, $ten, $so_dien_thoai, $userid]);
+            return $stmt->execute([$ho_va_ten_dem, $ten, $so_dien_thoai, $email, $userid]);
         } catch (Exception $e) {
             return false;
         }
