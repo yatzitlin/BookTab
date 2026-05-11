@@ -101,8 +101,6 @@ BookTab/
 │   │           ├── AdminAbout.php      # Quản lý Giới thiệu
 │   │           ├── AdminComment.php    # Quản lý bình luận
 │   │           ├── AdminContact.php    # Quản lý liên hệ
-│   │           ├── AdminDashboard.php  # Dashboard
-│   │           ├── AdminHome.php       # Quản lý trang chủ
 │   │           ├── AdminInfo.php       # Quản lý thông tin công ty
 │   │           ├── AdminNews.php       # Quản lý tin tức
 │   │           ├── AdminOrders.php     # Quản lý đơn hàng
