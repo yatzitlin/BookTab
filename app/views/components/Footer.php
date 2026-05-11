@@ -28,7 +28,7 @@
                 <ul class="space-y-2">
                     <li><a href="<?php echo BASE_URL; ?>/public/index.php?page=home" class="text-gray-400 hover:text-red-500 text-sm transition">Trang chủ</a></li>
                     <li><a href="<?php echo BASE_URL; ?>/public/index.php?page=products" class="text-gray-400 hover:text-red-500 text-sm transition">Cửa hàng</a></li>
-                    <li><a href="<?php echo BASE_URL; ?>/public/index.php?page=news" class="text-gray-400 hover:text-red-500 text-sm transition">Tin tức</a></li>
+                    <li><a href="<?php echo BASE_URL; ?>/public/bai-viet" class="text-gray-400 hover:text-red-500 text-sm transition">Bài viết</a></li>
                     <li><a href="<?php echo BASE_URL; ?>/public/index.php?page=qna" class="text-gray-400 hover:text-red-500 text-sm transition">Hỏi/Đáp</a></li>
                     <li><a href="<?php echo BASE_URL; ?>/public/index.php?page=contact" class="text-gray-400 hover:text-red-500 text-sm transition">Liên hệ</a></li>
                 </ul>

@@ -34,7 +34,8 @@ if (session_status() === PHP_SESSION_NONE) {
     <?php include __DIR__ . '/components/Header.php'; ?>
 
     <!-- MAIN CONTENT -->
-    <main class="max-w-6xl mx-auto px-4 lg:px-8 py-8 min-h-screen">
+    <main class="w-full mx-auto px-10 lg:px-20 py-8 min-h-screen">
+    <!-- <main class="max-w-screen mx-auto py-8 min-h-screen"> -->
         <?php 
             if (isset($view_content) && file_exists($view_content)) {
                 include $view_content;

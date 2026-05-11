@@ -1,0 +1,20 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Bỏ qua nếu là file hoặc thư mục vật lý có thật (ảnh, css, js...)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # 1. Trang chủ tin tức: /public/bai-viet
+    RewriteRule ^bai-viet/?$ index.php?page=news&news_action=index [L,QSA]
+
+    # 2. Trang danh mục: /public/danh-muc/slug-danh-muc
+    RewriteRule ^danh-muc/([a-zA-Z0-9-]+)/?$ index.php?page=news&news_action=list&type=category&slug=$1 [L,QSA]
+
+    # 3. Trang tìm kiếm: /public/tim-kiem-tin-tuc
+    RewriteRule ^tim-kiem-tin-tuc/?$ index.php?page=news&news_action=list&type=search [L,QSA]
+
+    # 4. Trang chi tiết: /public/bai-viet/slug-bai-viet
+    RewriteRule ^bai-viet/([a-zA-Z0-9-]+)/?$ index.php?page=news&news_action=detail&slug=$1 [L,QSA]
+
+</IfModule>
