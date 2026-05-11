@@ -137,8 +137,8 @@ BookTab/
 ```
 
 ### 📸 Thư mục Upload (Hình ảnh)
-- **`/public/upload/`**: Chứa các hình ảnh được tải lên từ server (ảnh bài viết, ảnh sản phẩm)
-- **`/public/uploads/`**: Chứa các hình ảnh được tải lên từ server (avatar, ảnh nội dung)
+- **`/public/upload/`**: Chứa các hình ảnh được tải lên server (ảnh bài viết, ảnh nội dung, câu hỏi)
+- **`/public/uploads/`**: Chứa các hình ảnh được tải lên server (avatar, ảnh sản phẩm)
   > Cả hai thư mục đều được dùng để lưu trữ hình ảnh do người dùng hoặc Admin tải lên
 
 ## 👥 Danh sách thành viên và Phân công
