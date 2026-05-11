@@ -46,6 +46,17 @@ $currentAction = isset($_GET['admin_action']) ? $_GET['admin_action'] : 'dashboa
                         </ul>
                     </li>
 
+                    <li class="<?php echo ($currentAction == 'orders') ? 'active' : ''; ?>">
+                        <a href="javascript:void(0)" aria-expanded="<?php echo ($currentAction == 'orders') ? 'true' : 'false'; ?>">
+                            <i class="ti-shopping-cart"></i><span>Orders</span>
+                        </a>
+                        <ul class="collapse <?php echo ($currentAction == 'orders') ? 'in show' : ''; ?>">
+                            <li class="<?php echo ($currentAction == 'orders') ? 'active' : ''; ?>">
+                                <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=orders">AdminOrders</a>
+                            </li>
+                        </ul>
+                    </li>
+
                     <li class="<?php echo ($currentAction == 'news') ? 'active' : ''; ?>">
                         <a href="javascript:void(0)" aria-expanded="<?php echo ($currentAction == 'news') ? 'true' : 'false'; ?>">
                             <i class="ti-widget"></i><span>News</span>

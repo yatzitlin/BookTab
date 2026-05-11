@@ -7,7 +7,8 @@ $adminPages = array(
     'products' => array('document_title' => 'AdminProducts', 'heading' => 'AdminProducts', 'breadcrumb' => 'AdminProducts', 'file' => '/adminPages/AdminProducts.php'),
     'news' => array('document_title' => 'AdminNews', 'heading' => 'AdminNews', 'breadcrumb' => 'AdminNews', 'file' => '/adminPages/AdminNews.php'),
     'qna' => array('document_title' => 'AdminQnA', 'heading' => 'AdminQnA', 'breadcrumb' => 'AdminQnA', 'file' => '/adminPages/AdminQnA.php'),
-    'contact' => array('document_title' => 'AdminContact', 'heading' => 'AdminContact', 'breadcrumb' => 'AdminContact', 'file' => '/adminPages/AdminContact.php')
+    'contact' => array('document_title' => 'AdminContact', 'heading' => 'AdminContact', 'breadcrumb' => 'AdminContact', 'file' => '/adminPages/AdminContact.php'),
+    'orders' => array('document_title' => 'AdminOrders', 'heading' => 'AdminOrders', 'breadcrumb' => 'AdminOrders', 'file' => '/adminPages/AdminOrders.php')
 );
 $adminPage = isset($adminPages[$admin_action]) ? $adminPages[$admin_action] : $adminPages['dashboard'];
 $adminPageTitle = $adminPage['document_title'];
