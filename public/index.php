@@ -77,9 +77,20 @@ if ($page === 'login') {
 // Routing cho các page thường
 switch ($page) {
     case 'home':
-        // require_once '../app/controllers/HomeController.php';
+        $productCtrl = new ProductController($dbConnection);
+        $featuredProducts = $productCtrl->showHome();
         $view_content = '../app/views/pages/Home.php';
         $pageTitle = 'Trang chủ';
+<<<<<<< Updated upstream
+=======
+
+    break;
+    case 'about':
+        $aboutController = new AboutController($dbConnection);
+        $aboutPage = $aboutController->getAboutPage();
+        $view_content = '../app/views/pages/About.php';
+        $pageTitle = 'Giới thiệu';
+>>>>>>> Stashed changes
         break;
     case 'products':
         $view_content = '../app/views/pages/Products.php';
