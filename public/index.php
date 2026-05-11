@@ -92,7 +92,14 @@ if ($page === 'cart') {
 } elseif ($page === 'checkout') {
     $cartCtrl = new CartController($dbConnection);
     $cartCtrl->showCheckout(); exit;
+} elseif ($action === 'admin_product') {
+    $productCtrl = new ProductController($dbConnection);
+    $productCtrl->handleAdminProductAction(); exit;
+} elseif ($action === 'admin_order') {
+    $orderCtrl = new OrderController($dbConnection);
+    $orderCtrl->handleUpdateOrderStatus(); exit;
 }
+
 
 // ORDER MODULE
 if ($page === 'orders') {
