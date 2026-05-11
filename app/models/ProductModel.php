@@ -212,27 +212,20 @@ class ProductModel {
 
         $sql = "SELECT sp.*,
                 (SELECT url_anh 
-                FROM anh_san_pham 
-                WHERE ma_san_pham = sp.ma_san_pham 
-                AND is_primary = 1 
+                FROM anh_san_pham
+                WHERE ma_san_pham = sp.ma_san_pham
+                AND is_primary = 1
                 LIMIT 1) as anh_chinh
-                
                 FROM san_pham sp
-                
                 WHERE sp.is_active = 1
-                
                 ORDER BY sp.ma_san_pham DESC
-                
                 LIMIT ?";
-
         $stmt = $this->db->prepare($sql);
-
         $stmt->bindValue(1, (int)$limit, PDO::PARAM_INT);
-
         $stmt->execute();
-
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+}
+
 
 }
 ?>
