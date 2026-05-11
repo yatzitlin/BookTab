@@ -49,8 +49,7 @@ BookTab/
 │   │   ├── AdminController.php         # Trang chủ admin
 │   │   ├── AdminNewsController.php     # Quản lý tin tức (CRUD)
 │   │   ├── AdminUserController.php     # Quản lý người dùng
-│   │   ├── AdminCommentController.php  # Quản lý bình luận
-│   │   └── CompanyContact.php          # Thông tin công ty
+│   │   └── AdminCommentController.php  # Quản lý bình luận
 │   │
 │   ├── models/                         # Các Model (tương tác với CSDL)
 │   │   ├── UserModel.php               # Người dùng, đăng ký, đăng nhập
@@ -63,7 +62,6 @@ BookTab/
 │   │   ├── NewsCategoryModel.php       # Danh mục tin tức
 │   │   ├── QnAModel.php                # Hỏi & Đáp
 │   │   ├── ContactModel.php            # Liên hệ khách hàng
-│   │   ├── CompanyContactModel.php     # Thông tin liên hệ công ty
 │   │   └── ThongTinModel.php           # Thông tin tĩnh trên website
 │   │
 │   ├── views/                          # Các view (giao diện)
