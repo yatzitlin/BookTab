@@ -1,6 +1,6 @@
-# Bài tập lớn Lập trình Web - MobileS
+# Bài tập lớn Lập trình Web - BookTab
 
-Dự án xây dựng website thương mại điện tử, phục vụ môn học Lập trình web (HK2 2025-2026). Dự án được phát triển bằng PHP thuần áp dụng kiến trúc MVC tự xây dựng, hoàn toàn không sử dụng bất kỳ PHP Framework hay CMS.
+Dự án xây dựng website bán sách online, phục vụ môn học Lập trình web (HK2 2025-2026). Dự án được phát triển bằng PHP thuần áp dụng kiến trúc MVC tự xây dựng, hoàn toàn không sử dụng bất kỳ PHP Framework hay CMS.
 
 ## 🛠 Công nghệ sử dụng
 * **Front-end:** HTML5, CSS3 (chuẩn W3C), JavaScript.
@@ -13,7 +13,7 @@ Dự án xây dựng website thương mại điện tử, phục vụ môn học
 Hệ thống phân quyền 3 cấp độ người dùng:
 
 ### 1. Khách truy cập (Guest)
-* Xem các trang thông tin public: Trang chủ, Giới thiệu, Sản phẩm, Bảng giá, Liên hệ, Hỏi/đáp, Tin tức.
+* Xem các trang thông tin public: Trang chủ, Giới thiệu, Sản phẩm, Bài viết, Hỏi & Đáp, Liên hệ.
 * Tìm kiếm sản phẩm, tin tức theo từ khóa.
 * Thêm sản phẩm vào giỏ hàng.
 * Đăng ký, Đăng nhập.
