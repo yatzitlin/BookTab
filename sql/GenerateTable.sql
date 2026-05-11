@@ -13,13 +13,6 @@ DROP TABLE IF EXISTS chi_tiet_don_hang, don_hang, chi_tiet_gio_hang, gio_hang, d
                      member, `rank`, administrator, nguoi_dung, anh_cau_hoi, anh;
 SET FOREIGN_KEY_CHECKS = 1;
 
-
-CREATE TABLE companycontact (
-    PhoneNumber VARCHAR(20),            -- Số điện thoại
-    Address NVARCHAR(500),              -- Địa chỉ (hỗ trợ tiếng Việt có dấu)
-    Email VARCHAR(255)                  -- Địa chỉ Email
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
 -- =========================================================
 -- 2. Nhóm người dùng & liên hệ
 -- =========================================================

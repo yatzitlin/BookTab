@@ -89,17 +89,7 @@
         <!-- Divider -->
         <div class="flex items-center my-6">
             <div class="flex-1 border-t border-gray-300"></div>
-            <span class="px-3 text-gray-500 text-sm">Hoặc</span>
-            <div class="flex-1 border-t border-gray-300"></div>
         </div>
-
-        <!-- Social Login (Placeholder) -->
-        <button class="w-full border border-gray-300 py-3 rounded-lg font-semibold text-gray-700 hover:bg-gray-50 transition mb-3">
-            <i class="fab fa-google mr-2 text-red-500"></i> Đăng nhập với Google
-        </button>
-        <button class="w-full border border-gray-300 py-3 rounded-lg font-semibold text-gray-700 hover:bg-gray-50 transition">
-            <i class="fab fa-facebook mr-2 text-blue-600"></i> Đăng nhập với Facebook
-        </button>
 
         <!-- Don't have account -->
         <p class="text-center text-gray-600 mt-6">

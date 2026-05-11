@@ -309,7 +309,6 @@ switch ($page) {
         $featuredProducts = $productCtrl->showHome();
         $view_content = '../app/views/pages/Home.php';
         $pageTitle = 'Trang chủ';
-
     break;
     case 'about':
         $aboutController = new AboutController($dbConnection);

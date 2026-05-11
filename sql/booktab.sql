@@ -175,13 +175,6 @@ INSERT INTO `cau_tra_loi` (`ma_cau_tra_loi`, `ma_cau_hoi`, `administrator_userid
 (30, 30, 1, 'Khi đơn hàng chuyển trạng thái \"Giao hàng thành công\", bạn vào \"Đơn hàng của tôi\", chọn đơn hàng tương ứng và nhấn vào nút \"Đánh giá\" để để lại nhận xét nhé.', '2026-05-07 15:50:00');
 
 --
--- Đang đổ dữ liệu cho bảng `companycontact`
---
-
-INSERT INTO `companycontact` (`PhoneNumber`, `Address`, `Email`) VALUES
-('+84 (123) 456-789', 'Trường Đại học Bách khoa - ĐHQG-HCM, cơ sở Dĩ An, Bình Dương', 'support@BookTab.com');
-
---
 -- Đang đổ dữ liệu cho bảng `lien_he`
 --
 
@@ -295,7 +288,7 @@ INSERT INTO `thong_tin_chi_tiet` (`ma_chi_tiet`, `ma_thong_tin`, `noi_dung`, `ur
 (4, 4, 'Trang chủ', 'index.php?page=home'),
 (5, 4, 'Giới thiệu', 'index.php?page=about'),
 (6, 4, 'Sản phẩm', 'index.php?page=products'),
-(7, 4, 'Tin tức', 'index.php?page=news'),
+(7, 4, 'Bài viết', 'index.php?page=news'),
 (8, 4, 'Hỏi đáp', 'index.php?page=qna'),
 (9, 4, 'Liên hệ', 'index.php?page=contact'),
 (10, 5, 'Hướng dẫn mua hàng', '#'),
