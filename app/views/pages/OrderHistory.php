@@ -1,10 +1,6 @@
 <h1 class="text-2xl font-bold mb-6">Đơn hàng của tôi</h1>
 
-<?php if (isset($_GET['success'])): ?>
-    <div class="bg-green-50 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
-        ✅ Đặt hàng thành công! Cảm ơn bạn đã mua hàng tại BookTab.
-    </div>
-<?php endif; ?>
+
 
 <?php if (empty($orders)): ?>
     <div class="text-center py-16">

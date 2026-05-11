@@ -45,10 +45,7 @@ $current_page = isset($_GET['page']) ? $_GET['page'] : 'home';
                 <!-- Shopping Cart -->
                 <a href="<?php echo BASE_URL; ?>/public/index.php?page=cart" class="relative text-gray-600 hover:text-gray-900 text-lg">
                     <i class="fas fa-shopping-cart"></i>
-                    <!-- tạm thời để số 0-->
-                    <span id="cartCount" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
-                        0
-                    </span>
+
                 </a>
 
                 <!-- User Menu -->
@@ -104,14 +101,4 @@ $current_page = isset($_GET['page']) ? $_GET['page'] : 'home';
     menuToggle.addEventListener('click', function() {
         navLinks.classList.toggle('hidden');
     });
-
-    // Update cart count from localStorage
-    function updateCartCount() {
-        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-        const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-        document.getElementById('cartCount').textContent = count;
-    }
-
-    updateCartCount();
-    window.addEventListener('storage', updateCartCount);
 </script>
