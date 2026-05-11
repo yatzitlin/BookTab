@@ -11,18 +11,23 @@ class UserModel {
      * Register
      * 
      * @param string $username - Tên người dùng
-     * @param string $ho_va_ten_dem - Họ và tên đệm
+    * @param string $email - Email
+    * @param string $ho_va_ten_dem - Họ và tên đệm
      * @param string $ten - Tên
      * @param string $mat_khau - Mật khẩu
      * @param string $so_dien_thoai - Số điện thoại (không bắt buộc)
      * @return array - Thành công: ['success' => true, 'userid' => id]
      *                 Thất bại: ['success' => false, 'message' => 'Lỗi gì']
      */
-    public function register($username, $ho_va_ten_dem, $ten, $mat_khau, $so_dien_thoai = '') {
+    public function register($username, $email, $ho_va_ten_dem, $ten, $mat_khau, $so_dien_thoai = '') {
         try {
             // 1. Server-side validation
-            if (empty($username) || empty($ho_va_ten_dem) || empty($ten) || empty($mat_khau)) {
+            if (empty($username) || empty($email) || empty($ho_va_ten_dem) || empty($ten) || empty($mat_khau)) {
                 return ['success' => false, 'message' => 'Vui lòng điền đầy đủ thông tin'];
+            }
+
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                return ['success' => false, 'message' => 'Email không hợp lệ'];
             }
 
             // Kiểm tra độ dài mật khẩu (tối thiểu 6 ký tự)
@@ -35,23 +40,23 @@ class UserModel {
                 return ['success' => false, 'message' => 'Tên đăng nhập phải từ 3-50 ký tự'];
             }
 
-            // 2. Kiểm tra username đã tồn tại chưa (Chống SQL Injection bằng Prepared Statement)
-            $sql = "SELECT userid FROM nguoi_dung WHERE username = ?";
+            // 2. Kiểm tra username và email đã tồn tại chưa
+            $sql = "SELECT userid FROM nguoi_dung WHERE username = ? OR email = ?";
             $stmt = $this->db->prepare($sql);
-            $stmt->execute([$username]);
+            $stmt->execute([$username, $email]);
 
             if ($stmt->rowCount() > 0) {
-                return ['success' => false, 'message' => 'Tên đăng nhập này đã được sử dụng'];
+                return ['success' => false, 'message' => 'Tên đăng nhập hoặc email này đã được sử dụng'];
             }
 
             // 3. Mã hóa mật khẩu sử dụng BCRYPT
             $hashed_password = password_hash($mat_khau, PASSWORD_BCRYPT);
 
             // 4. INSERT vào bảng nguoi_dung
-            $sql = "INSERT INTO nguoi_dung (username, mat_khau, ho_va_ten_dem, ten, so_dien_thoai, trang_thai, ngay_tao) 
-                    VALUES (?, ?, ?, ?, ?, 'active', NOW())";
+                $sql = "INSERT INTO nguoi_dung (username, email, mat_khau, ho_va_ten_dem, ten, so_dien_thoai, trang_thai, ngay_tao) 
+                    VALUES (?, ?, ?, ?, ?, ?, 'active', NOW())";
             $stmt = $this->db->prepare($sql);
-            $result = $stmt->execute([$username, $hashed_password, $ho_va_ten_dem, $ten, $so_dien_thoai]);
+                $result = $stmt->execute([$username, $email, $hashed_password, $ho_va_ten_dem, $ten, $so_dien_thoai]);
 
             if (!$result) {
                 return ['success' => false, 'message' => 'Không thể tạo tài khoản'];
@@ -248,6 +253,208 @@ class UserModel {
         } catch (Exception $e) {
             return false;
         }
+    }
+
+    // ===============================
+    // Admin User Manage
+    // ===============================
+
+    public function getAllUsersForAdmin($roleFilter = 'all') {
+        $sql = "SELECT u.userid, u.username, u.ho_va_ten_dem, u.ten, u.so_dien_thoai, u.trang_thai, u.ngay_tao,
+                       CASE WHEN a.userid IS NOT NULL THEN 'administrator' ELSE 'member' END AS user_role
+                FROM nguoi_dung u
+                LEFT JOIN administrator a ON a.userid = u.userid";
+
+        $params = [];
+
+        if ($roleFilter === 'administrator') {
+            $sql .= " WHERE a.userid IS NOT NULL";
+        } elseif ($roleFilter === 'member') {
+            $sql .= " WHERE a.userid IS NULL";
+        }
+
+        $sql .= " ORDER BY u.userid DESC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getUserByIdForAdmin($userId) {
+        $sql = "SELECT u.userid, u.username, u.ho_va_ten_dem, u.ten, u.so_dien_thoai, u.trang_thai,
+                       CASE WHEN a.userid IS NOT NULL THEN 'administrator' ELSE 'member' END AS user_role
+                FROM nguoi_dung u
+                LEFT JOIN administrator a ON a.userid = u.userid
+                WHERE u.userid = ?
+                LIMIT 1";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$userId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    private function isPhoneColumnExists() {
+        try {
+            $stmt = $this->db->query("SHOW COLUMNS FROM nguoi_dung LIKE 'so_dien_thoai'");
+            return (bool) $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            return true;
+        }
+    }
+
+    public function createUserByAdmin($data) {
+        try {
+            $this->db->beginTransaction();
+
+            $hasPhone = $this->isPhoneColumnExists();
+
+            if ($hasPhone) {
+                $sql = "INSERT INTO nguoi_dung (username, mat_khau, ho_va_ten_dem, ten, so_dien_thoai, trang_thai, ngay_tao)
+                        VALUES (?, ?, ?, ?, ?, ?, NOW())";
+                $params = [
+                    $data['username'],
+                    $data['mat_khau'],
+                    $data['ho_va_ten_dem'],
+                    $data['ten'],
+                    $data['so_dien_thoai'],
+                    $data['trang_thai']
+                ];
+            } else {
+                $sql = "INSERT INTO nguoi_dung (username, mat_khau, ho_va_ten_dem, ten, trang_thai, ngay_tao)
+                        VALUES (?, ?, ?, ?, ?, NOW())";
+                $params = [
+                    $data['username'],
+                    $data['mat_khau'],
+                    $data['ho_va_ten_dem'],
+                    $data['ten'],
+                    $data['trang_thai']
+                ];
+            }
+
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute($params);
+            $newUserId = (int) $this->db->lastInsertId();
+
+            if (($data['user_role'] ?? 'member') === 'administrator') {
+                $stmtAdmin = $this->db->prepare("INSERT INTO administrator (userid) VALUES (?)");
+                $stmtAdmin->execute([$newUserId]);
+            } else {
+                $stmtMember = $this->db->prepare("INSERT INTO member (userid, ten_rank) VALUES (?, ?)");
+                $stmtMember->execute([$newUserId, null]);
+            }
+
+            $this->db->commit();
+            return true;
+        } catch (Exception $e) {
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+            }
+            return false;
+        }
+    }
+
+    public function updateUserByAdmin($userId, $data) {
+        try {
+            $this->db->beginTransaction();
+
+            $hasPhone = $this->isPhoneColumnExists();
+            $hasNewPassword = !empty($data['mat_khau']);
+
+            if ($hasPhone) {
+                if ($hasNewPassword) {
+                    $sql = "UPDATE nguoi_dung
+                            SET username = ?, ho_va_ten_dem = ?, ten = ?, so_dien_thoai = ?, trang_thai = ?, mat_khau = ?
+                            WHERE userid = ?";
+                    $params = [
+                        $data['username'],
+                        $data['ho_va_ten_dem'],
+                        $data['ten'],
+                        $data['so_dien_thoai'],
+                        $data['trang_thai'],
+                        $data['mat_khau'],
+                        $userId
+                    ];
+                } else {
+                    $sql = "UPDATE nguoi_dung
+                            SET username = ?, ho_va_ten_dem = ?, ten = ?, so_dien_thoai = ?, trang_thai = ?
+                            WHERE userid = ?";
+                    $params = [
+                        $data['username'],
+                        $data['ho_va_ten_dem'],
+                        $data['ten'],
+                        $data['so_dien_thoai'],
+                        $data['trang_thai'],
+                        $userId
+                    ];
+                }
+            } else {
+                if ($hasNewPassword) {
+                    $sql = "UPDATE nguoi_dung
+                            SET username = ?, ho_va_ten_dem = ?, ten = ?, trang_thai = ?, mat_khau = ?
+                            WHERE userid = ?";
+                    $params = [
+                        $data['username'],
+                        $data['ho_va_ten_dem'],
+                        $data['ten'],
+                        $data['trang_thai'],
+                        $data['mat_khau'],
+                        $userId
+                    ];
+                } else {
+                    $sql = "UPDATE nguoi_dung
+                            SET username = ?, ho_va_ten_dem = ?, ten = ?, trang_thai = ?
+                            WHERE userid = ?";
+                    $params = [
+                        $data['username'],
+                        $data['ho_va_ten_dem'],
+                        $data['ten'],
+                        $data['trang_thai'],
+                        $userId
+                    ];
+                }
+            }
+
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute($params);
+
+            if (($data['user_role'] ?? 'member') === 'administrator') {
+                $stmtUpsertAdmin = $this->db->prepare("INSERT IGNORE INTO administrator (userid) VALUES (?)");
+                $stmtUpsertAdmin->execute([$userId]);
+            } else {
+                $stmtDeleteAdmin = $this->db->prepare("DELETE FROM administrator WHERE userid = ?");
+                $stmtDeleteAdmin->execute([$userId]);
+
+                $stmtEnsureMember = $this->db->prepare("INSERT IGNORE INTO member (userid, ten_rank) VALUES (?, ?)");
+                $stmtEnsureMember->execute([$userId, null]);
+            }
+
+            $this->db->commit();
+            return true;
+        } catch (Exception $e) {
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+            }
+            return false;
+        }
+    }
+
+    public function toggleUserStatus($userId) {
+        $sql = "SELECT trang_thai FROM nguoi_dung WHERE userid = ? LIMIT 1";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$userId]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$row) {
+            return false;
+        }
+
+        $newStatus = ($row['trang_thai'] === 'active') ? 'inactive' : 'active';
+        $updateStmt = $this->db->prepare("UPDATE nguoi_dung SET trang_thai = ? WHERE userid = ?");
+        return $updateStmt->execute([$newStatus, $userId]);
+    }
+
+    public function deleteUserByAdmin($userId) {
+        $stmt = $this->db->prepare("DELETE FROM nguoi_dung WHERE userid = ?");
+        return $stmt->execute([$userId]);
     }
 }
 ?>

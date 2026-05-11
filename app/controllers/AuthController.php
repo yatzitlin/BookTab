@@ -42,6 +42,7 @@ class AuthController extends BaseController{
         }
 
         $username = trim($_POST['username'] ?? '');
+        $email = trim($_POST['email'] ?? '');
         $ho_va_ten_dem = trim($_POST['ho_va_ten_dem'] ?? '');
         $ten = trim($_POST['ten'] ?? '');
         $mat_khau = $_POST['mat_khau'] ?? '';
@@ -49,8 +50,12 @@ class AuthController extends BaseController{
         $so_dien_thoai = trim($_POST['so_dien_thoai'] ?? '');
 
         // Validate phía Server
-        if (empty($username) || empty($ho_va_ten_dem) || empty($ten) || empty($mat_khau) || empty($mat_khau_confirm)) {
+        if (empty($username) || empty($email) || empty($ho_va_ten_dem) || empty($ten) || empty($mat_khau) || empty($mat_khau_confirm)) {
             $this->errors[] = 'Vui lòng điền đầy đủ thông tin';
+        }
+
+        if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $this->errors[] = 'Email không hợp lệ';
         }
 
         if (!empty($mat_khau) && !empty($mat_khau_confirm) && $mat_khau !== $mat_khau_confirm) {
@@ -66,7 +71,7 @@ class AuthController extends BaseController{
         }
 
         // Gọi UserModel để đăng ký
-        $result = $this->userModel->register($username, $ho_va_ten_dem, $ten, $mat_khau, $so_dien_thoai);
+        $result = $this->userModel->register($username, $email, $ho_va_ten_dem, $ten, $mat_khau, $so_dien_thoai);
 
         if ($result['success']) {
             // Đăng ký thành công
@@ -216,7 +221,7 @@ class AuthController extends BaseController{
     
     public static function configureSessionSecurity() {
         session_set_cookie_params([
-            'lifetime' => 0,       // Thời gian của cookie -> lúc test chỉnh thành 3600*24 (= 1 ngày)
+            'lifetime' => 3600,       // Thời gian của cookie -> lúc test chỉnh thành 3600*24 (= 1 ngày)
             'path' => '/',
             'domain' => '',        // Tên miền hiện tại
             'secure' => false,     // Nếu trong HTTPS -> đặt về true

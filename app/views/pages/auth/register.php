@@ -63,6 +63,20 @@
                     value="<?php echo htmlspecialchars($_POST['ten'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
                 >
             </div>
+            
+            <!-- Email -->
+            <div>
+                <label for="email" class="block text-sm font-semibold text-gray-900 mb-2">Email</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    required
+                    class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-red-500 focus:ring-2 focus:ring-red-200 focus:outline-none transition"
+                    placeholder="name@example.com"
+                    value="<?php echo htmlspecialchars($_POST['email'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                >
+            </div>
 
             <!-- Phone -->
             <div>
@@ -136,8 +150,8 @@
     // Client-side validation
     const form = document.querySelector('form');
     form.addEventListener('submit', function(e) {
-        const password = document.getElementById('password').value;
-        const passwordConfirm = document.getElementById('password_confirm').value;
+        const password = document.getElementById('mat_khau').value;
+        const passwordConfirm = document.getElementById('mat_khau_confirm').value;
 
         if (password !== passwordConfirm) {
             e.preventDefault();

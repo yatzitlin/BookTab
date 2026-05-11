@@ -22,6 +22,10 @@
 
             <div class="modal-body">
                 <form action="<?php echo $formAction; ?>" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
+                    <?php if ($isEdit): ?>
+                        <input type="hidden" name="id" value="<?php echo (int)$newsToEdit['ma_bai_viet']; ?>">
+                    <?php endif; ?>
                     
                     <div class="form-group">
                         <label class="col-form-label">Tiêu đề bài viết <span class="text-danger">*</span></label>
@@ -174,6 +178,7 @@
             xhr.onerror = () => { reject('Lỗi đường truyền XHR!'); };
 
             const formData = new FormData();
+            formData.append('csrf_token', '<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>');
             // TinyMCE gói ảnh vào biến có tên là 'file'
             formData.append('file', blobInfo.blob(), blobInfo.filename());
 
@@ -188,6 +193,27 @@
             editor.on('change', function () {
                 editor.save(); 
             });
+            editor.on('keyup', function () {
+                editor.save();
+            });
         }
     });
+
+    (function () {
+        var modalElement = document.getElementById('modalCreateNews');
+        if (!modalElement) {
+            return;
+        }
+
+        var formElement = modalElement.querySelector('form');
+        if (!formElement) {
+            return;
+        }
+
+        formElement.addEventListener('submit', function () {
+            if (window.tinymce) {
+                tinymce.triggerSave();
+            }
+        });
+    })();
 </script>

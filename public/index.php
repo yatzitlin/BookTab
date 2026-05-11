@@ -319,6 +319,18 @@ switch ($page) {
             exit;
         }
 
+        // AJAX: Lấy bình luận
+        if ($newsAction === 'get_comments') {
+            $newsController->getCommentsAjax();
+            exit;
+        }
+
+        // AJAX: Post bình luận
+        if ($newsAction === 'post_comment') {
+            $newsController->postCommentAjax();
+            exit;
+        }
+
         // Xử lý trang Chi tiết bài viết
         if ($newsAction === 'detail' && isset($_GET['slug'])) {
             $newsController->detail(trim((string) $_GET['slug']));
@@ -510,6 +522,51 @@ switch ($page) {
 // Admin gọi Controller
 if ($page == 'admin') {
     $admin_action = isset($_GET['admin_action']) ? $_GET['admin_action'] : 'dashboard';
+
+    // Comment Management
+    if ($admin_action === 'comments' || $admin_action === 'toggle_comment' || $admin_action === 'delete_comment') {
+        require_once '../app/controllers/AdminCommentController.php';
+        $commentController = new AdminCommentController($dbConnection);
+
+        if ($admin_action === 'comments') {
+            $commentController->index();
+            exit;
+        } elseif ($admin_action === 'toggle_comment') {
+            $commentController->toggleComment();
+            exit;
+        } elseif ($admin_action === 'delete_comment') {
+            $commentController->deleteComment();
+            exit;
+        }
+    }
+
+    if (
+        $admin_action === 'users'
+        || $admin_action === 'user_store'
+        || $admin_action === 'user_update'
+        || $admin_action === 'user_delete'
+        || $admin_action === 'user_toggle_status'
+    ) {
+        require_once '../app/controllers/AdminUserController.php';
+        $userController = new AdminUserController($dbConnection);
+
+        if ($admin_action === 'users') {
+            $userController->index();
+            exit;
+        } elseif ($admin_action === 'user_store') {
+            $userController->store();
+            exit;
+        } elseif ($admin_action === 'user_update') {
+            $userController->update();
+            exit;
+        } elseif ($admin_action === 'user_delete') {
+            $userController->delete();
+            exit;
+        } elseif ($admin_action === 'user_toggle_status') {
+            $userController->toggleStatus();
+            exit;
+        }
+    }
 
     require_once '../app/controllers/AdminNewsController.php';
     $newsController = new AdminNewsController($dbConnection);

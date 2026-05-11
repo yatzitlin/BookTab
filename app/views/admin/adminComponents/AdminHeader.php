@@ -54,12 +54,11 @@ $adminPageBreadcrumb = $adminPageBreadcrumb ?? $adminPageTitle;
         </div>
         <div class="col-sm-6 clearfix">
             <div class="user-profile float-end">
-                <picture><source srcset="<?php echo htmlspecialchars($adminAssetBase, ENT_QUOTES, 'UTF-8'); ?>/images/author/avatar.avif" type="image/avif"><img class="avatar user-thumb" src="<?php echo htmlspecialchars($adminAssetBase, ENT_QUOTES, 'UTF-8'); ?>/images/author/avatar.png" alt="avatar"></picture>
                 <h4 class="user-name dropdown-toggle" data-bs-toggle="dropdown">
                     <?php echo htmlspecialchars($_SESSION['ho_va_ten_dem'] . ' ' . $_SESSION['ten'], ENT_QUOTES, 'UTF-8'); ?>    
                     <i class="fa-solid fa-angle-down"></i></h4>                
                 <div class="dropdown-menu user-dropdown">
-                    <a class="dropdown-item" href="#"><i class="fa-solid fa-user"></i> My Profile</a>
+                    <a class="dropdown-item"><i class="fa-solid fa-user"></i> <?php echo htmlspecialchars($_SESSION['ho_va_ten_dem'] . ' ' . $_SESSION['ten'], ENT_QUOTES, 'UTF-8'); ?></a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item user-dropdown-logout" href="<?php echo BASE_URL; ?>/public/index.php?action=logout"><i class="fa-solid fa-right-from-bracket"></i> Log Out</a>
                 </div>

@@ -1,7 +1,7 @@
 <?php
 $adminAssetBase = (defined('BASE_URL') ? rtrim(BASE_URL, '/') : 'http://localhost/BookTab') . '/public/admin_assets';
 
-$currentAction = isset($_GET['admin_action']) ? $_GET['admin_action'] : 'dashboard';
+$currentAction = isset($_GET['admin_action']) ? $_GET['admin_action'] : 'home';
 ?>
 <div class="sidebar-menu">
     <div class="sidebar-header">
@@ -12,18 +12,7 @@ $currentAction = isset($_GET['admin_action']) ? $_GET['admin_action'] : 'dashboa
     <div class="main-menu">
         <div class="menu-inner">
             <nav>
-                <ul class="metismenu" id="menu">
-                    <li class="<?php echo ($currentAction == 'dashboard') ? 'active' : ''; ?>">
-                        <a href="javascript:void(0)" aria-expanded="<?php echo ($currentAction == 'dashboard') ? 'true' : 'false'; ?>">
-                            <i class="ti-dashboard"></i><span>dashboard</span>
-                        </a>
-                        <ul class="collapse <?php echo ($currentAction == 'dashboard') ? 'in show' : ''; ?>">
-                            <li class="<?php echo ($currentAction == 'dashboard') ? 'active' : ''; ?>">
-                                <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=dashboard">AdminDashboard</a>
-                            </li>
-                        </ul>
-                    </li>
-                    
+                <ul class="metismenu" id="menu">                    
                     <li class="<?php echo ($currentAction == 'home') ? 'active' : ''; ?>">
                         <a href="javascript:void(0)" aria-expanded="<?php echo ($currentAction == 'home') ? 'true' : 'false'; ?>">
                             <i class="ti-layout-sidebar-left"></i><span>Home</span>
@@ -53,6 +42,20 @@ $currentAction = isset($_GET['admin_action']) ? $_GET['admin_action'] : 'dashboa
                         <ul class="collapse <?php echo ($currentAction == 'news') ? 'in show' : ''; ?>">
                             <li class="<?php echo ($currentAction == 'news') ? 'active' : ''; ?>">
                                 <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=news">AdminNews</a>
+                            </li>
+                            <li class="<?php echo ($currentAction == 'comments') ? 'active' : ''; ?>">
+                                <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=comments">CommentManages</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="<?php echo ($currentAction == 'users') ? 'active' : ''; ?>">
+                        <a href="javascript:void(0)" aria-expanded="<?php echo ($currentAction == 'users') ? 'true' : 'false'; ?>">
+                            <i class="ti-user"></i><span>UserManage</span>
+                        </a>
+                        <ul class="collapse <?php echo ($currentAction == 'users') ? 'in show' : ''; ?>">
+                            <li class="<?php echo ($currentAction == 'users') ? 'active' : ''; ?>">
+                                <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=users">AdminUserManage</a>
                             </li>
                         </ul>
                     </li>

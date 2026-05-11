@@ -65,11 +65,11 @@ class NewsModel {
 
     // Cập nhật bài viết
     public function update($id, $data) {
-        $sql = "UPDATE bai_viet SET tieu_de = ?, noi_dung = ?, thumbnail_url = ?, trang_thai = ?, slug = ?, ma_loai = ? 
+        $sql = "UPDATE bai_viet SET tieu_de = ?, tom_tat = ?, noi_dung = ?, thumbnail_url = ?, trang_thai = ?, slug = ?, ma_loai = ? 
                 WHERE ma_bai_viet = ?";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([
-            $data['tieu_de'], $data['noi_dung'], $data['thumbnail_url'], 
+            $data['tieu_de'], $data['tom_tat'], $data['noi_dung'], $data['thumbnail_url'], 
             $data['trang_thai'], $data['slug'], $data['ma_loai'], $id
         ]);
     }

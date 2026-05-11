@@ -101,37 +101,39 @@ class AdminNewsController extends BaseController {
 
     // Chỉnh sửa
     public function edit() {
-    $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-    
-    if ($id > 0) {
-        $newsToEdit = $this->newsModel->getById($id);
+        $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
         
-        if ($newsToEdit) {
-            // Quan trọng: Phải lấy lại danh sách bài viết và danh mục để trang nền vẫn hiện bảng dữ liệu
-            $newsList = $this->newsModel->getAllNews();
-            $categories = $this->categoryModel->getAllCategories();
+        if ($id > 0) {
+            $newsToEdit = $this->newsModel->getById($id);
             
-            // "Đánh lừa" Layout load lại file AdminNews.php làm nền
-            $_GET['admin_action'] = 'news'; 
-            
-            // Gọi layout
-            require_once __DIR__ . '/../views/admin/adminLayout.php'; 
-            return;
+            if ($newsToEdit) {
+                // Quan trọng: Phải lấy lại danh sách bài viết và danh mục để trang nền vẫn hiện bảng dữ liệu
+                $newsList = $this->newsModel->getAllNews();
+                $categories = $this->categoryModel->getAllCategories();
+                
+                // "Đánh lừa" Layout load lại file AdminNews.php làm nền
+                $_GET['admin_action'] = 'news'; 
+                
+                // Gọi layout
+                require_once __DIR__ . '/../views/admin/adminLayout.php'; 
+                return;
+            }
         }
+        header('Location: ' . BASE_URL . '/public/index.php?page=admin&admin_action=news');
+        exit;
     }
-    header('Location: ' . BASE_URL . '/public/index.php?page=admin&admin_action=news');
-    exit;
-}
 
     // Lưu lại bản đã chỉnh sửa
     public function update() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+            // Hỗ trợ lấy id từ POST nếu không có trong query string (trong một số trường hợp modal gửi form mà thiếu id trên URL)
+            $id = isset($_GET['id']) ? (int)$_GET['id'] : (isset($_POST['id']) ? (int)$_POST['id'] : 0);
             $newsOld = $this->newsModel->getById($id);
             
             if (!$newsOld) {
-                echo "Bài viết không tồn tại!"; 
-                return;
+                // Nếu id không hợp lệ -> chuyển về danh sách và hiển thị trạng thái lỗi (tránh trang trắng)
+                header('Location: ' . BASE_URL . '/public/index.php?page=admin&admin_action=news&status=error');
+                exit;
             }
 
             // Xử lý Trạng thái và Danh mục
@@ -177,12 +179,17 @@ class AdminNewsController extends BaseController {
             ];
 
             if ($this->newsModel->update($id, $data)) {
-                header('Location: ' . BASE_URL . '/public/index.php?page=admin&admin_action=news');
+                header('Location: ' . BASE_URL . '/public/index.php?page=admin&admin_action=news&status=success');
                 exit;
             } else {
-                echo "Có lỗi xảy ra khi cập nhật bài viết!";
+                header('Location: ' . BASE_URL . '/public/index.php?page=admin&admin_action=news&status=error');
+                exit;
             }
         }
+
+        // Nếu không phải POST thì chuyển về trang danh sách
+        header('Location: ' . BASE_URL . '/public/index.php?page=admin&admin_action=news');
+        exit;
     }
 
     // Xóa bài viết
@@ -278,7 +285,9 @@ class AdminNewsController extends BaseController {
 
     // Insert ảnh vào phần nội dung trong TinyMCE (Chạy ngầm bằng AJAX)
     public function uploadImage() {
-        ob_clean();
+        if (ob_get_level() > 0) {
+            ob_end_clean();
+        }
         header('Content-Type: application/json; charset=utf-8');
         
         // Lấy tiêu đề được gửi kèm từ JS của TinyMCE (nếu có)

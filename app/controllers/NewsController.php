@@ -163,5 +163,96 @@ class NewsController extends BaseController {
         $pageTitle = $newsDetail['tieu_de'];
         require_once __DIR__ . '/../views/template.php';
     }
+
+    // AJAX: Lấy bình luận (top-level + replies)
+    public function getCommentsAjax() {
+        header('Content-Type: application/json; charset=utf-8');
+        try {
+            $ma_bai_viet = (int) ($_GET['article_id'] ?? 0);
+            $page = max(1, (int) ($_GET['comment_page'] ?? 1));
+            $limit = 10;
+            $offset = ($page - 1) * $limit;
+
+            if ($ma_bai_viet <= 0) {
+                echo json_encode(['success' => false, 'error' => 'Invalid article']);
+                exit;
+            }
+
+            $commentModel = $this->loadModel('CommentModel');
+
+            // Lấy bình luận top-level
+            $topComments = $commentModel->getTopLevelComments($ma_bai_viet, $limit, $offset);
+            $totalComments = $commentModel->countTopLevelComments($ma_bai_viet);
+
+            // Lấy replies cho mỗi top-level comment
+            foreach ($topComments as &$comment) {
+                $comment['replies'] = $commentModel->getRepliesByParentId($comment['ma_binh_luan']);
+            }
+            unset($comment);
+
+            echo json_encode([
+                'success' => true,
+                'comments' => $topComments,
+                'total' => $totalComments,
+                'page' => $page,
+                'hasMore' => ($offset + $limit) < $totalComments
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        } catch (Throwable $e) {
+            error_log('getCommentsAjax failed: ' . $e->getMessage());
+            echo json_encode([
+                'success' => false,
+                'error' => 'Không tải được bình luận.'
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+    }
+
+    // AJAX: Post bình luận mới
+    public function postCommentAjax() {
+        header('Content-Type: application/json; charset=utf-8');
+
+        // Kiểm tra session
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        if (!isset($_SESSION['userid'])) {
+            echo json_encode(['error' => 'Bạn cần đăng nhập để bình luận']);
+            exit;
+        }
+
+        $ma_bai_viet = (int) ($_POST['article_id'] ?? 0);
+        $noi_dung = trim($_POST['content'] ?? '');
+        $parent_id = isset($_POST['parent_id']) ? (int) $_POST['parent_id'] : null;
+
+        if ($parent_id !== null && $parent_id <= 0) {
+            $parent_id = null;
+        }
+
+        if ($ma_bai_viet <= 0 || $noi_dung === '') {
+            echo json_encode(['error' => 'Dữ liệu không hợp lệ']);
+            exit;
+        }
+
+        if (strlen($noi_dung) < 5 || strlen($noi_dung) > 5000) {
+            echo json_encode(['error' => 'Bình luận phải từ 5-5000 ký tự']);
+            exit;
+        }
+
+        $commentModel = $this->loadModel('CommentModel');
+        $commentId = $commentModel->insertComment($ma_bai_viet, (int) $_SESSION['userid'], $noi_dung, $parent_id);
+
+        if ($commentId) {
+            $newComment = $commentModel->getCommentById($commentId);
+            echo json_encode([
+                'success' => true,
+                'comment' => $newComment
+            ], JSON_UNESCAPED_UNICODE);
+        } else {
+            echo json_encode(['error' => 'Lỗi khi lưu bình luận']);
+        }
+        exit;
+    }
 }
 ?>
