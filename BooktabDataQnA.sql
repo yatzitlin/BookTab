@@ -23,9 +23,14 @@ SET time_zone = "+00:00";
 
 SET FOREIGN_KEY_CHECKS = 0;
 
-INSERT INTO `nguoi_dung` (`userid`, `username`, `mat_khau`, `ho_va_ten_dem`, `ten`, `so_dien_thoai`, `trang_thai`, `ngay_tao`) VALUES
-(1, 'admin', '$2a$12$UHRC2flycgjyh/bpatCJDO14bC/ap99VXEFV/WAXmXuCRbFlIDHyG', 'Khá Là', 'Bảnh', '0123456789', 'active', '2026-05-05 20:23:28'),
-(2, 'user1', '$2y$10$J1nTsf6mrr0hEbfODkCFHOdZfkdMRy.UOjJM4pHYPXz1Ocutm0dyi', 'Bành Phú', 'Hội', '1234567899', 'active', '2026-05-05 20:24:39');
+
+--
+-- Dumping data for table `nguoi_dung`
+--
+
+INSERT INTO `nguoi_dung` (`userid`, `username`, `mat_khau`, `ho_va_ten_dem`, `ten`, `so_dien_thoai`, `email`, `avatar_url`, `vai_tro`, `trang_thai`, `ngay_tao`) VALUES
+(1, 'admin', '$2a$12$UHRC2flycgjyh/bpatCJDO14bC/ap99VXEFV/WAXmXuCRbFlIDHyG', 'Quản Trị', 'Viên', '0123456789', 'admin@example.com', NULL, 'member', 'active', '2026-05-05 20:23:28'),
+(2, 'user1', '$2y$10$UX5ZV4.g6Ayx5rn0pWoRI.ya575kadXDrMSf9ULjbIr/dGvnLgv6a', 'Huỳnh Đức', 'Khoa', '01222222222', 'user1@example.com', '6a009d26affd0_Cartethyia.jpeg', 'member', 'active', '2026-05-05 20:24:39');
 
 --
 -- Dumping data for table `administrator`
@@ -33,6 +38,14 @@ INSERT INTO `nguoi_dung` (`userid`, `username`, `mat_khau`, `ho_va_ten_dem`, `te
 
 INSERT INTO `administrator` (`userid`) VALUES
 (1);
+
+
+--
+-- Dumping data for table `member`
+--
+
+INSERT INTO `member` (`userid`, `diem_tich_luy`, `ten_rank`) VALUES
+(2, 0, NULL);
 
 --
 -- Dumping data for table `loai_cau_hoi`
@@ -118,13 +131,6 @@ INSERT INTO `cau_tra_loi` (`ma_cau_tra_loi`, `ma_cau_hoi`, `administrator_userid
 (28, 28, 1, 'Nếu đơn hàng chưa được bàn giao cho đơn vị vận chuyển, bạn có thể tự đổi số điện thoại trong Quản lý đơn hàng. Nếu đơn đã gửi đi, vui lòng gọi CSKH để được hỗ trợ.', '2026-05-07 15:40:00'),
 (29, 29, 1, 'Theo chính sách của BookTab, các sản phẩm bán theo dạng bộ/combo nguyên seal không hỗ trợ đổi trả lẻ từng cuốn nếu không có lỗi từ nhà sản xuất.', '2026-05-07 15:45:00'),
 (30, 30, 1, 'Khi đơn hàng chuyển trạng thái \"Giao hàng thành công\", bạn vào \"Đơn hàng của tôi\", chọn đơn hàng tương ứng và nhấn vào nút \"Đánh giá\" để để lại nhận xét nhé.', '2026-05-07 15:50:00');
-
---
--- Dumping data for table `member`
---
-
-INSERT INTO `member` (`userid`, `diem_tich_luy`, `ten_rank`) VALUES
-(2, 0, NULL);
 
 --
 -- Dumping data for table `thong_tin`

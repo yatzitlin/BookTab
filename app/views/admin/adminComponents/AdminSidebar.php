@@ -71,16 +71,16 @@ $currentAction = isset($_GET['admin_action']) ? $_GET['admin_action'] : 'dashboa
                         </ul>
                     </li>
 
-                    <li class="<?php echo ($currentAction == 'about') ? 'active' : ''; ?>">
-                        <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=about">
-                            <i class="ti-info-alt"></i><span>Giới thiệu</span>
+                    <li class="<?php echo ($currentAction == 'contact') ? 'active' : ''; ?>">
+                        <a href="javascript:void(0)" aria-expanded="<?php echo ($currentAction == 'contact') ? 'true' : 'false'; ?>">
+                            <i class="ti-email"></i><span>Contact</span>
                         </a>
-                    </li>
+                        <ul class="collapse <?php echo ($currentAction == 'contact') ? 'in show' : ''; ?>">
+                            <li class="<?php echo ($currentAction == 'contact') ? 'active' : ''; ?>">
+                                <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=contact">AdminContact</a>
+                            </li>
+                        </ul>
 
-                    <li class="<?php echo ($currentAction == 'info') ? 'active' : ''; ?>">
-                        <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=info">
-                            <i class="ti-layout-list-post"></i><span>Thông tin</span>
-                        </a>
                     </li>
                 </ul>
             </nav>

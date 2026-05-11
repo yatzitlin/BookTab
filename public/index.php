@@ -10,7 +10,9 @@ error_reporting(E_ALL);
 require_once __DIR__ . '/../app/core/Database.php'; 
 require_once __DIR__ . '/../app/controllers/AboutController.php';
 require_once __DIR__ . '/../app/controllers/QnAController.php';
-require_once '../app/controllers/NewsController.php';
+require_once __DIR__ . '/../app/models/CompanyContactModel.php';
+require_once __DIR__ . '/../app/controllers/NewsController.php';
+
 
 $database = new Database();
 $dbConnection = $database->connect();
@@ -53,6 +55,21 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'home';
 if ($page === 'admin' || $page === 'admin_dashboard') {
     if (!isset($_SESSION['userid']) || !isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'administrator') {
         header('Location: ' . BASE_URL . '/public/index.php?page=login&error=unauthorized');
+        exit;
+    }
+}
+
+$contactModel = new CompanyContactModel($dbConnection);
+$contact = $contactModel->getContactInfo();
+
+// Xử lý admin actions TRƯỚC khi include adminLayout
+if ($page === 'admin' && isset($_GET['action'])) {
+    require_once __DIR__ . '/../app/controllers/AdminController.php';
+    $adminController = new AdminController($dbConnection);
+    $adminActionName = $_GET['action'];
+
+    if (method_exists($adminController, $adminActionName)) {
+        $adminController->$adminActionName();
         exit;
     }
 }
@@ -241,6 +258,7 @@ $qnaController = new QnAController($dbConnection);
 // Routing cho các page thường
 switch ($page) {
     case 'home':
+        // require_once '../app/controllers/HomeController.php';
         $view_content = '../app/views/pages/Home.php';
         $pageTitle = 'Trang chủ';
         break;
@@ -415,8 +433,36 @@ switch ($page) {
         $view_content = '../app/views/pages/Contact.php';
         $pageTitle = 'Liên hệ';
         break;
+    // Xử lý submit form
+    case 'contact-send':
+        require_once '../app/controllers/ContactController.php';
+        $controller = new ContactController($dbConnection);
+        $controller->send();
+        break;
     case 'admin':
         $pageTitle = 'Admin Dashboard';
+        break;
+    case 'profile':
+        require_once '../app/controllers/UserController.php';
+        $controller = new UserController($dbConnection);
+        $user = $controller->information();
+        $view_content = '../app/views/user/information.php';
+        break;
+    case 'change-password':
+        require_once '../app/controllers/UserController.php';
+        $controller = new UserController($dbConnection);
+        $controller->changePassword();
+        $view_content = '../app/views/user/change_password.php';
+        break;
+    case 'update-profile':
+        require_once '../app/controllers/UserController.php';
+        $controller = new UserController($dbConnection);
+        $controller->updateProfile();
+        break;
+    case 'update-avatar':
+        require_once '../app/controllers/UserController.php';
+        $controller = new UserController($dbConnection);
+        $controller->updateAvatar();
         break;
     default:
         $view_content = '../app/views/pages/404.php';
@@ -461,4 +507,5 @@ if ($page == 'admin') {
 else {
     require_once '../app/views/template.php';
 }
+
 ?>

@@ -16,5 +16,9 @@ class BaseController {
             die("Lỗi: Không tìm thấy file Model $modelName");
         }
     }
+    protected function view($path, $data = []) {
+        extract($data);
+        require "../app/views/$path.php";
+    }
 }
 ?>
