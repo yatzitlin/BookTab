@@ -3,11 +3,12 @@
 Dự án xây dựng website bán sách online, phục vụ môn học Lập trình web (HK2 2025-2026). Dự án được phát triển bằng PHP thuần áp dụng kiến trúc MVC tự xây dựng, hoàn toàn không sử dụng bất kỳ PHP Framework hay CMS.
 
 ## 🛠 Công nghệ sử dụng
-* **Front-end:** HTML5, CSS3 (chuẩn W3C), JavaScript.
-* **Back-end:** PHP (Phiên bản >= 7.0).
-* **Cơ sở dữ liệu:** MySQL.
-* **UI/UX:** Responsive Design,....
-* **Admin Template:** Srtdash Dashboard.
+* **Front-end (Client):** HTML5, CSS3, JavaScript, Tailwind CSS (CDN), Font Awesome.
+* **Front-end (Admin):** Srtdash Dashboard, Bootstrap 5, MetisMenuJS, SwiperJS, TinyMCE.
+* **Back-end:** PHP thuần theo mô hình MVC (không dùng framework/CMS), Session/Cookie, CSRF token.
+* **Cơ sở dữ liệu:** MySQL/MariaDB, truy cập qua PDO (Prepared Statements, charset `utf8mb4`).
+* **Web server:** Apache (mod_rewrite qua `.htaccess`).
+* **Môi trường phát triển:** XAMPP.
 
 ## 🌟 Chức năng chính
 Hệ thống phân quyền 3 cấp độ người dùng:
