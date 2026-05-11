@@ -47,12 +47,13 @@ $current_page = isset($_GET['page']) ? $_GET['page'] : 'home';
                 </button>
 
                 <!-- Shopping Cart -->
-                <button class="relative text-gray-600 hover:text-gray-900 text-lg">
+                <a href="<?php echo BASE_URL; ?>/public/index.php?page=cart" class="relative text-gray-600 hover:text-gray-900 text-lg">
                     <i class="fas fa-shopping-cart"></i>
+                    <!-- tạm thời để số 0-->
                     <span id="cartCount" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
                         0
                     </span>
-                </button>
+                </a>
 
                 <!-- User Menu -->
                 <div class="relative group">
