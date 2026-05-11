@@ -295,10 +295,12 @@ if ($page === 'cart') {
 // Routing cho các page thường
 switch ($page) {
     case 'home':
-        // require_once '../app/controllers/HomeController.php';
+        $productCtrl = new ProductController($dbConnection);
+        $featuredProducts = $productCtrl->showHome();
         $view_content = '../app/views/pages/Home.php';
         $pageTitle = 'Trang chủ';
-        break;
+
+    break;
     case 'about':
         $aboutController = new AboutController($dbConnection);
         $aboutPage = $aboutController->getAboutPage();

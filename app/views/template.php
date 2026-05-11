@@ -49,21 +49,34 @@ if (session_status() === PHP_SESSION_NONE) {
         let index = 0;
         const slider = document.getElementById("slider");
 
+        let autoSlide;
+
         function showSlide() {
             slider.style.transform = `translateX(-${index * 100}%)`;
+        }
+
+        // reset auto khi user click
+        function resetAuto() {
+            clearInterval(autoSlide);
+            autoSlide = setInterval(nextSlide, 4000);
         }
 
         function nextSlide() {
             index = (index + 1) % slider.children.length;
             showSlide();
+            resetAuto();
         }
 
         function prevSlide() {
             index = (index - 1 + slider.children.length) % slider.children.length;
             showSlide();
+            resetAuto();
         }
 
-        setInterval(nextSlide, 4000);
+        // start auto
+        if (slider) {
+            autoSlide = setInterval(nextSlide, 4000);
+        }
     </script>
 </body>
 </html>

@@ -1,43 +1,127 @@
-<!-- HERO -->
-<section class="relative h-[400px] bg-cover bg-center flex items-center"
-    style="background-image: url('/assets/images/hero.jpg');">
+<!-- HERO SLIDER -->
+<section class="relative overflow-hidden h-[550px] rounded-2xl mx-4 mt-6">
 
-    <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+    <div id="slider" class="flex h-full transition-transform duration-700 ease-in-out">
 
-    <div class="container mx-auto px-4 relative z-10 text-white">
-        <h1 class="text-4xl md:text-5xl font-bold mb-4 uppercase leading-tight">
-            Khám phá thế giới <br> qua những trang sách
-        </h1>
+        <!-- SLIDE 1 -->
+        <div class="min-w-full h-full relative bg-cover bg-center"
+            style="background-image: url('<?php echo BASE_URL; ?>/public/admin_assets/home/trangsach.jpg');">
 
-        <a href="/products"
-           class="bg-yellow-500 hover:bg-yellow-600 px-8 py-3 rounded shadow font-bold transition inline-block">
-            MUA NGAY
-        </a>
+            <div class="absolute inset-0 bg-black/40"></div>
+
+            <!-- TEXT bottom-left -->
+            <div class="absolute bottom-10 left-10 z-10 text-white max-w-xl">
+                <h1 class="text-4xl md:text-5xl font-bold uppercase leading-tight mb-4">
+                    Khám phá thế giới <br> qua từng trang sách
+                </h1>
+
+                <a href="<?php echo BASE_URL; ?>/public/index.php?page=products"
+                   class="bg-yellow-500 hover:bg-yellow-600 px-6 py-3 rounded font-bold transition inline-block">
+                    MUA NGAY
+                </a>
+            </div>
+        </div>
+
+        <!-- SLIDE 2 -->
+        <div class="min-w-full h-full relative bg-cover bg-center"
+            style="background-image: url('<?php echo BASE_URL; ?>/public/admin_assets/home/slide.jpg');">
+
+            <div class="absolute inset-0 bg-black/40"></div>
+
+            <div class="absolute bottom-10 left-10 z-10 text-white max-w-xl">
+                <h1 class="text-4xl md:text-5xl font-bold uppercase leading-tight mb-2">
+                    Sách mở ra thế giới bạn chưa từng thấy
+                </h1>
+
+                <p class="text-lg text-gray-200">
+                    Mỗi trang sách là một hành trình mới
+                </p>
+            </div>
+        </div>
+
+        <!-- SLIDE 3 -->
+        <div class="min-w-full h-full relative bg-cover bg-center"
+            style="background-image: url('<?php echo BASE_URL; ?>/public/admin_assets/home/docsach.jpg');">
+
+            <div class="absolute inset-0 bg-black/40"></div>
+
+            <div class="absolute bottom-10 left-10 z-10 text-white max-w-xl">
+                <h1 class="text-4xl md:text-5xl font-bold uppercase leading-tight mb-2">
+                    Đọc hôm nay – thay đổi ngày mai
+                </h1>
+
+                <p class="text-lg text-gray-200">
+                    Thói quen nhỏ tạo nên tri thức lớn
+                </p>
+            </div>
+        </div>
+
     </div>
+
+    <!-- PREV -->
+    <button onclick="prevSlide()"
+        class="absolute left-4 top-1/2 -translate-y-1/2 
+               bg-black/50 hover:bg-black/70 text-white 
+               w-11 h-11 rounded-full flex items-center justify-center">
+        ‹
+    </button>
+
+    <!-- NEXT -->
+    <button onclick="nextSlide()"
+        class="absolute right-4 top-1/2 -translate-y-1/2 
+               bg-black/50 hover:bg-black/70 text-white 
+               w-11 h-11 rounded-full flex items-center justify-center">
+        ›
+    </button>
+
 </section>
 
 <!-- GIỚI THIỆU -->
-<section class="py-16 container mx-auto px-4">
-    <div class="flex flex-col md:flex-row items-center gap-12">
+<section class="py-20 bg-white">
+    <div class="container mx-auto px-4 flex flex-col md:flex-row items-center gap-14">
 
+        <!-- TEXT -->
         <div class="md:w-1/2">
-            <h2 class="text-3xl font-bold mb-6 text-blue-900 uppercase">
-                Chào mừng đến với Nhà Sách Tri Thức Việt
+
+            <h2 class="text-4xl font-bold mb-6 text-blue-900 uppercase leading-tight">
+                Hành trình tri thức bắt đầu từ những trang sách
             </h2>
 
-            <p class="text-gray-600 mb-4">
-                Không gian tri thức đa dạng với hàng ngàn đầu sách chất lượng.
+            <p class="text-gray-600 mb-4 leading-relaxed">
+                Nhà Sách Tri Thức Việt là không gian dành cho những người yêu sách, nơi bạn có thể tìm thấy hàng ngàn đầu sách thuộc nhiều lĩnh vực: kỹ năng sống, kinh doanh, văn học, thiếu nhi và phát triển bản thân.
             </p>
 
-            <p class="text-gray-600">
-                Đồng hành cùng bạn trên hành trình học tập và phát triển bản thân.
+            <p class="text-gray-600 mb-6 leading-relaxed">
+                Chúng tôi tin rằng mỗi cuốn sách là một người thầy, giúp bạn mở rộng tư duy, nâng cao kiến thức và thay đổi cuộc sống theo hướng tích cực hơn.
             </p>
+
+            <!-- STATS -->
+            <div class="flex gap-8">
+
+                <div>
+                    <p class="text-2xl font-bold text-yellow-500">10.000+</p>
+                    <p class="text-gray-500 text-sm">Đầu sách</p>
+                </div>
+
+                <div>
+                    <p class="text-2xl font-bold text-yellow-500">5.000+</p>
+                    <p class="text-gray-500 text-sm">Khách hàng</p>
+                </div>
+
+                <div>
+                    <p class="text-2xl font-bold text-yellow-500">24/7</p>
+                    <p class="text-gray-500 text-sm">Hỗ trợ</p>
+                </div>
+
+            </div>
+
         </div>
 
-        <div class="md:w-1/2">
-            <img src="/assets/images/about.jpg"
-                 alt="about"
-                 class="rounded-lg shadow-xl">
+        <!-- IMAGE -->
+        <div class="md:w-1/2 relative">
+            <img src="<?php echo BASE_URL; ?>/public/admin_assets/home/store.jpg"
+                 alt="sach-van-hoc"
+                 class="rounded-2xl shadow-2xl w-full object-cover">
         </div>
 
     </div>
@@ -47,8 +131,9 @@
 <section class="bg-gray-100 py-16">
     <div class="container mx-auto px-4 text-center">
 
-        <!-- HEADER + XEM TẤT CẢ -->
+        <!-- HEADER -->
         <div class="flex justify-between items-center mb-12">
+
             <h2 class="text-3xl font-bold text-blue-900 uppercase">
                 Sách nổi bật
             </h2>
@@ -57,41 +142,41 @@
                class="text-yellow-600 font-bold hover:underline">
                 Xem tất cả →
             </a>
+
         </div>
 
-        <!-- GRID SÁCH -->
+        <!-- GRID -->
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
 
-            <?php
-            $books = [
-                ["title" => "Đắc Nhân Tâm", "price" => "120.000đ", "img" => "/assets/images/book1.jpg"],
-                ["title" => "Số Đỏ", "price" => "80.000đ", "img" => "/assets/images/book2.jpg"],
-                ["title" => "Nhật Ký Trong Tù", "price" => "120.000đ", "img" => "/assets/images/book3.jpg"],
-                ["title" => "Harry Potter", "price" => "180.000đ", "img" => "/assets/images/book4.jpg"],
-            ];
-            ?>
+            <?php foreach ($featuredProducts as $book): ?>
 
-            <?php foreach ($books as $book): ?>
-                <div class="bg-white p-4 rounded shadow hover:shadow-xl transition">
+                <div class="bg-white p-4 rounded shadow hover:shadow-2xl transition duration-300">
 
-                    <!-- ẢNH LOCAL (bạn tự upload vào /assets/images/) -->
-                    <img src="<?= $book['img'] ?>"
-                         alt="<?= $book['title'] ?>"
-                         class="h-64 mx-auto mb-4 object-cover">
+                    <!-- ẢNH -->
+                    <img src="<?= BASE_URL . '/' . $book['anh_chinh'] ?>"
+                         alt="<?= htmlspecialchars($book['ten_san_pham']) ?>"
+                         class="h-64 w-full object-cover rounded mb-4">
 
-                    <h3 class="font-bold mb-2">
-                        <?= $book['title'] ?>
+                    <!-- TÊN -->
+                    <h3 class="font-bold text-lg mb-2 line-clamp-2">
+                        <?= htmlspecialchars($book['ten_san_pham']) ?>
                     </h3>
 
-                    <p class="text-red-600 font-bold mb-4">
-                        <?= $book['price'] ?>
+                    <!-- GIÁ -->
+                    <p class="text-red-600 font-bold text-xl mb-4">
+                        <?= number_format($book['gia_san_pham'], 0, ',', '.') ?>đ
                     </p>
 
-                    <button class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 w-full rounded font-bold uppercase text-sm">
+                    <!-- BUTTON -->
+                    <a href="<?php echo BASE_URL; ?>/public/index.php?page=product_detail&id=<?= $book['ma_san_pham'] ?>"
+                       class="block bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded font-bold uppercase text-sm transition">
+
                         Mua ngay
-                    </button>
+
+                    </a>
 
                 </div>
+
             <?php endforeach; ?>
 
         </div>
