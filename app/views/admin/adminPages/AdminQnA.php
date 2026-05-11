@@ -9,6 +9,25 @@ $perPage = 15;
 
 $categories = $qnaController->getCategories();
 
+// ---- Breadcrumb động theo tab ----
+$qnaBaseUrl = BASE_URL . '/public/index.php?page=admin&admin_action=qna';
+$_bcQna = ['label' => 'Hỏi đáp', 'url' => $qnaBaseUrl . '&act=questions'];
+switch ($act) {
+    case 'faq':
+        $adminPageBreadcrumbOverride = [$_bcQna, ['label' => 'FAQ']];
+        break;
+    case 'categories':
+        $adminPageBreadcrumbOverride = [$_bcQna, ['label' => 'Quản lý chủ đề']];
+        break;
+    case 'view':
+        // sẽ được xác định lại sau khi biết is_faq của câu hỏi
+        $adminPageBreadcrumbOverride = null; // placeholder, set bên dưới
+        break;
+    default: // questions
+        $adminPageBreadcrumbOverride = [$_bcQna, ['label' => 'Danh sách câu hỏi']];
+        break;
+}
+
 $successMsg = $_SESSION['admin_qna_success'] ?? '';
 $errorMsg = $_SESSION['admin_qna_error'] ?? '';
 unset($_SESSION['admin_qna_success'], $_SESSION['admin_qna_error']);
@@ -136,18 +155,33 @@ function statusRowClass($trangThai) {
         <?php
         $questionId = (int)$_GET['id'];
         $detail = $qnaController->adminGetQuestionDetail($questionId);
-        $backTab = !empty($detail) && $detail['trang_thai'] ? 'questions' : 'questions';
+        $isFaqQuestion = !empty($detail) && ($detail['is_faq'] ?? 'No') === 'Yes';
+        $backTab = $isFaqQuestion ? 'faq' : 'questions';
+        // Set breadcrumb chính xác dựa vào loại câu hỏi
+        if ($isFaqQuestion) {
+            $adminPageBreadcrumbOverride = [
+                $_bcQna,
+                ['label' => 'FAQ', 'url' => $qnaBaseUrl . '&act=faq'],
+                ['label' => 'Chi tiết câu hỏi'],
+            ];
+        } else {
+            $adminPageBreadcrumbOverride = [
+                $_bcQna,
+                ['label' => 'Danh sách câu hỏi', 'url' => $qnaBaseUrl . '&act=questions'],
+                ['label' => 'Chi tiết câu hỏi'],
+            ];
+        }
         if (!$detail):
         ?>
             <div class="alert alert-warning mt-3">Không tìm thấy câu hỏi.</div>
         <?php else: ?>
             <div class="card mt-3">
                 <div class="card-body">
-                    <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna&act=questions<?php echo $selectedCategory > 0 ? '&category=' . $selectedCategory : ''; ?>" class="btn btn-outline-secondary btn-sm mb-3">
-                        <i class="ti-arrow-left"></i> Quay lại danh sách
+                    <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna&act=<?php echo $backTab; ?><?php echo $selectedCategory > 0 ? '&category=' . $selectedCategory : ''; ?>" class="btn btn-outline-secondary btn-sm mb-3">
+                        <i class="ti-arrow-left"></i> <?php echo $isFaqQuestion ? 'Quay lại danh sách FAQ' : 'Quay lại danh sách'; ?>
                     </a>
 
-                    <h4 class="header-title mb-3"><i class="ti-help-alt"></i> Chi tiết câu hỏi #<?php echo $questionId; ?></h4>
+                    <h4 class="header-title mb-3"><i class="ti-help-alt"></i> Chi tiết câu hỏi</h4>
 
                     <div class="row mb-4 p-3 bg-light rounded" style="border-left: 4px solid #17a2b8;">
                         <div class="col-md-8">

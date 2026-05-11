@@ -152,7 +152,7 @@ class QnAController extends BaseController {
                 $destPath = $publicDir . '/' . $safe;
 
                 if (move_uploaded_file($tmp, $destPath)) {
-                    $webPath = 'public/upload/qna' . $safe;
+                    $webPath = 'public/upload/qna/' . $safe;
                     $imageId = $this->qnaModel->createImage($webPath, $origName, $uploadedCount);
                     if ($imageId) {
                         $this->qnaModel->linkImageToQuestion($insertId, $imageId, $uploadedCount);
@@ -259,6 +259,26 @@ class QnAController extends BaseController {
     }
 
     public function adminDeleteQuestion($id) {
+        $id = (int)$id;
+
+        // 1. Lấy tất cả ảnh liên quan (câu hỏi + câu trả lời)
+        $images = $this->qnaModel->getImagePathsByQuestionId($id);
+
+        // 2. Xóa file vật lý trên server
+        if (!empty($images)) {
+            $basePath = dirname(__DIR__, 2); // thư mục gốc BookTab/
+            foreach ($images as $img) {
+                $filePath = $basePath . '/' . ltrim($img['url_anh'], '/');
+                if (is_file($filePath)) {
+                    @unlink($filePath);
+                }
+            }
+            // 3. Xóa record ảnh trong DB
+            $anhIds = array_column($images, 'ma_anh');
+            $this->qnaModel->deleteImageRecords($anhIds);
+        }
+
+        // 4. Xóa câu hỏi (cascade sẽ xóa cau_tra_loi, anh_cau_hoi, anh_cau_tra_loi nếu có FK)
         $this->qnaModel->deleteQuestion($id);
         return ['success' => true];
     }

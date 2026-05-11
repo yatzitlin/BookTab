@@ -283,7 +283,7 @@ class QnAModel {
             $params[] = $categoryId;
         }
 
-        $sql .= " ORDER BY FIELD(ch.trang_thai, 'cho_duyet', 'chua_tra_loi', 'da_tra_loi', 'da_an'), ch.ngay_tao DESC
+        $sql .= " ORDER BY ch.ngay_tao DESC
                   LIMIT " . (int)$perPage . " OFFSET " . (int)$offset;
 
         $stmt = $this->conn->prepare($sql);

@@ -257,13 +257,3 @@ CREATE TABLE `anh_cau_hoi` (
     CONSTRAINT `fk_anh_cau_hoi_cau_hoi` FOREIGN KEY (`ma_cau_hoi`) REFERENCES `cau_hoi`(`ma_cau_hoi`) ON DELETE CASCADE,
     CONSTRAINT `fk_anh_cau_hoi_anh` FOREIGN KEY (`ma_anh`) REFERENCES `anh`(`ma_anh`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-CREATE TABLE anh_cau_tra_loi (
-    `ma_cau_tra_loi` BIGINT NOT NULL,
-    `ma_anh` BIGINT NOT NULL,
-    `so_thu_tu` INT DEFAULT 0,
-    PRIMARY KEY (`ma_cau_tra_loi`, `ma_anh`),
-    KEY `idx_actl_ma_anh` (`ma_anh`),
-    CONSTRAINT `fk_anh_cau_tra_loi_cau_tra_loi` FOREIGN KEY (`ma_cau_tra_loi`) REFERENCES `cau_tra_loi`(`ma_cau_tra_loi`) ON DELETE CASCADE,
-    CONSTRAINT `fk_anh_cau_tra_loi_anh` FOREIGN KEY (`ma_anh`) REFERENCES `anh`(`ma_anh`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

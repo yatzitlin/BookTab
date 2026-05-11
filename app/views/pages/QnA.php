@@ -222,57 +222,157 @@ $paginationBase = $qnaBaseUrl . ($categoryParam ? '&' . ltrim($categoryParam, '&
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/lazysizes@5/lazysizes.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lazysizes@5/lazysizes.min.js"></script>
 <script>
 	(function() {
 		const triggers = document.querySelectorAll('.image-zoom-trigger');
-		const lightbox = document.createElement('div');
-		lightbox.className = 'fixed inset-0 z-50 hidden items-center justify-center bg-black/80 p-4';
-		lightbox.innerHTML = `
-			<div class="absolute inset-0" data-lightbox-close></div>
-			<div class="relative max-w-5xl max-h-full w-full flex flex-col items-center gap-3">
-				<button type="button" class="absolute -top-3 -right-3 h-10 w-10 rounded-full bg-white text-gray-900 shadow-lg flex items-center justify-center" data-lightbox-close aria-label="Đóng ảnh">
-					<i class="fas fa-times"></i>
+		const lb = document.createElement('div');
+		lb.id = 'qna-lb';
+		lb.style.cssText = 'position:fixed;inset:0;z-index:9999;display:none;background:rgba(0,0,0,0.93);';
+		lb.innerHTML = `
+			<div id="lb-stage" style="position:absolute;inset:0;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+				<img id="lb-img" draggable="false" alt=""
+					style="max-width:100%;max-height:100%;object-fit:contain;transform-origin:center;will-change:transform;user-select:none;-webkit-user-drag:none;" />
+			</div>
+			<button id="lb-close" aria-label="Đóng"
+				style="position:absolute;top:16px;right:16px;z-index:10;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.13);border:1px solid rgba(255,255,255,0.22);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);">
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+			</button>
+			<div id="lb-hint" style="position:absolute;top:16px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.45);font-size:12px;pointer-events:none;white-space:nowrap;transition:opacity .6s;">
+				Scroll để zoom &middot; Kéo để di chuyển &middot; Double-click để phóng to
+			</div>
+			<p id="lb-cap" style="position:absolute;bottom:76px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.65);font-size:13px;max-width:80%;pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></p>
+			<div style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.11);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,0.18);border-radius:40px;padding:7px 12px;">
+				<button id="lb-out" title="Thu nhỏ (-)" style="width:34px;height:34px;border-radius:50%;background:0;border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
 				</button>
-				<img data-lightbox-image class="max-h-[85vh] w-auto max-w-full rounded-xl bg-white shadow-2xl object-contain" alt="" />
-				<p data-lightbox-caption class="text-sm text-gray-200 text-center max-w-3xl"></p>
+				<button id="lb-pct" title="Đặt lại (0)" style="min-width:54px;height:34px;border-radius:20px;background:0;border:none;color:#fff;cursor:pointer;font-size:13px;font-weight:700;">100%</button>
+				<button id="lb-in" title="Phóng to (+)" style="width:34px;height:34px;border-radius:50%;background:0;border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+				</button>
 			</div>
 		`;
-		document.body.appendChild(lightbox);
+		document.body.appendChild(lb);
 
-		const image = lightbox.querySelector('[data-lightbox-image]');
-		const caption = lightbox.querySelector('[data-lightbox-caption]');
+		const stage  = lb.querySelector('#lb-stage');
+		const img    = lb.querySelector('#lb-img');
+		const cap    = lb.querySelector('#lb-cap');
+		const pctBtn = lb.querySelector('#lb-pct');
+		const hint   = lb.querySelector('#lb-hint');
+
+		let s = 1, tx = 0, ty = 0;
+		let drag = false, dsx = 0, dsy = 0, dtx = 0, dty = 0;
+		let lastDist = null, hintTimer;
+		const MIN = 0.5, MAX = 5;
+
+		function apply(anim) {
+			img.style.transition = anim ? 'transform .2s ease' : 'none';
+			img.style.transform  = `translate(${tx}px,${ty}px) scale(${s})`;
+			img.style.cursor     = s > 1 ? (drag ? 'grabbing' : 'grab') : 'default';
+			pctBtn.textContent   = Math.round(s * 100) + '%';
+		}
+
+		function clamp() {
+			if (s <= 1) { tx = 0; ty = 0; return; }
+			const r = stage.getBoundingClientRect();
+			const mx = r.width  * (s - 1) / 2;
+			const my = r.height * (s - 1) / 2;
+			tx = Math.max(-mx, Math.min(mx, tx));
+			ty = Math.max(-my, Math.min(my, ty));
+		}
+
+		function reset(anim) { s = 1; tx = 0; ty = 0; apply(anim); }
+
+		function zoomAt(ns, px, py) {
+			ns = Math.min(MAX, Math.max(MIN, ns));
+			const r  = stage.getBoundingClientRect();
+			const ox = px - (r.left + r.width  / 2);
+			const oy = py - (r.top  + r.height / 2);
+			const rt = ns / s;
+			tx = ox * (1 - rt) + tx * rt;
+			ty = oy * (1 - rt) + ty * rt;
+			s  = ns; clamp(); apply(false);
+		}
+
+		function cZoom(ns) {
+			const r = stage.getBoundingClientRect();
+			zoomAt(ns, r.left + r.width / 2, r.top + r.height / 2);
+		}
+
 		const open = (src, alt) => {
-			image.src = src;
-			image.alt = alt || '';
-			caption.textContent = alt || '';
-			lightbox.classList.remove('hidden');
-			lightbox.classList.add('flex');
-			document.body.classList.add('overflow-hidden');
+			reset(false);
+			img.src = src; img.alt = alt || '';
+			cap.textContent = alt || '';
+			lb.style.display = 'block';
+			document.body.style.overflow = 'hidden';
+			hint.style.opacity = '1';
+			clearTimeout(hintTimer);
+			hintTimer = setTimeout(() => hint.style.opacity = '0', 3000);
 		};
+
 		const close = () => {
-			lightbox.classList.add('hidden');
-			lightbox.classList.remove('flex');
-			image.src = '';
-			caption.textContent = '';
-			document.body.classList.remove('overflow-hidden');
+			lb.style.display = 'none';
+			img.src = ''; reset(false);
+			document.body.style.overflow = '';
 		};
 
-		triggers.forEach((trigger) => {
-			trigger.addEventListener('click', () => {
-				open(trigger.dataset.lightboxSrc || '', trigger.dataset.lightboxAlt || '');
-			});
+		lb.querySelector('#lb-close').addEventListener('click', close);
+		stage.addEventListener('click', (e) => { if (e.target === stage) close(); });
+
+		lb.querySelector('#lb-in') .addEventListener('click', () => { cZoom(s * 1.35); apply(true); });
+		lb.querySelector('#lb-out').addEventListener('click', () => { cZoom(s / 1.35); apply(true); });
+		lb.querySelector('#lb-pct').addEventListener('click', () => reset(true));
+
+		img.addEventListener('dblclick', (e) => {
+			if (s > 1) reset(true); else { zoomAt(2.5, e.clientX, e.clientY); apply(true); }
 		});
 
-		lightbox.addEventListener('click', (event) => {
-			if (event.target.hasAttribute('data-lightbox-close')) {
-				close();
+		stage.addEventListener('wheel', (e) => {
+			e.preventDefault();
+			zoomAt(s * (e.deltaY < 0 ? 1.12 : 1 / 1.12), e.clientX, e.clientY);
+		}, { passive: false });
+
+		stage.addEventListener('mousedown', (e) => {
+			if (s <= 1 || e.button !== 0) return;
+			e.preventDefault();
+			drag = true; dsx = e.clientX; dsy = e.clientY; dtx = tx; dty = ty; apply(false);
+		});
+		window.addEventListener('mousemove', (e) => {
+			if (!drag) return;
+			tx = dtx + (e.clientX - dsx); ty = dty + (e.clientY - dsy);
+			clamp(); apply(false);
+		});
+		window.addEventListener('mouseup', () => { if (drag) { drag = false; apply(false); } });
+
+		stage.addEventListener('touchstart', (e) => {
+			if (e.touches.length === 1 && s > 1) { dsx = e.touches[0].clientX; dsy = e.touches[0].clientY; dtx = tx; dty = ty; }
+			if (e.touches.length === 2) lastDist = null;
+		}, { passive: true });
+		stage.addEventListener('touchmove', (e) => {
+			e.preventDefault();
+			if (e.touches.length === 1 && s > 1) {
+				tx = dtx + (e.touches[0].clientX - dsx); ty = dty + (e.touches[0].clientY - dsy);
+				clamp(); apply(false);
 			}
+			if (e.touches.length === 2) {
+				const dist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+				const mx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+				const my = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+				if (lastDist !== null) zoomAt(s * dist / lastDist, mx, my);
+				lastDist = dist;
+			}
+		}, { passive: false });
+		stage.addEventListener('touchend', () => { lastDist = null; });
+
+		document.addEventListener('keydown', (e) => {
+			if (lb.style.display !== 'block') return;
+			if (e.key === 'Escape') close();
+			if (e.key === '+' || e.key === '=') { cZoom(s * 1.25); apply(true); }
+			if (e.key === '-') { cZoom(s / 1.25); apply(true); }
+			if (e.key === '0') reset(true);
 		});
 
-		document.addEventListener('keydown', (event) => {
-			if (event.key === 'Escape' && !lightbox.classList.contains('hidden')) {
-				close();
-			}
-		});
+		triggers.forEach((t) => t.addEventListener('click', () =>
+			open(t.dataset.lightboxSrc || '', t.dataset.lightboxAlt || '')));
 	})();
 </script>

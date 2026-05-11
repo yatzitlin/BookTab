@@ -11,7 +11,7 @@ unset($_SESSION['qna_form_error']);
 		<p class="text-red-400 font-semibold uppercase tracking-wider text-sm mb-2">Hỏi/đáp</p>
 		<h1 class="text-3xl md:text-4xl font-bold mb-4">Đặt câu hỏi mới</h1>
 		<p class="text-gray-300">
-			Trang này chỉ dành cho tài khoản đã đăng nhập. Khách truy cập chỉ có thể xem FAQ ở trang con trước đó.
+			Bạn có thể đặt câu hỏi để nhận được hỗ trợ chính xác và nhanh chóng.
 		</p>
 	</div>
 
