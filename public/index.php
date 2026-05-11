@@ -5,6 +5,7 @@ require_once '../app/controllers/AuthController.php';
 require_once '../app/core/Database.php';
 require_once '../app/controllers/ProductController.php';
 require_once '../app/controllers/CartController.php';
+require_once '../app/controllers/OrderController.php';
 
 
 $database = new Database();
@@ -92,6 +93,16 @@ if ($page === 'cart') {
     $cartCtrl = new CartController($dbConnection);
     $cartCtrl->showCheckout(); exit;
 }
+
+// ORDER MODULE
+if ($page === 'orders') {
+    $orderCtrl = new OrderController($dbConnection);
+    $orderCtrl->showOrders(); exit;
+} elseif ($page === 'order_detail') {
+    $orderCtrl = new OrderController($dbConnection);
+    $orderCtrl->showOrderDetail(); exit;
+}
+
 
 
 
