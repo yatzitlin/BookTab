@@ -1,6 +1,6 @@
 <?php
 $adminAssetBase = (defined('BASE_URL') ? rtrim(BASE_URL, '/') : 'http://localhost/BookTab') . '/public/admin_assets';
-$admin_action = isset($_GET['admin_action']) ? $_GET['admin_action'] : 'home';
+$admin_action = isset($_GET['admin_action']) ? $_GET['admin_action'] : 'about';
 if ($admin_action == 'contact') {
 
     require_once "../app/models/ContactModel.php";
@@ -18,7 +18,8 @@ $adminPages = array(
     'about' => array('document_title' => 'Giới thiệu', 'heading' => 'Quản lý Giới thiệu', 'breadcrumb' => [['label'=>'Giới thiệu','url'=>BASE_URL.'/public/index.php?page=about']], 'file' => '/adminPages/AdminAbout.php'),
     'qna' => array('document_title' => 'Hỏi đáp', 'heading' => 'Quản lý Hỏi đáp', 'breadcrumb' => [['label'=>'Hỏi đáp']], 'file' => '/adminPages/AdminQnA.php'),
     'info' => array('document_title' => 'Thông tin', 'heading' => 'Chỉnh sửa thông tin trang web', 'breadcrumb' => [['label'=>'Thông tin']], 'file' => '/adminPages/AdminInfo.php'),
-    'contact' => array('document_title' => 'AdminContact', 'heading' => 'AdminContact', 'breadcrumb' => 'AdminContact', 'file' => '/adminPages/AdminContact.php')
+    'contact' => array('document_title' => 'AdminContact', 'heading' => 'AdminContact', 'breadcrumb' => 'AdminContact', 'file' => '/adminPages/AdminContact.php'),
+    'orders' => array('document_title' => 'AdminOrders', 'heading' => 'AdminOrders', 'breadcrumb' => 'AdminOrders', 'file' => '/adminPages/AdminOrders.php')
 );
 $adminPage = isset($adminPages[$admin_action]) ? $adminPages[$admin_action] : $adminPages['home'];
 $adminPageTitle = $adminPage['document_title'];

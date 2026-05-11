@@ -1,7 +1,7 @@
 <?php
 $adminAssetBase = (defined('BASE_URL') ? rtrim(BASE_URL, '/') : 'http://localhost/BookTab') . '/public/admin_assets';
 
-$currentAction = isset($_GET['admin_action']) ? $_GET['admin_action'] : 'home';
+ $currentAction = isset($_GET['admin_action']) ? $_GET['admin_action'] : 'about';
 ?>
 <div class="sidebar-menu">
     <div class="sidebar-header">
@@ -13,13 +13,13 @@ $currentAction = isset($_GET['admin_action']) ? $_GET['admin_action'] : 'home';
         <div class="menu-inner">
             <nav>
                 <ul class="metismenu" id="menu">                    
-                    <li class="<?php echo ($currentAction == 'home') ? 'active' : ''; ?>">
-                        <a href="javascript:void(0)" aria-expanded="<?php echo ($currentAction == 'home') ? 'true' : 'false'; ?>">
-                            <i class="ti-layout-sidebar-left"></i><span>Home</span>
+                    <li class="<?php echo ($currentAction == 'about') ? 'active' : ''; ?>">
+                        <a href="javascript:void(0)" aria-expanded="<?php echo ($currentAction == 'about') ? 'true' : 'false'; ?>">
+                            <i class="ti-info-alt"></i><span>Giới thiệu</span>
                         </a>
-                        <ul class="collapse <?php echo ($currentAction == 'home') ? 'in show' : ''; ?>">
-                            <li class="<?php echo ($currentAction == 'home') ? 'active' : ''; ?>">
-                                <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=home">AdminHome</a>
+                        <ul class="collapse <?php echo ($currentAction == 'about') ? 'in show' : ''; ?>">
+                            <li class="<?php echo ($currentAction == 'about') ? 'active' : ''; ?>">
+                                <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=about">Quản lý Giới thiệu</a>
                             </li>
                         </ul>
                     </li>
@@ -31,6 +31,17 @@ $currentAction = isset($_GET['admin_action']) ? $_GET['admin_action'] : 'home';
                         <ul class="collapse <?php echo ($currentAction == 'products') ? 'in show' : ''; ?>">
                             <li class="<?php echo ($currentAction == 'products') ? 'active' : ''; ?>">
                                 <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=products">AdminProducts</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="<?php echo ($currentAction == 'orders') ? 'active' : ''; ?>">
+                        <a href="javascript:void(0)" aria-expanded="<?php echo ($currentAction == 'orders') ? 'true' : 'false'; ?>">
+                            <i class="ti-shopping-cart"></i><span>Orders</span>
+                        </a>
+                        <ul class="collapse <?php echo ($currentAction == 'orders') ? 'in show' : ''; ?>">
+                            <li class="<?php echo ($currentAction == 'orders') ? 'active' : ''; ?>">
+                                <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=orders">AdminOrders</a>
                             </li>
                         </ul>
                     </li>

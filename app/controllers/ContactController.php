@@ -4,7 +4,13 @@ class ContactController extends BaseController
 {
     public function index()
     {
-        require_once "../app/views/pages/contact.php";
+        require_once "../app/models/CompanyContactModel.php";
+        
+        $companyContactModel = new CompanyContactModel($this->db);
+        $contact = $companyContactModel->getContactInfo() ?: [];
+        
+        // Make $contact available to the view
+        $GLOBALS['contact_data'] = $contact;
     }
 
     public function send()

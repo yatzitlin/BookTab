@@ -94,7 +94,7 @@ $current_page = isset($_GET['page']) ? $_GET['page'] : 'home';
             <a href="<?php echo BASE_URL; ?>/public/index.php?page=home" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Trang chủ</a>
             <a href="<?php echo BASE_URL; ?>/public/index.php?page=about" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Giới thiệu</a>
             <a href="<?php echo BASE_URL; ?>/public/index.php?page=products" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Sản phẩm</a>
-            <a href="<?php echo BASE_URL; ?>/public/index.php?page=news" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Tin tức</a>
+            <a href="<?php echo BASE_URL; ?>/public/index.php?page=news" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Bài viết</a>
             <a href="<?php echo BASE_URL; ?>/public/index.php?page=qna" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Hỏi đáp</a>
             <a href="<?php echo BASE_URL; ?>/public/index.php?page=contact" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Liên hệ</a>
         </nav>

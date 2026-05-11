@@ -14,6 +14,9 @@ class ProductModel {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function getCategories() {
+        return $this->getAllCategories();
+    }
     public function getProductById($id) {
         // tìm trong bàng sp cuốn sách có id = ? và thể loại của nó
         $sql = "SELECT sp.*, lsp.ten_loai 

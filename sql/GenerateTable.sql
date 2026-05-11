@@ -14,7 +14,7 @@ DROP TABLE IF EXISTS chi_tiet_don_hang, don_hang, chi_tiet_gio_hang, gio_hang, d
 SET FOREIGN_KEY_CHECKS = 1;
 
 
-CREATE TABLE CompanyContact (
+CREATE TABLE companycontact (
     PhoneNumber VARCHAR(20),            -- Số điện thoại
     Address NVARCHAR(500),              -- Địa chỉ (hỗ trợ tiếng Việt có dấu)
     Email VARCHAR(255)                  -- Địa chỉ Email

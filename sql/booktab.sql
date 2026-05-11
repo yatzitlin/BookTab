@@ -21,6 +21,17 @@ SET time_zone = "+00:00";
 -- Cơ sở dữ liệu: `booktab`
 --
 
+SET FOREIGN_KEY_CHECKS = 0;
+--
+-- Đang đổ dữ liệu cho bảng `nguoi_dung`
+--
+
+INSERT INTO `nguoi_dung` (`userid`, `username`, `mat_khau`, `ho_va_ten_dem`, `ten`, `so_dien_thoai`, `email`, `avatar_url`, `vai_tro`, `trang_thai`, `ngay_tao`) VALUES
+(1, 'admin', '$2a$12$UHRC2flycgjyh/bpatCJDO14bC/ap99VXEFV/WAXmXuCRbFlIDHyG', 'Quản Trị', 'Viên', '0123456789', 'admin@booktab.com', NULL, 'member', 'active', '2026-05-05 20:23:28'),
+(2, 'user1', '$2y$10$UX5ZV4.g6Ayx5rn0pWoRI.ya575kadXDrMSf9ULjbIr/dGvnLgv6a', 'Bành Phú', 'Hội', '0123456789', 'hoi.banhphu@gmail.com', '6a009d26affd0_Cartethyia.jpeg', 'member', 'active', '2026-05-05 20:24:39'),
+(3, 'admin2', '$2y$10$LtIPqqzSd08/a6cXpCsqD.U/Z4tGSEyizzWXy6lRx5eQJCJUvVAW.', 'Nguyễn Văn', 'Hiệp', '0123456789', 'admin2@booktab.com', NULL, 'member', 'active', '2026-05-11 17:07:59'),
+(4, 'user2', '$2y$10$75FWPGM3gh8zKXqWvRT/XOoVpRHcFYUgGjDeA2uXdyl7wMK0Zh5Su', 'Huỳnh Đức', 'Huy', '0123456789', 'huy.huynhduc@gmail.com', NULL, 'member', 'active', '2026-05-11 17:17:34');
+
 --
 -- Đang đổ dữ liệu cho bảng `administrator`
 --
@@ -34,21 +45,21 @@ INSERT INTO `administrator` (`userid`) VALUES
 --
 
 INSERT INTO `anh_san_pham` (`ma_anh`, `ma_san_pham`, `url_anh`, `alt_text`, `is_primary`, `so_thu_tu`) VALUES
-(1, 1, 'https://salt.tikicdn.com/cache/w1200/ts/product/5e/18/24/2a6154ba08df6ce6161c13f4303fa19e.jpg', 'Đắc Nhân Tâm', 1, 1),
-(2, 2, 'https://salt.tikicdn.com/cache/w1200/ts/product/45/5b/fc/ae06f4392c15f912f658a975ba0e7daa.jpg', 'Nhà Giả Kim', 1, 1),
-(3, 3, 'https://salt.tikicdn.com/cache/w1200/ts/product/0b/f1/6a/1c808b8b26369b9e4a4f2d7e13e1fac7.jpg', 'Sapiens', 1, 1),
-(4, 4, 'https://salt.tikicdn.com/cache/w1200/ts/product/df/7d/b4/6b8e7a9eb61f5e3b3d6c4e8f5a2c9d1e.jpg', 'Tư Duy Nhanh Và Chậm', 1, 1),
-(5, 5, 'https://salt.tikicdn.com/cache/w1200/ts/product/4b/c9/49/1e853f3d2e4f5a6b7c8d9e0f1a2b3c4d.jpg', 'Atomic Habits', 1, 1),
-(6, 6, 'https://salt.tikicdn.com/cache/w1200/ts/product/8c/d7/6f/2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e.jpg', 'Người Giàu Có Nhất Thành Babylon', 1, 1),
-(7, 7, 'https://salt.tikicdn.com/cache/w1200/ts/product/3a/2b/1c/0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f5a.jpg', 'Cây Cam Ngọt Của Tôi', 1, 1),
-(8, 8, 'https://salt.tikicdn.com/cache/w1200/ts/product/7f/6e/5d/4c3b2a1b0c9d8e7f6a5b4c3d2e1f0a9b.jpg', 'Dám Bị Ghét', 1, 1),
-(9, 9, 'https://salt.tikicdn.com/cache/w1200/ts/product/6e/5d/4c/3b2a1b0c9d8e7f6a5b4c3d2e1f0a9b8c.jpg', 'Zero to One', 1, 1),
-(10, 10, 'https://salt.tikicdn.com/cache/w1200/ts/product/5d/4c/3b/2a1b0c9d8e7f6a5b4c3d2e1f0a9b8c7d.jpg', 'Hoàng Tử Bé', 1, 1),
-(11, 11, 'https://salt.tikicdn.com/cache/w1200/ts/product/4c/3b/2a/1b0c9d8e7f6a5b4c3d2e1f0a9b8c7d6e.jpg', 'Thinking in Systems', 1, 1),
-(12, 12, 'https://salt.tikicdn.com/cache/w1200/ts/product/3b/2a/1b/0c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f.jpg', 'Doraemon', 1, 1),
-(13, 13, 'https://salt.tikicdn.com/cache/w1200/ts/product/2a/1b/0c/9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a.jpg', 'Bố Già', 1, 1),
-(14, 14, 'https://salt.tikicdn.com/cache/w1200/ts/product/1b/0c/9d/8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b.jpg', 'Rèn Luyện Tư Duy Phản Biện', 1, 1),
-(15, 15, 'https://salt.tikicdn.com/cache/w1200/ts/product/0c/9d/8e/7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c.jpg', 'Sản Phẩm Test', 1, 1);
+(1,  1,  'uploads/products/product_1.webp',  'Đắc Nhân Tâm', 1, 1),
+(2,  2,  'uploads/products/product_2.webp',  'Nhà Giả Kim', 1, 1),
+(3,  3,  'uploads/products/product_3.webp',  'Sapiens', 1, 1),
+(4,  4,  'uploads/products/product_4.webp',  'Tư Duy Nhanh Và Chậm', 1, 1),
+(5,  5,  'uploads/products/product_5.webp',  'Atomic Habits', 1, 1),
+(6,  6,  'uploads/products/product_6.webp',  'Người Giàu Có Nhất Thành Babylon', 1, 1),
+(7,  7,  'uploads/products/product_7.webp',  'Cây Cam Ngọt Của Tôi', 1, 1),
+(8,  8,  'uploads/products/product_8.webp',  'Dám Bị Ghét', 1, 1),
+(9,  9,  'uploads/products/product_9.webp',  'Zero to One', 1, 1),
+(10, 10, 'uploads/products/product_10.webp', 'Hoàng Tử Bé', 1, 1),
+(11, 11, 'uploads/products/product_11.webp', 'Thinking in Systems', 1, 1),
+(12, 12, 'uploads/products/product_12.webp', 'Doraemon', 1, 1),
+(13, 13, 'uploads/products/product_13.webp', 'Bố Già', 1, 1),
+(14, 14, 'uploads/products/product_14.webp', 'Rèn Luyện Tư Duy Phản Biện', 1, 1),
+(15, 15, 'uploads/products/product_15.webp', 'Sản Phẩm Test', 1, 1);
 
 --
 -- Đang đổ dữ liệu cho bảng `bai_viet`
@@ -239,16 +250,6 @@ INSERT INTO `member` (`userid`, `diem_tich_luy`, `ten_rank`) VALUES
 (9, 0, NULL);
 
 --
--- Đang đổ dữ liệu cho bảng `nguoi_dung`
---
-
-INSERT INTO `nguoi_dung` (`userid`, `username`, `mat_khau`, `ho_va_ten_dem`, `ten`, `so_dien_thoai`, `email`, `avatar_url`, `vai_tro`, `trang_thai`, `ngay_tao`) VALUES
-(1, 'admin', '$2a$12$UHRC2flycgjyh/bpatCJDO14bC/ap99VXEFV/WAXmXuCRbFlIDHyG', 'Quản Trị', 'Viên', '0123456789', 'admin@booktab.com', NULL, 'member', 'active', '2026-05-05 20:23:28'),
-(2, 'user1', '$2y$10$UX5ZV4.g6Ayx5rn0pWoRI.ya575kadXDrMSf9ULjbIr/dGvnLgv6a', 'Bành Phú', 'Hội', '0123456789', 'hoi.banhphu@gmail.com', '6a009d26affd0_Cartethyia.jpeg', 'member', 'active', '2026-05-05 20:24:39'),
-(3, 'admin2', '$2y$10$LtIPqqzSd08/a6cXpCsqD.U/Z4tGSEyizzWXy6lRx5eQJCJUvVAW.', 'Nguyễn Văn', 'Hiệp', '0123456789', 'admin2@booktab.com', NULL, 'member', 'active', '2026-05-11 17:07:59'),
-(9, 'user2', '$2y$10$75FWPGM3gh8zKXqWvRT/XOoVpRHcFYUgGjDeA2uXdyl7wMK0Zh5Su', 'Huỳnh Đức', 'Huy', '0123456789', 'huy.huynhduc@gmail.com', NULL, 'member', 'active', '2026-05-11 17:17:34');
-
---
 -- Đang đổ dữ liệu cho bảng `san_pham`
 --
 
@@ -307,6 +308,9 @@ INSERT INTO `thong_tin_chi_tiet` (`ma_chi_tiet`, `ma_thong_tin`, `noi_dung`, `ur
 (17, 8, 'support@booktab.vn', NULL),
 (18, 9, '© 2026 BookTab. Nhà sách trực tuyến — Nơi sách gặp công nghệ.', NULL),
 (19, 1, '<div class=\"not-prose\" style=\"text-align: center; padding: 40px 20px; background: linear-gradient(135deg, #ef4444, #f97316); border-radius: 16px; color: white; margin-bottom: 32px;\">\r\n<h1 style=\"font-size: 36px; font-weight: bold; margin: 0;\"><span style=\"color: rgb(255, 255, 255);\">BookTab &mdash; Nơi s&aacute;ch gặp c&ocirc;ng nghệ</span></h1>\r\n<p style=\"margin-top: 12px; font-size: 18px; opacity: 0.9;\">X&acirc;y dựng trải nghiệm mua s&aacute;ch trực tuyến nhanh, r&otilde; r&agrave;ng v&agrave; đ&aacute;ng tin cậy cho mọi độc giả.</p>\r\n</div>\r\n<h2><span style=\"color: rgb(224, 62, 45);\">BookTab</span> l&agrave; g&igrave;?</h2>\r\n<p>BookTab l&agrave; dự &aacute;n thương mại điện tử s&aacute;ch được ph&aacute;t triển theo kiến tr&uacute;c MVC tự x&acirc;y dựng. Ch&uacute;ng t&ocirc;i tập trung v&agrave;o trải nghiệm t&igrave;m kiếm dễ d&ugrave;ng, th&ocirc;ng tin minh bạch v&agrave; quy tr&igrave;nh đặt h&agrave;ng đơn giản để ai cũng c&oacute; thể mua s&aacute;ch thuận tiện.</p>\r\n<p>Với kho s&aacute;ch đa dạng từ văn học trong nước đến s&aacute;ch ngoại văn, từ s&aacute;ch gi&aacute;o khoa đến tiểu thuyết, BookTab mong muốn trở th&agrave;nh điểm đến tin cậy cho mọi đối tượng độc giả &mdash; từ học sinh, sinh vi&ecirc;n đến những người y&ecirc;u s&aacute;ch ở mọi lứa tuổi.</p>\r\n<h2><span style=\"color: rgb(224, 62, 45);\">Sứ mệnh</span> của ch&uacute;ng t&ocirc;i</h2>\r\n<p>Ch&uacute;ng t&ocirc;i mong muốn r&uacute;t ngắn khoảng c&aacute;ch giữa người đọc v&agrave; những đầu s&aacute;ch chất lượng th&ocirc;ng qua một nền tảng ổng định, dễ truy cập v&agrave; th&acirc;n thiện với cả người d&ugrave;ng mới.</p>\r\n<p>Mỗi ng&agrave;y, h&agrave;ng ng&agrave;n cuốn s&aacute;ch mới được xuất bản tr&ecirc;n thế giới. Nhiệm vụ của BookTab l&agrave; gi&uacute;p bạn tiếp cận những cuốn s&aacute;ch đ&oacute; một c&aacute;ch nhanh nhất, với gi&aacute; cả hợp l&yacute; nhất v&agrave; dịch vụ chuy&ecirc;n nghiệp nhất.</p>\r\n<h2><span style=\"color: rgb(224, 62, 45);\">Gi&aacute; trị cốt l&otilde;i</span></h2>\r\n<p>BookTab ưu ti&ecirc;n ba gi&aacute; trị ch&iacute;nh trong mọi hoạt động:</p>\r\n<ul>\r\n<li><strong>Minh bạch th&ocirc;ng tin:</strong> M&otilde;i cuốn s&aacute;ch đều c&oacute; m&ocirc; tả chi tiết, h&igrave;nh ảnh thực tế v&agrave; đ&aacute;nh gi&aacute; từ người mua. Kh&ocirc;ng c&oacute; th&ocirc;ng tin ẩn hay ph&iacute; ph&aacute;t sinh.</li>\r\n<li><strong>Tối ưu hiệu năng:</strong> Trang web tải nhanh, t&igrave;m kiếm ch&iacute;nh x&aacute;c, quy tr&iacute;nh đặt h&agrave;ng gọn g&agrave;ng. Ch&uacute;ng t&ocirc;i li&ecirc;n tục cải thiện tốc độ v&agrave; trải nghiệm người d&ugrave;ng.</li>\r\n<li><strong>Cải tiến li&ecirc;n tục:</strong> Phản hồi từ người d&ugrave;ng l&agrave; nguồn cảm hứng cho mọi cập nhật. Ch&uacute;ng t&ocirc;i lắng nghe, học hỏi v&agrave; cải thiện mỗi ng&agrave;y.</li>\r\n</ul>\r\n<h2><span style=\"color: rgb(224, 62, 45);\">Đội ngũ </span>đằng sau BookTab</h2>\r\n<p>BookTab được x&acirc;y dựng bởi đội ngũ nhỏ gọn nhưng đam m&ecirc;, bao gồm c&aacute;c lập tr&igrave;nh vi&ecirc;n, thiết kế vi&ecirc;n v&agrave; những người y&ecirc;u s&aacute;ch. Ch&uacute;ng t&ocirc;i tin rằng c&ocirc;ng nghệ phải phục vụ con người, v&agrave; m&otilde;i d&ograve;ng code đều hướng tới trải nghiệm tốt hơn cho người đọc.</p>\r\n<h2><span style=\"color: rgb(224, 62, 45);\">Li&ecirc;n hệ</span> với ch&uacute;ng t&ocirc;i</h2>\r\n<p>Bạn c&oacute; thắ̂c măc, đề xuất hay muốn hợp t&aacute;c? Đừng ngần ngại li&ecirc;n hệ:</p>\r\n<ul>\r\n<li><strong>Email:</strong> support@booktab.vn</li>\r\n<li><strong>Hotline:</strong> 0123 456 789 (8:00 &ndash; 21:00 h&agrave;ng ng&agrave;y)</li>\r\n<li><strong>Địa chỉ:</strong> 123 Đường S&aacute;ch, Quận 1, TP. Hồ Ch&iacute; Minh</li>\r\n</ul>\r\n<blockquote>\r\n<p>&ldquo;Mỗi cuốn s&aacute;ch l&agrave; một c&aacute;nh cửa. BookTab gi&uacute;p bạn mở c&aacute;nh cửa đ&oacute; dễ d&agrave;ng hơn.&rdquo;</p>\r\n</blockquote>', NULL);
+
+
+SET FOREIGN_KEY_CHECKS = 1;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

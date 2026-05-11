@@ -89,6 +89,139 @@ if (!function_exists('booktab_news_thumbnail_url')) {
         opacity: 0;
         transition: all 1.3s;
     }
+
+    /* ===== Responsive: Tablet và điện thoại ===== */
+    @media (max-width: 1024px) {
+        #discoverBar {
+            margin-bottom: 1.5rem;
+        }
+
+        #discoverBar .grid {
+            gap: 1rem;
+        }
+
+        #discoverBar .font-semibold {
+            margin-bottom: 0.25rem;
+        }
+
+        .news-card,
+        .news-card:hover {
+            transform: none;
+        }
+
+        #sliderDots {
+            right: 1rem;
+            bottom: 1rem;
+        }
+
+        #btnPrev,
+        #btnNext {
+            opacity: 1;
+        }
+    }
+
+    @media (max-width: 768px) {
+        #discoverBar section {
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+
+        #discoverBar .flex.flex-wrap {
+            gap: 0.5rem;
+        }
+
+        #discoverBar .px-4.py-1\.5 {
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
+        }
+
+        .news-card {
+            border-radius: 1rem;
+        }
+
+        #sliderContainer,
+        .news-slider-shell {
+            height: 320px;
+        }
+
+        #btnPrev,
+        #btnNext {
+            width: 2.5rem;
+            height: 2.5rem;
+            left: 0.75rem;
+            right: 0.75rem;
+        }
+
+        #sliderDots {
+            gap: 0.35rem;
+        }
+
+        #sliderDots button,
+        #sliderDots span {
+            transform: scale(0.9);
+        }
+
+        .snap-start {
+            width: 12.5rem;
+        }
+    }
+
+    @media (max-width: 640px) {
+        #discoverBar {
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        #discoverBar .font-semibold {
+            font-size: 0.95rem;
+        }
+
+        #sliderContainer,
+        .news-slider-shell {
+            height: 280px;
+        }
+
+        .news-home-slide-title {
+            font-size: 1.35rem;
+            line-height: 1.2;
+        }
+
+        .news-home-slide-summary {
+            width: 100%;
+            font-size: 0.75rem;
+        }
+
+        .news-home-slide-meta {
+            font-size: 0.72rem;
+            gap: 0.4rem;
+        }
+
+        .news-home-trending-card {
+            width: 10rem;
+        }
+
+        .news-home-trending-image {
+            height: auto;
+            aspect-ratio: 1 / 1;
+        }
+
+        .news-home-trending-title {
+            font-size: 0.78rem;
+            line-height: 1.35;
+        }
+
+        .line-clamp-2,
+        .line-clamp-3 {
+            -webkit-line-clamp: 2;
+        }
+
+        .snap-start {
+            width: 11.5rem;
+        }
+
+        h2 {
+            scroll-margin-top: 90px;
+        }
+    }
 </style>
 
 <!-- ===================================================================================== -->
@@ -198,7 +331,7 @@ if (!function_exists('booktab_news_thumbnail_url')) {
     
     <!-- Thẻ slider container: Chứa slides, nút điều hướng, và dots -->
     <div 
-        class="relative w-full lg:w-[95%] mx-auto h-[450px] rounded-2xl overflow-hidden group shadow-lg news-card"
+        class="news-slider-shell relative w-full lg:w-[95%] mx-auto h-[450px] rounded-2xl overflow-hidden group shadow-lg news-card"
     >
         
         <!-- Nút: Chuyển sang slide trước -->
@@ -282,17 +415,17 @@ if (!function_exists('booktab_news_thumbnail_url')) {
                             </span>
 
                             <!-- Tiêu đề bài viết -->
-                            <h3 class="text-3xl md:text-4xl font-bold mb-4 leading-tight">
+                            <h3 class="news-home-slide-title text-3xl md:text-4xl font-bold mb-4 leading-tight">
                                 <?php echo htmlspecialchars($news['tieu_de']); ?>
                             </h3>
 
                             <!-- Tóm tắt bài viết (tối đa 2 dòng) -->
-                            <p class="text-gray-300 text-sm md:text-base line-clamp-2 mb-4 w-3/4">
+                            <p class="news-home-slide-summary text-gray-300 text-sm md:text-base line-clamp-2 mb-4 w-3/4">
                                 <?php echo htmlspecialchars($news['tom_tat'] ?? ''); ?>
                             </p>
 
                             <!-- Tác giả và ngày đăng -->
-                            <div class="text-sm text-gray-300 flex items-center gap-3 font-medium">
+                            <div class="news-home-slide-meta text-sm text-gray-300 flex items-center gap-3 font-medium">
                                 <span>
                                     <?php echo htmlspecialchars($news['ho_ten'] ?? 'BookTab'); ?>
                                 </span>
@@ -343,7 +476,7 @@ if (!function_exists('booktab_news_thumbnail_url')) {
     </div>
     
     <!-- Container: Grid hoặc scroll ngang các card trending -->
-    <div class="flex overflow-x-auto hide-scroll snap-x gap-6 pb-4 lg:grid lg:grid-cols-5 lg:overflow-visible">
+    <div class="flex overflow-x-auto hide-scroll snap-x gap-4 md:gap-6 pb-4 lg:grid lg:grid-cols-5 lg:overflow-visible">
         <?php if (!empty($trendingNews)): ?>
             <?php foreach ($trendingNews as $index => $news): ?>
                 <?php
@@ -353,7 +486,7 @@ if (!function_exists('booktab_news_thumbnail_url')) {
                 ?>
                 <!-- Card: Bài viết trending với hiệu ứng glass hover -->
                 <article 
-                    class="snap-start shrink-0 w-[240px] lg:w-auto cursor-pointer group wave-glass news-card p-3" 
+                    class="news-home-trending-card snap-start shrink-0 w-[220px] md:w-[240px] lg:w-auto cursor-pointer group wave-glass news-card p-3" 
                     onclick="<?php echo htmlspecialchars($jsAction, ENT_QUOTES, 'UTF-8'); ?>"
                 >
                     <!-- Hiệu ứng glass pieces: 4 mảnh kính ở 4 góc -->
@@ -363,7 +496,7 @@ if (!function_exists('booktab_news_thumbnail_url')) {
                     <div class="glass-piece bottom-right"></div>
 
                     <!-- Ảnh thumbnail bài viết -->
-                    <div class="relative h-36 bg-gray-200 rounded-lg mb-3 overflow-hidden">
+                    <div class="news-home-trending-image relative h-36 bg-gray-200 rounded-lg mb-3 overflow-hidden">
                         <?php if (!empty($news['thumbnail_url'])): ?>
                             <img 
                                 src="<?php echo htmlspecialchars(booktab_news_thumbnail_url($news['thumbnail_url']), ENT_QUOTES, 'UTF-8'); ?>" 
@@ -378,7 +511,7 @@ if (!function_exists('booktab_news_thumbnail_url')) {
                     </div>
 
                     <!-- Tiêu đề bài viết (tối đa 3 dòng) -->
-                    <h3 class="font-semibold text-gray-800 line-clamp-3 text-sm leading-relaxed">
+                    <h3 class="news-home-trending-title font-semibold text-gray-800 line-clamp-3 text-sm leading-relaxed">
                         <?php echo htmlspecialchars($news['tieu_de']); ?>
                     </h3>
                 </article>

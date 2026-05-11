@@ -4,7 +4,7 @@
 class CompanyContactModel
 {
     private $conn;
-    private $table = "CompanyContact";
+    private $table = "companycontact";
 
     public function __construct($dbConnection)
     {

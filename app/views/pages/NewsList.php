@@ -94,9 +94,90 @@ function booktab_news_list_page_url($type, $value, $pageNumber = 1) {
     .search-dropdown-empty {
         color: #64748b;
     }
+
+    /* ===== Responsive: Tablet và điện thoại ===== */
+    @media (max-width: 1024px) {
+        .news-list-header {
+            gap: 1rem;
+        }
+
+        .news-list-search {
+            width: 100%;
+        }
+
+        .news-list-search form {
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .news-list-page {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        .news-list-header h1 {
+            font-size: 1.875rem;
+            line-height: 1.15;
+        }
+
+        .news-list-grid {
+            gap: 1rem;
+        }
+
+        .news-list-grid .news-card .relative.h-52 {
+            height: 13rem;
+        }
+
+        .news-list-pagination {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .news-list-pagination .flex.items-center.gap-2 {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .news-list-page nav ol {
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
+
+        .news-list-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .news-list-page .news-card {
+            border-radius: 1rem;
+        }
+
+        .news-list-page .news-card h2 {
+            font-size: 1rem;
+            line-height: 1.35;
+        }
+
+        .news-list-page .news-card p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+        }
+
+        .news-list-page .news-list-card-image {
+            aspect-ratio: 1 / 1;
+            height: auto;
+        }
+
+        .news-list-pagination a,
+        .news-list-pagination span {
+            padding-left: 0.85rem;
+            padding-right: 0.85rem;
+        }
+    }
 </style>
 
-<div class="max-w-7xl mx-auto px-4 sm:px-6">
+<div class="news-list-page max-w-7xl mx-auto px-4 sm:px-6">
     <!-- Section: Breadcrumb Navigation - Đường dẫn điều hướng hiển thị vị trí hiện tại -->
     <nav 
         class="flex text-sm text-gray-400 mb-6" 
@@ -121,7 +202,7 @@ function booktab_news_list_page_url($type, $value, $pageNumber = 1) {
     </nav>
 
     <!-- Section: Header - Tiêu đề + mô tả trang + ô tìm kiếm -->
-    <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-8">
+    <div class="news-list-header flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-8">
         <!-- Header content: Tiêu đề chính và mô tả -->
         <div>
             <h1 class="text-3xl md:text-4xl font-black text-gray-900 mb-2">
@@ -133,7 +214,7 @@ function booktab_news_list_page_url($type, $value, $pageNumber = 1) {
         </div>
 
         <!-- Form tìm kiếm: Ô input + button + dropdown gợi ý -->
-        <div class="w-full lg:w-[420px]">
+        <div class="news-list-search w-full lg:w-[420px]">
             <form 
                 id="newsSearchForm" 
                 action="<?php echo BASE_URL; ?>/public/tim-kiem-tin-tuc" 
@@ -185,7 +266,7 @@ function booktab_news_list_page_url($type, $value, $pageNumber = 1) {
     <!-- Section: Danh sách bài viết - Grid hoặc thông báo trống -->
     <?php if (!empty($newsItems)): ?>
         <!-- Grid: 3 cột trên desktop, 2 cột trên tablet, 1 cột trên mobile -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="news-list-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <?php foreach ($newsItems as $news): ?>
                 <?php $newsUrl = BASE_URL . '/public/bai-viet/' . urlencode($news['slug'] ?? ''); ?>
                 <!-- Card: Bài viết - Click để chuyển tới chi tiết -->
@@ -194,7 +275,7 @@ function booktab_news_list_page_url($type, $value, $pageNumber = 1) {
                     onclick="window.location='<?php echo $newsUrl; ?>'"
                 >  
                     <!-- Ảnh thumbnail: Với background dark overlay + gradient -->
-                    <div class="relative h-52 bg-gray-200 overflow-hidden">
+                    <div class="news-list-card-image relative h-52 bg-gray-200 overflow-hidden">
                         <?php if (!empty($news['thumbnail_url'])): ?>
                             <img 
                                 src="<?php echo htmlspecialchars(booktab_news_thumbnail_url($news['thumbnail_url']), ENT_QUOTES, 'UTF-8'); ?>" 
@@ -243,7 +324,7 @@ function booktab_news_list_page_url($type, $value, $pageNumber = 1) {
     <?php endif; ?>
 
     <!-- Section: Pagination - Điều hướng giữa các trang -->
-    <div class="mt-10 flex items-center justify-between gap-4 flex-wrap">
+    <div class="news-list-pagination mt-10 flex items-center justify-between gap-4 flex-wrap">
         <!-- Text: Thông tin trang hiện tại -->
         <div class="text-sm text-gray-500">
             Trang <?php echo (int) $currentPage; ?> / <?php echo (int) $totalPages; ?>

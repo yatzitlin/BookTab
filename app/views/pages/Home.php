@@ -153,7 +153,7 @@
                 <div class="bg-white p-4 rounded shadow hover:shadow-2xl transition duration-300">
 
                     <!-- ẢNH -->
-                    <img src="<?= BASE_URL . '/' . $book['anh_chinh'] ?>"
+                    <img src="<?= htmlspecialchars($book['anh_chinh'], ENT_QUOTES, 'UTF-8') ?>"
                          alt="<?= htmlspecialchars($book['ten_san_pham']) ?>"
                          class="h-64 w-full object-cover rounded mb-4">
 

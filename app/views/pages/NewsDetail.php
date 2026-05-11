@@ -103,11 +103,147 @@ if (!function_exists('booktab_news_thumbnail_url')) {
     section[id], h2[id], h1[id] {
         scroll-margin-top: 120px;
     }
+
+    /* ===== Responsive: Tablet và điện thoại ===== */
+    @media (max-width: 1024px) {
+        .news-detail-layout {
+            gap: 2rem;
+        }
+
+        .news-detail-article {
+            width: 100%;
+        }
+
+        .news-detail-toc {
+            width: 100%;
+            order: -1;
+        }
+
+        .news-detail-toc-panel {
+            position: relative;
+            top: auto;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .news-detail-page {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        .news-detail-page .breadcrumb ol {
+            flex-wrap: wrap;
+            row-gap: 0.35rem;
+        }
+
+        .news-detail-page .breadcrumb li {
+            max-width: 100%;
+        }
+
+        .news-detail-article {
+            padding: 1.25rem;
+            border-radius: 1.5rem;
+        }
+
+        .news-detail-article h1 {
+            font-size: 2rem;
+            line-height: 1.2;
+        }
+
+        .news-detail-meta {
+            gap: 0.75rem;
+            align-items: flex-start;
+        }
+
+        .news-detail-toc-panel {
+            padding: 1rem;
+            border-radius: 1.25rem;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .news-detail-page .breadcrumb {
+            display: none;
+        }
+
+        .news-detail-article .mb-8 p {
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .news-detail-article .chi-tiet-bai-viet {
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .news-detail-article .chi-tiet-bai-viet p {
+            font-size: 0.9rem;
+        }
+
+        .news-detail-meta {
+            gap: 0.75rem;
+        }
+
+        .news-detail-meta .w-12.h-12 {
+            width: 2.5rem;
+            height: 2.5rem;
+            font-size: 0.85rem;
+        }
+
+        .news-detail-meta > div .font-bold {
+            font-size: 0.875rem;
+        }
+
+        .news-detail-meta > div .text-gray-400 {
+            font-size: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .comments-list-item {
+            padding: 0.75rem;
+        }
+
+        .comments-list-item .font-bold {
+            font-size: 0.875rem;
+        }
+
+        .comments-list-item .text-gray-600,
+        .comments-list-item .text-xs,
+        .comments-list-item p {
+            font-size: 0.8rem;
+        }
+
+        .comments-list-item .text-gray-400 {
+            font-size: 0.7rem;
+        }
+
+        .news-detail-article h1 {
+            font-size: 1.75rem;
+        }
+
+        .news-detail-article .chi-tiet-bai-viet h2 {
+            font-size: 1.5rem;
+        }
+
+        .news-detail-article .chi-tiet-bai-viet h3 {
+            font-size: 1.25rem;
+        }
+    }
+
+        .news-detail-toc-panel {
+            padding: 0.2rem;
+        }
+
+        .news-detail-toc-panel #toc-list {
+            gap: 0.125rem;
+        }
+    }
 </style>
 
+<div class="news-detail-page max-w-7xl mx-auto px-4 sm:px-6">
     <!-- Section: Breadcrumb Navigation - Đường dẫn điều hướng hiển thị vị trí hiện tại -->
     <nav 
-        class="flex text-sm text-gray-400 mb-8" 
+        class="breadcrumb flex text-sm text-gray-400 mb-8" 
         aria-label="Breadcrumb"
     >
         <ol class="flex items-center space-x-2">
@@ -145,10 +281,27 @@ if (!function_exists('booktab_news_thumbnail_url')) {
         </ol>
     </nav>
 
-    <div class="flex flex-col lg:flex-row gap-12">
+    <div class="news-detail-layout flex flex-col lg:flex-row gap-12">
+
+        <!-- Sidebar: Table of Contents + Sticky navigation -->
+        <aside class="news-detail-toc w-full lg:w-4/12 flex flex-col gap-8 order-first lg:order-last">
+            <div 
+                id="toc-container" 
+                class="news-detail-toc-panel sticky top-24 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm"
+            >
+                <h3 class="text-sm font-black text-gray-400 uppercase tracking-widest mb-4">
+                    Nội dung bài viết
+                </h3>
+                <nav 
+                    id="toc-list" 
+                    class="flex flex-col gap-1 border-l-2 border-gray-50"
+                >
+                </nav>
+            </div>
+        </aside>
         
         <!-- Article: Nội dung bài viết chính -->
-        <article class="w-full lg:w-8/12 bg-white p-6 md:p-10 rounded-3xl shadow-sm border border-gray-100">
+        <article class="news-detail-article w-full lg:w-8/12 bg-white p-6 md:p-10 rounded-3xl shadow-sm border border-gray-100">
             
             <!-- Badge: Danh mục bài viết -->
             <span class="inline-block px-3 py-1 bg-blue-50 text-brand text-xs font-bold rounded-md uppercase tracking-wider mb-4">
@@ -161,7 +314,7 @@ if (!function_exists('booktab_news_thumbnail_url')) {
             </h1>
 
             <!-- Metadata: Tác giả, ngày đăng, lượt xem -->
-            <div class="flex items-center gap-4 mb-10 pb-8 border-b border-gray-100">
+            <div class="news-detail-meta flex items-center gap-4 mb-10 pb-8 border-b border-gray-100">
                 <div class="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center font-bold text-gray-500">
                     <?php echo mb_substr($newsDetail['ho_ten'], 0, 1); ?>
                 </div>
@@ -344,24 +497,8 @@ if (!function_exists('booktab_news_thumbnail_url')) {
             </section>
         </article>
 
-        <!-- Sidebar: Table of Contents + Sticky navigation -->
-        <aside class="w-full lg:w-4/12 flex flex-col gap-8">
-            <div 
-                id="toc-container" 
-                class="sticky top-24 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm"
-            >
-                <h3 class="text-sm font-black text-gray-400 uppercase tracking-widest mb-4">
-                    Nội dung bài viết
-                </h3>
-                <nav 
-                    id="toc-list" 
-                    class="flex flex-col gap-1 border-l-2 border-gray-50"
-                >
-                </nav>
-            </div>
-        </aside>
-
     </div>
+</div>
 
 <!-- ===================================================================================== -->
 <!-- Script: Logic Table of Contents - Tạo mục lục tự động từ headings -->

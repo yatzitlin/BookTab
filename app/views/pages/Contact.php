@@ -1,3 +1,4 @@
+<?php $contact = $GLOBALS['contact_data'] ?? []; ?>
 <div class="max-w-6xl mx-auto px-4 py-16">
 
     <!-- HEADER -->

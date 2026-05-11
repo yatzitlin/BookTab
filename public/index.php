@@ -13,7 +13,7 @@ require_once __DIR__ . '/../app/models/CompanyContactModel.php';
 require_once __DIR__ . '/../app/controllers/NewsController.php';
 require_once __DIR__ . '/../app/controllers/ProductController.php';
 require_once __DIR__ . '/../app/controllers/CartController.php';
-
+require_once __DIR__ . '/../app/controllers/OrderController.php';
 
 $database = new Database();
 $dbConnection = $database->connect();
@@ -284,6 +284,22 @@ if ($page === 'cart') {
 } elseif ($page === 'checkout') {
     $cartCtrl = new CartController($dbConnection);
     $cartCtrl->showCheckout(); exit;
+} elseif ($action === 'admin_product') {
+    $productCtrl = new ProductController($dbConnection);
+    $productCtrl->handleAdminProductAction(); exit;
+} elseif ($action === 'admin_order') {
+    $orderCtrl = new OrderController($dbConnection);
+    $orderCtrl->handleUpdateOrderStatus(); exit;
+}
+
+
+// ORDER MODULE
+if ($page === 'orders') {
+    $orderCtrl = new OrderController($dbConnection);
+    $orderCtrl->showOrders(); exit;
+} elseif ($page === 'order_detail') {
+    $orderCtrl = new OrderController($dbConnection);
+    $orderCtrl->showOrderDetail(); exit;
 }
 
 // Routing cho các page thường
@@ -475,6 +491,10 @@ switch ($page) {
         }
         break;
     case 'contact':
+        require_once '../app/controllers/ContactController.php';
+        $controller = new ContactController($dbConnection);
+        $controller->index();
+        // Don't exit - let template.php handle it
         $view_content = '../app/views/pages/Contact.php';
         $pageTitle = 'Liên hệ';
         break;
