@@ -9,7 +9,6 @@ $perPage = 15;
 
 $categories = $qnaController->getCategories();
 
-// ---- Breadcrumb động theo tab ----
 $qnaBaseUrl = BASE_URL . '/public/index.php?page=admin&admin_action=qna';
 $_bcQna = ['label' => 'Hỏi đáp', 'url' => $qnaBaseUrl . '&act=questions'];
 switch ($act) {
@@ -20,10 +19,9 @@ switch ($act) {
         $adminPageBreadcrumbOverride = [$_bcQna, ['label' => 'Quản lý chủ đề']];
         break;
     case 'view':
-        // sẽ được xác định lại sau khi biết is_faq của câu hỏi
-        $adminPageBreadcrumbOverride = null; // placeholder, set bên dưới
+        $adminPageBreadcrumbOverride = null;
         break;
-    default: // questions
+    default:
         $adminPageBreadcrumbOverride = [$_bcQna, ['label' => 'Danh sách câu hỏi']];
         break;
 }
@@ -151,13 +149,11 @@ function statusRowClass($trangThai) {
     <?php endif; ?>
 
     <?php if ($act === 'view' && isset($_GET['id'])): ?>
-        <!-- ==================== DETAIL VIEW ==================== -->
         <?php
         $questionId = (int)$_GET['id'];
         $detail = $qnaController->adminGetQuestionDetail($questionId);
         $isFaqQuestion = !empty($detail) && ($detail['is_faq'] ?? 'No') === 'Yes';
         $backTab = $isFaqQuestion ? 'faq' : 'questions';
-        // Set breadcrumb chính xác dựa vào loại câu hỏi
         if ($isFaqQuestion) {
             $adminPageBreadcrumbOverride = [
                 $_bcQna,
@@ -196,12 +192,24 @@ function statusRowClass($trangThai) {
                         </div>
                         <div class="col-md-4 text-end">
                             <?php if ($detail['trang_thai'] === 'da_an'): ?>
+                                <?php
+                                $canUnhide = !($isFaqQuestion && empty($detail['ma_cau_tra_loi']));
+                                ?>
+                                <?php if ($canUnhide): ?>
                                 <form method="POST" action="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna" class="d-inline mb-2">
                                     <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
                                     <input type="hidden" name="act" value="unhide">
                                     <input type="hidden" name="id" value="<?php echo $questionId; ?>">
                                     <button type="submit" class="btn btn-outline-warning btn-sm"><i class="ti-eye"></i> Hiện</button>
                                 </form>
+                                <?php else: ?>
+                                <span class="d-inline">
+                                <button type="button" class="btn btn-outline-warning btn-sm"
+                                        onclick="showFaqUnhideWarning()">
+                                    <i class="ti-eye"></i> Hiện
+                                </button>
+                                </span>
+                                <?php endif; ?>
                             <?php else: ?>
                                 <form method="POST" action="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna" class="d-inline mb-2">
                                     <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
@@ -262,16 +270,7 @@ function statusRowClass($trangThai) {
                                 </div>
                                 <div class="mb-3"><?php echo $detail['cau_tra_loi']; ?></div>
 
-                                <?php if (!empty($detail['answer_images'])): ?>
-                                    <div class="img-gallery mb-3">
-                                        <?php foreach ($detail['answer_images'] as $img): ?>
-                                            <?php $aImgUrl = BASE_URL . '/' . htmlspecialchars(ltrim($img['url_anh'], '/'), ENT_QUOTES, 'UTF-8'); ?>
-                                            <a href="<?php echo $aImgUrl; ?>" class="glightbox" data-gallery="answer-images">
-                                                <img src="<?php echo $aImgUrl; ?>" loading="lazy" class="img-thumb" style="width:100px;height:100px;" alt="">
-                                            </a>
-                                        <?php endforeach; ?>
-                                    </div>
-                                <?php endif; ?>
+
 
                                 <div id="editAnswerForm" style="display:none;">
                                     <form method="POST" action="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna">
@@ -305,7 +304,6 @@ function statusRowClass($trangThai) {
         <?php endif; ?>
 
     <?php elseif ($act === 'faq'): ?>
-        <!-- ==================== FAQ VIEW ==================== -->
         <?php
         $faqData = $qnaController->adminGetFaqItems($currentPage, $perPage, $selectedCategory);
         $catParam = $selectedCategory > 0 ? '&category=' . $selectedCategory : '';
@@ -434,7 +432,6 @@ function statusRowClass($trangThai) {
         </div>
 
     <?php elseif ($act === 'categories'): ?>
-        <!-- ==================== CATEGORIES VIEW ==================== -->
         <?php
         $editCat = null;
         if (isset($_GET['edit_cat'])) {
@@ -490,7 +487,6 @@ function statusRowClass($trangThai) {
                         <button type="submit" class="btn btn-success btn-sm" id="reorder-save-btn"><i class="ti-save"></i> Lưu thứ tự</button>
                     </div>
 
-                    <!-- Toast thông báo không thay đổi -->
                     <div aria-live="polite" aria-atomic="true" style="position:relative;">
                         <div id="reorder-toast-wrap" style="position:absolute;top:0;right:0;z-index:9999;"></div>
                     </div>
@@ -532,9 +528,8 @@ function statusRowClass($trangThai) {
             var el = document.getElementById('category-list');
             if (!el) return;
 
-            // Thứ tự ban đầu khi trang load
             var initialOrder = <?php echo json_encode(array_values(array_column($categories, 'ma_loai'))); ?>;
-            var currentOrder = initialOrder.slice(); // bản sao
+            var currentOrder = initialOrder.slice();
             document.getElementById('reorder-input').value = JSON.stringify(currentOrder);
 
             function syncOrder() {
@@ -554,7 +549,6 @@ function statusRowClass($trangThai) {
                 onEnd: syncOrder
             });
 
-            // Intercept submit: nếu thứ tự không đổi thì hiện toast và KHÔNG gửi request
             document.getElementById('reorder-form').addEventListener('submit', function(e) {
                 if (JSON.stringify(currentOrder) === JSON.stringify(initialOrder)) {
                     e.preventDefault();
@@ -589,7 +583,6 @@ function statusRowClass($trangThai) {
         </script>
 
     <?php else: ?>
-        <!-- ==================== QUESTIONS LIST (default) ==================== -->
         <?php
         $qnaData = $qnaController->adminGetQuestions($currentPage, $perPage, $selectedCategory);
         $catParam = $selectedCategory > 0 ? '&category=' . $selectedCategory : '';
@@ -702,4 +695,22 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+function showFaqUnhideWarning() {
+    var container = document.getElementById('faq-toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'faq-toast-container';
+        container.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;';
+        document.body.appendChild(container);
+    }
+    var el = document.createElement('div');
+    el.className = 'toast align-items-center text-bg-warning border-0 show mb-2';
+    el.setAttribute('role', 'alert');
+    el.innerHTML = '<div class="d-flex"><div class="toast-body fw-semibold">' +
+        '<i class="ti-alert me-1"></i>FAQ phải có câu trả lời trước khi hiện. Hãy thêm câu trả lời bên dưới.' +
+        '</div><button type="button" class="btn-close me-2 m-auto" onclick="this.closest(\'.toast\').remove()"></button></div>';
+    container.appendChild(el);
+    setTimeout(function() { el.remove(); }, 4000);
+}
 </script>

@@ -2,7 +2,6 @@
 define('BASE_URL', 'http://localhost/BookTab');
 
 require_once __DIR__ . '/../app/controllers/AuthController.php';
-// Enable display errors for development troubleshooting
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -20,23 +19,18 @@ $database = new Database();
 $dbConnection = $database->connect();
 $GLOBALS['dbConnection'] = $dbConnection;
 
-// Cấu hình cài đặt cookie session bảo mật
 AuthController::configureSessionSecurity();
 
 session_start();
 
-// Tạo một thực thể AuthController duy nhất để xử lý session và yêu cầu.
 $authController = new AuthController($dbConnection);
 
-// Kiểm tra session timeout trước khi xử lý
 $authController->checkSessionTimeout();
 
-// Tạo token chống CSRF
 if (!isset($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-// Kiểm tra action
 $action = isset($_GET['action']) ? $_GET['action'] : null;
 
 if ($action === 'register') {
@@ -65,20 +59,15 @@ if ($action === 'register') {
     $orderCtrl->handleCheckout(); exit;
 }
 
-
 // Nếu không có action, kiểm tra page
 $page = isset($_GET['page']) ? $_GET['page'] : 'home';
 
-// Kiểm tra quyền admin
 if ($page === 'admin' || $page === 'admin_dashboard') {
     if (!isset($_SESSION['userid']) || !isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'administrator') {
         header('Location: ' . BASE_URL . '/public/index.php?page=login&error=unauthorized');
         exit;
     }
 }
-
-$contactModel = new CompanyContactModel($dbConnection);
-$contact = $contactModel->getContactInfo();
 
 // Xử lý admin actions TRƯỚC khi include adminLayout
 if ($page === 'admin' && isset($_GET['action'])) {
@@ -208,9 +197,14 @@ if ($page === 'admin' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
             case 'unhide':
                 $qId = (int)($_POST['id'] ?? 0);
-                $qnaCtrl->adminUnhideQuestion($qId);
-                $_SESSION['admin_qna_success'] = 'Đã hiện câu hỏi.';
-                header('Location: ' . BASE_URL . '/public/index.php?page=admin&admin_action=qna&act=questions');
+                $result = $qnaCtrl->adminUnhideQuestion($qId);
+                if (isset($result['error'])) {
+                    $_SESSION['admin_qna_error'] = $result['error'];
+                    header('Location: ' . BASE_URL . '/public/index.php?page=admin&admin_action=qna&act=view&id=' . $qId);
+                } else {
+                    $_SESSION['admin_qna_success'] = 'Đã hiện câu hỏi.';
+                    header('Location: ' . BASE_URL . '/public/index.php?page=admin&admin_action=qna&act=view&id=' . $qId);
+                }
                 exit;
 
             case 'create_faq':

@@ -31,10 +31,6 @@ class QnAModel {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // ============================================================
-    // Guest queries — chỉ hiện câu hỏi đã duyệt + đã trả lời
-    // ============================================================
-
     public function getQuestionsWithAnswers($categoryId = 0, $page = 1, $itemsPerPage = 10) {
         $page = max(1, (int)$page);
         $itemsPerPage = max(1, (int)$itemsPerPage);
@@ -118,7 +114,7 @@ class QnAModel {
         return (int)(($stmt->fetch(PDO::FETCH_ASSOC))['total'] ?? 0);
     }
 
-    // FAQ guest — câu hỏi đánh dấu is_faq = 1
+
     public function getPublicFaqItems($categoryId = 0, $page = 1, $itemsPerPage = 10) {
         $page = max(1, (int)$page);
         $itemsPerPage = max(1, (int)$itemsPerPage);
@@ -132,7 +128,7 @@ class QnAModel {
                 INNER JOIN cau_tra_loi ctr ON ctr.ma_cau_hoi = ch.ma_cau_hoi
                 LEFT JOIN administrator adm2 ON adm2.userid = ctr.administrator_userid
                 LEFT JOIN nguoi_dung ngu_ad ON ngu_ad.userid = adm2.userid
-                WHERE ch.trang_thai = 'da_tra_loi' AND ch.is_faq = 'Yes'";
+                WHERE ch.trang_thai != 'da_an' AND ch.is_faq = 'Yes'";
 
         $params = [];
         if ($categoryId > 0) {
@@ -150,7 +146,7 @@ class QnAModel {
         $sql = "SELECT COUNT(DISTINCT ch.ma_cau_hoi) as total
                 FROM cau_hoi ch
                 INNER JOIN cau_tra_loi ctr ON ctr.ma_cau_hoi = ch.ma_cau_hoi
-                WHERE ch.trang_thai = 'da_tra_loi' AND ch.is_faq = 'Yes'";
+                WHERE ch.trang_thai != 'da_an' AND ch.is_faq = 'Yes'";
         $params = [];
         if ($categoryId > 0) {
             $sql .= " AND ch.ma_loai = ?";
@@ -160,10 +156,6 @@ class QnAModel {
         $stmt->execute($params);
         return (int)(($stmt->fetch(PDO::FETCH_ASSOC))['total'] ?? 0);
     }
-
-    // ============================================================
-    // User "My Questions"
-    // ============================================================
 
     public function getMyQuestions($userId, $page = 1, $perPage = 10) {
         $page = max(1, (int)$page);
@@ -198,10 +190,6 @@ class QnAModel {
         return (int)(($stmt->fetch(PDO::FETCH_ASSOC))['total'] ?? 0);
     }
 
-    // ============================================================
-    // Create question
-    // ============================================================
-
     public function createQuestion($tenCauHoi, $maLoai, $userId, $isFaq = 'No') {
         $sql = "INSERT INTO cau_hoi (ten_cau_hoi, trang_thai, is_faq, ma_loai, userid)
                 VALUES (?, 'cho_duyet', ?, ?, ?)";
@@ -213,14 +201,10 @@ class QnAModel {
         return false;
     }
 
-    // ============================================================
-    // Images
-    // ============================================================
-
-    public function createImage($filePath, $fileName = null, $sortOrder = 0) {
-        $sql = "INSERT INTO anh (url_anh, ten_file, so_thu_tu) VALUES (?, ?, ?)";
+    public function createImage($filePath, $fileName = null) {
+        $sql = "INSERT INTO anh (url_anh, ten_file) VALUES (?, ?)";
         $stmt = $this->conn->prepare($sql);
-        $success = $stmt->execute([$filePath, $fileName, $sortOrder]);
+        $success = $stmt->execute([$filePath, $fileName]);
         return $success ? (int)$this->conn->lastInsertId() : false;
     }
 
@@ -230,20 +214,10 @@ class QnAModel {
         return $stmt->execute([$cauHoiId, $anhId, $sortOrder]);
     }
 
-    public function linkImageToAnswer($cauTraLoiId, $anhId, $sortOrder = 0) {
-        if (!$this->tableExists('anh_cau_tra_loi')) {
-            return false;
-        }
-
-        $sql = "INSERT INTO anh_cau_tra_loi (ma_cau_tra_loi, ma_anh, so_thu_tu) VALUES (?, ?, ?)";
-        $stmt = $this->conn->prepare($sql);
-        return $stmt->execute([$cauTraLoiId, $anhId, $sortOrder]);
-    }
-
     public function getImagesForQuestions(array $cauHoiIds) {
         if (empty($cauHoiIds)) return [];
         $placeholders = implode(',', array_fill(0, count($cauHoiIds), '?'));
-        $sql = "SELECT acq.ma_cau_hoi, a.ma_anh, a.url_anh, a.ten_file, COALESCE(acq.so_thu_tu, a.so_thu_tu) AS so_thu_tu
+        $sql = "SELECT acq.ma_cau_hoi, a.ma_anh, a.url_anh, a.ten_file, acq.so_thu_tu
                 FROM anh_cau_hoi acq
                 INNER JOIN anh a ON a.ma_anh = acq.ma_anh
                 WHERE acq.ma_cau_hoi IN ($placeholders)
@@ -259,32 +233,6 @@ class QnAModel {
         }
         return $map;
     }
-
-    public function getImagesForAnswers(array $cauTraLoiIds) {
-        if (empty($cauTraLoiIds)) return [];
-        if (!$this->tableExists('anh_cau_tra_loi')) return [];
-
-        $placeholders = implode(',', array_fill(0, count($cauTraLoiIds), '?'));
-        $sql = "SELECT actl.ma_cau_tra_loi, a.ma_anh, a.url_anh, a.ten_file, COALESCE(actl.so_thu_tu, a.so_thu_tu) AS so_thu_tu
-                FROM anh_cau_tra_loi actl
-                INNER JOIN anh a ON a.ma_anh = actl.ma_anh
-                WHERE actl.ma_cau_tra_loi IN ($placeholders)
-                ORDER BY actl.so_thu_tu ASC, a.ma_anh ASC";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute($cauTraLoiIds);
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $map = [];
-        foreach ($rows as $r) {
-            $id = $r['ma_cau_tra_loi'];
-            if (!isset($map[$id])) $map[$id] = [];
-            $map[$id][] = $r;
-        }
-        return $map;
-    }
-
-    // ============================================================
-    // Admin — User Questions (chỉ user thường, không phải admin)
-    // ============================================================
 
     public function getAllQuestionsAdmin($page = 1, $perPage = 15, $categoryId = 0) {
         $page = max(1, (int)$page);
@@ -330,27 +278,24 @@ class QnAModel {
 
     public function getQuestionDetailAdmin($id) {
         $sql = "SELECT ch.ma_cau_hoi, ch.ten_cau_hoi, ch.trang_thai, ch.is_faq, ch.ma_loai,
-                       lch.ten_loai,
+                       COALESCE(lch.ten_loai, '(Chủ đề đã xóa)') AS ten_loai,
                        nd.ho_va_ten_dem AS user_ho_ten_dem, nd.ten AS user_ten, nd.userid AS user_id,
                        ch.ngay_tao,
                        ctr.ma_cau_tra_loi, ctr.noi_dung AS cau_tra_loi, ctr.ngay_dang AS ngay_tra_loi,
                        ctr.administrator_userid,
                        ngu_ad.ho_va_ten_dem AS admin_ho_ten_dem, ngu_ad.ten AS admin_ten
                 FROM cau_hoi ch
-                INNER JOIN loai_cau_hoi lch ON ch.ma_loai = lch.ma_loai
-                INNER JOIN nguoi_dung nd ON nd.userid = ch.userid
+                LEFT JOIN loai_cau_hoi lch ON ch.ma_loai = lch.ma_loai
+                LEFT JOIN nguoi_dung nd ON nd.userid = ch.userid
                 LEFT JOIN cau_tra_loi ctr ON ctr.ma_cau_hoi = ch.ma_cau_hoi
                 LEFT JOIN administrator adm ON adm.userid = ctr.administrator_userid
                 LEFT JOIN nguoi_dung ngu_ad ON ngu_ad.userid = adm.userid
-                WHERE ch.ma_cau_hoi = ?";
+                WHERE ch.ma_cau_hoi = ?
+                GROUP BY ch.ma_cau_hoi";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
-
-    // ============================================================
-    // Admin — FAQ (chỉ câu hỏi do admin tạo)
-    // ============================================================
 
     public function getFaqItemsAdmin($page = 1, $perPage = 15, $categoryId = 0) {
         $page = max(1, (int)$page);
@@ -396,10 +341,6 @@ class QnAModel {
         return (int)(($stmt->fetch(PDO::FETCH_ASSOC))['total'] ?? 0);
     }
 
-    // ============================================================
-    // Admin — Answer CRUD
-    // ============================================================
-
     public function createAnswer($cauHoiId, $adminUserId, $noiDung) {
         $sql = "INSERT INTO cau_tra_loi (ma_cau_hoi, administrator_userid, noi_dung) VALUES (?, ?, ?)";
         $stmt = $this->conn->prepare($sql);
@@ -429,10 +370,6 @@ class QnAModel {
         return $stmt->execute([$cauTraLoiId]);
     }
 
-    // ============================================================
-    // Admin — Question CRUD
-    // ============================================================
-
     public function deleteQuestion($cauHoiId) {
         $sql = "DELETE FROM cau_hoi WHERE ma_cau_hoi = ?";
         $stmt = $this->conn->prepare($sql);
@@ -446,10 +383,6 @@ class QnAModel {
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([$trangThai, $id]);
     }
-
-    // ============================================================
-    // Admin — Categories CRUD
-    // ============================================================
 
     public function getCategoryById($id) {
         $sql = "SELECT ma_loai, ten_loai, so_thu_tu FROM loai_cau_hoi WHERE ma_loai = ?";
