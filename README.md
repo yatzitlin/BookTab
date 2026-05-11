@@ -32,20 +32,113 @@ Hệ thống phân quyền 3 cấp độ người dùng:
 
 ## 📂 Cấu trúc thư mục (Mô hình MVC)
 ```text
-.
-├── app/                # Mã nguồn chính
-│   ├── models/         # Tương tác với CSDL (MySQL)
-│   ├── controllers/    # Xử lý logic
-│   └── views/          # Giao diện
-│       ├── admin/      # Giao diện Quản trị viên
-│       ├── layouts/    # Template chung
-│       └── pages/      # Giao diện Client
-├── config/             # Cấu hình kết nối CSDL
-├── core/               # Lõi xử lý MVC (Router, Database, Base Controller)
-├── public/             # Thư mục gốc truy cập web
-├── GenerateTable.sql   # File Cơ sở dữ liệu
-└── README.md
+BookTab/
+├── app/                              # Mã nguồn chính của ứng dụng
+│   ├── controllers/                  # Các Controller xử lý logic
+│   │   ├── AuthController.php        # Xử lý đăng ký, đăng nhập, đăng xuất
+│   │   ├── AdminController.php       # Trang chủ Admin
+│   │   ├── AdminNewsController.php   # Quản lý tin tức (CRUD)
+│   │   ├── AdminUserController.php   # Quản lý người dùng (CRUD, phân quyền)
+│   │   ├── AdminCommentController.php # Quản lý bình luận
+│   │   ├── NewsController.php        # Hiển thị tin tức, bình luận
+│   │   ├── HomeController.php        # Trang chủ website
+│   │   ├── ProductController.php     # Quản lý sản phẩm
+│   │   ├── CartController.php        # Giỏ hàng
+│   │   ├── UserController.php        # Thông tin cá nhân người dùng
+│   │   ├── AboutController.php       # Trang Giới thiệu
+│   │   ├── ContactController.php     # Trang Liên hệ
+│   │   ├── QnAController.php         # Quản lý Hỏi & Đáp
+│   │   ├── CompanyContact.php        # Thông tin công ty
+│   │   └── BaseController.php        # Lớp cha cho tất cả Controller
+│   │
+│   ├── models/                       # Các Model (tương tác với CSDL)
+│   │   ├── UserModel.php             # Quản lý người dùng (đăng ký, đăng nhập, profile)
+│   │   ├── NewsModel.php             # Quản lý tin tức/bài viết
+│   │   ├── CommentModel.php          # Quản lý bình luận (nested comments)
+│   │   ├── ProductModel.php          # Quản lý sản phẩm
+│   │   ├── CartModel.php             # Quản lý giỏ hàng
+│   │   ├── OrderModel.php            # Quản lý đơn hàng
+│   │   ├── CategoryModel.php         # Danh mục sản phẩm
+│   │   ├── NewsCategoryModel.php     # Danh mục tin tức
+│   │   ├── QnAModel.php              # Hỏi & Đáp
+│   │   ├── ContactModel.php          # Liên hệ khách hàng
+│   │   ├── CompanyContactModel.php   # Thông tin công ty
+│   │   └── ThongTinModel.php         # Thông tin tĩnh trên website
+│   │
+│   ├── views/                        # Các view (giao diện)
+│   │   ├── template.php              # Template chung
+│   │   ├── components/               # Các component tái sử dụng
+│   │   │   ├── Header.php            # Thanh header
+│   │   │   └── Footer.php            # Thanh footer
+│   │   ├── pages/                    # Các trang công khai (Client)
+│   │   │   ├── Home.php              # Trang chủ
+│   │   │   ├── News.php              # Trang danh sách tin tức
+│   │   │   ├── NewsDetail.php        # Trang chi tiết bài viết (+ bình luận)
+│   │   │   ├── NewsList.php          # Danh sách tin tức (hiển thị khác)
+│   │   │   ├── Products.php          # Danh sách sản phẩm
+│   │   │   ├── ProductDetail.php     # Chi tiết sản phẩm
+│   │   │   ├── Cart.php              # Giỏ hàng
+│   │   │   ├── Checkout.php          # Thanh toán
+│   │   │   ├── My.php                # Thông tin cá nhân người dùng
+│   │   │   ├── Contact.php           # Trang liên hệ
+│   │   │   ├── QnA.php               # Hỏi & Đáp
+│   │   │   ├── About.php             # Giới thiệu
+│   │   │   ├── Ask.php               # Đặt câu hỏi
+│   │   │   ├── FAQ.php               # Câu hỏi thường gặp
+│   │   │   ├── 404.php               # Trang lỗi 404
+│   │   │   └── auth/                 # Trang xác thực
+│   │   │       ├── login.php         # Đăng nhập
+│   │   │       └── register.php      # Đăng ký
+│   │   │
+│   │   └── admin/                    # Giao diện Admin
+│   │       ├── adminLayout.php       # Layout chủ của Admin
+│   │       ├── adminComponents/      # Component tái sử dụng của Admin
+│   │       │   ├── AdminHeader.php   # Header Admin
+│   │       │   ├── AdminSidebar.php  # Menu Sidebar
+│   │       │   ├── AdminCreateNews.php # Form tạo/sửa tin tức (TinyMCE)
+│   │       │   └── ... (các form khác)
+│   │       └── adminPages/           # Các trang Admin
+│   │           ├── AdminDashboard.php     # Dashboard
+│   │           ├── AdminNews.php          # Quản lý tin tức
+│   │           ├── AdminUserManage.php    # Quản lý người dùng (CRUD + vai trò)
+│   │           ├── AdminComment.php       # Quản lý bình luận
+│   │           ├── AdminProducts.php      # Quản lý sản phẩm
+│   │           ├── AdminQnA.php           # Quản lý Hỏi & Đáp
+│   │           ├── AdminContact.php       # Quản lý liên hệ
+│   │           ├── AdminAbout.php         # Quản lý Giới thiệu
+│   │           ├── AdminHome.php          # Quản lý Trang chủ
+│   │           └── AdminInfo.php          # Quản lý Thông tin công ty
+│   │
+│   └── core/                         # Lõi xử lý ứng dụng
+│       └── Database.php              # Lớp kết nối và xử lý CSDL (PDO)
+│
+├── public/                           # Thư mục công khai trên web
+│   ├── index.php                     # Front Controller (Router chính)
+│   ├── .htaccess                     # Cấu hình Apache (URL rewriting)
+│   ├── upload/                       # Thư mục chứa hình ảnh tải lên từ server
+│   │                                 #    (ảnh bài viết, ảnh sản phẩm)
+│   ├── uploads/                      # Thư mục chứa hình ảnh tải lên từ server
+│   │                                 #    (avatar người dùng)
+│   └── admin_assets/                 # Assets cho Admin (Bootstrap, CSS, JS, icons)
+│       ├── css/
+│       ├── js/
+│       ├── images/
+│       └── fonts/
+│
+├── sql/                              # Thư mục chứa các file sql
+│   ├── GenerateTable.sql             # Script khởi tạo cơ sở dữ liệu
+│   ├── booktab.sql                   # Data của website
+│  
+├── WEB_SECURITY.md                   # Tài liệu bảo mật ứng dụng
+├── COOKIES_SESSION.md                # Tài liệu về cookie và session
+├── README.md                         # File README.md
+└── .gitignore                        # File cấu hình Git ignore
 ```
+
+### 📸 Thư mục Upload (Hình ảnh)
+- **`/public/upload/`**: Chứa các hình ảnh được tải lên từ server (ảnh bài viết, ảnh sản phẩm)
+- **`/public/uploads/`**: Chứa các hình ảnh được tải lên từ server (avatar, ảnh nội dung)
+  > Cả hai thư mục đều được dùng để lưu trữ hình ảnh do người dùng hoặc Admin tải lên
 
 ## 👥 Danh sách thành viên và Phân công
 
