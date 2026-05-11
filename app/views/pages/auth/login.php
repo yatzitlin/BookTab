@@ -1,9 +1,3 @@
-<?php
-/**
- * Login.php - Form Đăng nhập
- */
-?>
-
 <div class="max-w-md mx-auto my-12">
     <div class="bg-white rounded-lg shadow-lg p-8 border border-gray-200">
         <h1 class="text-3xl font-bold text-gray-900 mb-2 text-center">Đăng nhập</h1>

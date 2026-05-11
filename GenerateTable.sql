@@ -57,22 +57,28 @@ CREATE TABLE lien_he (
 -- =========================================================
 -- 3. Nhóm bài viết
 -- =========================================================
+
+-- Bảng Loại bài viết (Danh mục)
 CREATE TABLE loai_bai_viet (
     ma_loai BIGINT AUTO_INCREMENT PRIMARY KEY,
     ten_loai VARCHAR(255) NOT NULL,
     slug VARCHAR(255) UNIQUE,
-    trang_thai VARCHAR(50),
+    trang_thai VARCHAR(50) DEFAULT 'active',
     loai_cha BIGINT,
     FOREIGN KEY (loai_cha) REFERENCES loai_bai_viet(ma_loai) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- Bảng Bài viết
 CREATE TABLE bai_viet (
     ma_bai_viet BIGINT AUTO_INCREMENT PRIMARY KEY,
     tieu_de VARCHAR(255) NOT NULL,
+    tom_tat TEXT,
     noi_dung TEXT NOT NULL,
     thumbnail_url VARCHAR(500),
-    trang_thai VARCHAR(50),
+    luot_xem INT DEFAULT 0,
+    trang_thai VARCHAR(50) DEFAULT 'ban_nhap',
     ngay_dang DATETIME DEFAULT CURRENT_TIMESTAMP,
+    ngay_cap_nhat DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     slug VARCHAR(255) UNIQUE,
     ma_loai BIGINT,
     administrator_userid BIGINT NOT NULL,
@@ -96,12 +102,13 @@ CREATE TABLE thong_tin_chi_tiet (
     FOREIGN KEY (ma_thong_tin) REFERENCES thong_tin(ma_thong_tin) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- Bảng Bình luận
 CREATE TABLE binh_luan (
     ma_binh_luan BIGINT AUTO_INCREMENT PRIMARY KEY,
     noi_dung TEXT NOT NULL,
-    ngay_sau DATETIME DEFAULT CURRENT_TIMESTAMP,
+    ngay_tao DATETIME DEFAULT CURRENT_TIMESTAMP,
     luot_thich INT DEFAULT 0,
-    trang_thai VARCHAR(50),
+    trang_thai VARCHAR(50) DEFAULT 'ban_nhap',
     url_anh VARCHAR(500),
     ma_bai_viet BIGINT NOT NULL,
     userid BIGINT NOT NULL,

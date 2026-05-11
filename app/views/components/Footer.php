@@ -1,23 +1,49 @@
 <?php
 require_once __DIR__ . '/../../models/ThongTinModel.php';
-$thongTinModel = new ThongTinModel($dbConnection);
-$footerData = $thongTinModel->getMultiByLoai([
-    'intro', 'name', 'quick_links', 'support_links',
-    'address', 'phone', 'email', 'copyright'
-]);
+
+// Resolve DB connection safely because this view can be included from multiple scopes.
+$resolvedDbConnection = null;
+if (isset($dbConnection) && $dbConnection instanceof PDO) {
+    $resolvedDbConnection = $dbConnection;
+} elseif (isset($GLOBALS['dbConnection']) && $GLOBALS['dbConnection'] instanceof PDO) {
+    $resolvedDbConnection = $GLOBALS['dbConnection'];
+} else {
+    require_once __DIR__ . '/../../core/Database.php';
+    $database = new Database();
+    $resolvedDbConnection = $database->connect();
+}
+
+$thongTinModel = new ThongTinModel($resolvedDbConnection);
+$footerData = [];
+try {
+    $footerData = $thongTinModel->getMultiByLoai([
+        'intro', 'name', 'quick_links', 'support_links',
+        'address', 'phone', 'email', 'copyright'
+    ]);
+} catch (Throwable $e) {
+    $footerData = [];
+}
 
 // Fetch link items for link-type records
 $footerLinks = [];
 foreach (['quick_links', 'support_links'] as $key) {
     if (isset($footerData[$key]) && $footerData[$key]['type'] === 'link') {
-        $footerLinks[$key] = $thongTinModel->getChiTietByMaThongTin($footerData[$key]['ma_thong_tin']);
+        try {
+            $footerLinks[$key] = $thongTinModel->getChiTietByMaThongTin($footerData[$key]['ma_thong_tin']);
+        } catch (Throwable $e) {
+            $footerLinks[$key] = [];
+        }
     }
 }
 
 // Fetch text content for text-type records
 $footerText = [];
 foreach (['intro', 'name', 'address', 'phone', 'email', 'copyright'] as $key) {
-    $footerText[$key] = $thongTinModel->getFirstNoiDung($key);
+    try {
+        $footerText[$key] = $thongTinModel->getFirstNoiDung($key);
+    } catch (Throwable $e) {
+        $footerText[$key] = null;
+    }
 }
 
 function renderFooterLinks($items) {
@@ -45,7 +71,9 @@ function renderFooterLinks($items) {
             <!-- Links -->
             <div>
                 <h4 class="text-white text-lg font-bold mb-4">Liên kết nhanh</h4>
+
                 <?php echo renderFooterLinks($footerLinks['quick_links'] ?? []); ?>
+
             </div>
 
             <!-- Support -->

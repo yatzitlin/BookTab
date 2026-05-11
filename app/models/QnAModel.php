@@ -2,9 +2,26 @@
 
 class QnAModel {
     private $conn;
+    private $tableExistsCache = [];
 
     public function __construct($dbConnection) {
         $this->conn = $dbConnection;
+    }
+
+    private function tableExists($tableName) {
+        if (isset($this->tableExistsCache[$tableName])) {
+            return $this->tableExistsCache[$tableName];
+        }
+
+        $sql = "SELECT COUNT(*) AS total
+                FROM information_schema.TABLES
+                WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$tableName]);
+        $exists = ((int) (($stmt->fetch(PDO::FETCH_ASSOC))['total'] ?? 0)) > 0;
+        $this->tableExistsCache[$tableName] = $exists;
+
+        return $exists;
     }
 
     public function getAllCategories() {
@@ -214,6 +231,10 @@ class QnAModel {
     }
 
     public function linkImageToAnswer($cauTraLoiId, $anhId, $sortOrder = 0) {
+        if (!$this->tableExists('anh_cau_tra_loi')) {
+            return false;
+        }
+
         $sql = "INSERT INTO anh_cau_tra_loi (ma_cau_tra_loi, ma_anh, so_thu_tu) VALUES (?, ?, ?)";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([$cauTraLoiId, $anhId, $sortOrder]);
@@ -241,6 +262,8 @@ class QnAModel {
 
     public function getImagesForAnswers(array $cauTraLoiIds) {
         if (empty($cauTraLoiIds)) return [];
+        if (!$this->tableExists('anh_cau_tra_loi')) return [];
+
         $placeholders = implode(',', array_fill(0, count($cauTraLoiIds), '?'));
         $sql = "SELECT actl.ma_cau_tra_loi, a.ma_anh, a.url_anh, a.ten_file, COALESCE(actl.so_thu_tu, a.so_thu_tu) AS so_thu_tu
                 FROM anh_cau_tra_loi actl

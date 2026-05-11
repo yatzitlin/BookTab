@@ -25,9 +25,9 @@ $current_page = isset($_GET['page']) ? $_GET['page'] : 'home';
                    class="<?php echo $current_page === 'products' ? 'text-red-500 font-bold' : 'text-gray-600 hover:text-gray-900'; ?> transition">
                     Sản phẩm
                 </a>
-                <a href="<?php echo BASE_URL; ?>/public/index.php?page=news" 
+                <a href="<?php echo BASE_URL; ?>/public/bai-viet" 
                    class="<?php echo $current_page === 'news' ? 'text-red-500 font-bold' : 'text-gray-600 hover:text-gray-900'; ?> transition">
-                    Tin tức
+                    Bài viết
                 </a>
                 <a href="<?php echo BASE_URL; ?>/public/index.php?page=qna" 
                    class="<?php echo $current_page === 'qna' ? 'text-red-500 font-bold' : 'text-gray-600 hover:text-gray-900'; ?> transition">

@@ -10,9 +10,11 @@ error_reporting(E_ALL);
 require_once __DIR__ . '/../app/core/Database.php'; 
 require_once __DIR__ . '/../app/controllers/AboutController.php';
 require_once __DIR__ . '/../app/controllers/QnAController.php';
+require_once '../app/controllers/NewsController.php';
 
 $database = new Database();
 $dbConnection = $database->connect();
+$GLOBALS['dbConnection'] = $dbConnection;
 
 // Cấu hình cài đặt cookie session bảo mật
 AuthController::configureSessionSecurity();
@@ -253,8 +255,29 @@ switch ($page) {
         $pageTitle = 'Sản phẩm';
         break;
     case 'news':
-        $view_content = '../app/views/pages/News.php';
-        $pageTitle = 'Tin tức';
+        $newsController = new NewsController($dbConnection);
+        $newsAction = isset($_GET['news_action']) ? $_GET['news_action'] : 'index';
+
+        // Xử lý gợi ý tìm kiếm
+        if ($newsAction === 'search_ajax') {
+            $newsController->searchAjax();
+            exit;
+        }
+
+        // Xử lý trang Chi tiết bài viết
+        if ($newsAction === 'detail' && isset($_GET['slug'])) {
+            $newsController->detail(trim((string) $_GET['slug']));
+            exit;
+        }
+
+        // Xử lý trang Danh sách bài viết
+        if ($newsAction === 'list') {
+            $newsController->listing();
+            exit;
+        }
+
+        $newsController->index();
+        exit;
         break;
     case 'qna':
         $qnaTab = isset($_GET['tab']) ? trim($_GET['tab']) : 'qna';
@@ -393,7 +416,6 @@ switch ($page) {
         $pageTitle = 'Liên hệ';
         break;
     case 'admin':
-        $view_content = '../app/views/admin/adminLayout.php';
         $pageTitle = 'Admin Dashboard';
         break;
     default:
@@ -402,9 +424,40 @@ switch ($page) {
         break;
 }
 
+// Admin gọi Controller
 if ($page == 'admin') {
+    $admin_action = isset($_GET['admin_action']) ? $_GET['admin_action'] : 'dashboard';
+
+    require_once '../app/controllers/AdminNewsController.php';
+    $newsController = new AdminNewsController($dbConnection);
+
+    if ($admin_action === 'news') {
+        $newsController->index();
+        exit; // Lệnh exit báo PHP dừng lại vì trong index() đã gọi adminLayout
+    } 
+    elseif ($admin_action === 'news_store') {
+        $newsController->store();
+        exit; 
+    } 
+    elseif ($admin_action === 'news_edit') {
+        $newsController->edit();
+        exit; 
+    } 
+    elseif ($admin_action === 'news_update') {
+        $newsController->update();
+        exit;
+    }
+    elseif ($admin_action === 'news_delete') {
+        $newsController->delete();
+        exit;
+    }
+    elseif ($admin_action === 'news_upload_image') {
+        $newsController->uploadImage();
+        exit;
+    }
+
     require_once '../app/views/admin/adminLayout.php';
-}
+} 
 else {
     require_once '../app/views/template.php';
 }
