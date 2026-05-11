@@ -10,7 +10,7 @@ USE BookTab;
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS chi_tiet_don_hang, don_hang, chi_tiet_gio_hang, gio_hang, danh_gia, anh_san_pham, san_pham, loai_san_pham,
                      cau_tra_loi, cau_hoi, loai_cau_hoi, binh_luan, bai_viet, loai_bai_viet, thong_tin, lien_he,
-                     member, `rank`, administrator, nguoi_dung;
+                     member, `rank`, administrator, nguoi_dung, anh_cau_hoi, anh;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- =========================================================
@@ -153,8 +153,14 @@ AFTER DELETE ON cau_tra_loi
 FOR EACH ROW
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM cau_tra_loi WHERE ma_cau_hoi = OLD.ma_cau_hoi) THEN
+        UPDATE cau_hoi SET trang_thai = 'da_an'
+        WHERE ma_cau_hoi = OLD.ma_cau_hoi
+          AND trang_thai IN ('da_tra_loi', 'chua_tra_loi')
+          AND is_faq = 'Yes';
         UPDATE cau_hoi SET trang_thai = 'chua_tra_loi'
-        WHERE ma_cau_hoi = OLD.ma_cau_hoi AND trang_thai = 'da_tra_loi';
+        WHERE ma_cau_hoi = OLD.ma_cau_hoi
+          AND trang_thai = 'da_tra_loi'
+          AND is_faq = 'No';
     END IF;
 END$$
 DELIMITER ;
@@ -244,7 +250,6 @@ CREATE TABLE `anh` (
     `ma_anh` BIGINT AUTO_INCREMENT PRIMARY KEY,
     `url_anh` VARCHAR(500) NOT NULL,
     `ten_file` VARCHAR(255) DEFAULT NULL,
-    `so_thu_tu` INT DEFAULT 0,
     `ngay_tao` DATETIME DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

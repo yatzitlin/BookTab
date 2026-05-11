@@ -37,21 +37,12 @@ class QnAController extends BaseController {
         $offset = ($page - 1) * $itemsPerPage;
         $paginatedItems = array_slice($items, $offset, $itemsPerPage);
 
-        $questionIds = [];
-        $answerIds = [];
-        foreach ($paginatedItems as $it) {
-            $questionIds[] = $it['ma_cau_hoi'];
-            if (!empty($it['ma_cau_tra_loi'])) $answerIds[] = $it['ma_cau_tra_loi'];
-        }
-
+        $questionIds = array_column($paginatedItems, 'ma_cau_hoi');
         $qImages = $this->qnaModel->getImagesForQuestions($questionIds);
-        $aImages = $this->qnaModel->getImagesForAnswers($answerIds);
 
         foreach ($paginatedItems as &$it) {
-            $qid = $it['ma_cau_hoi'];
-            $aid = $it['ma_cau_tra_loi'] ?? null;
-            $it['images'] = $qImages[$qid] ?? [];
-            $it['answer_images'] = ($aid && isset($aImages[$aid])) ? $aImages[$aid] : [];
+            $it['images'] = $qImages[$it['ma_cau_hoi']] ?? [];
+            $it['answer_images'] = [];
         }
 
         return [
@@ -72,21 +63,12 @@ class QnAController extends BaseController {
 
         $items = $this->qnaModel->getPublicFaqItems($category, $page, $itemsPerPage);
 
-        $questionIds = [];
-        $answerIds = [];
-        foreach ($items as $it) {
-            $questionIds[] = $it['ma_cau_hoi'];
-            if (!empty($it['ma_cau_tra_loi'])) $answerIds[] = $it['ma_cau_tra_loi'];
-        }
-
+        $questionIds = array_column($items, 'ma_cau_hoi');
         $qImages = $this->qnaModel->getImagesForQuestions($questionIds);
-        $aImages = $this->qnaModel->getImagesForAnswers($answerIds);
 
         foreach ($items as &$it) {
-            $qid = $it['ma_cau_hoi'];
-            $aid = $it['ma_cau_tra_loi'] ?? null;
-            $it['images'] = $qImages[$qid] ?? [];
-            $it['answer_images'] = ($aid && isset($aImages[$aid])) ? $aImages[$aid] : [];
+            $it['images'] = $qImages[$it['ma_cau_hoi']] ?? [];
+            $it['answer_images'] = [];
         }
 
         return [
@@ -153,7 +135,7 @@ class QnAController extends BaseController {
 
                 if (move_uploaded_file($tmp, $destPath)) {
                     $webPath = 'public/upload/qna/' . $safe;
-                    $imageId = $this->qnaModel->createImage($webPath, $origName, $uploadedCount);
+                    $imageId = $this->qnaModel->createImage($webPath, $origName);
                     if ($imageId) {
                         $this->qnaModel->linkImageToQuestion($insertId, $imageId, $uploadedCount);
                         $uploadedCount++;
@@ -165,30 +147,17 @@ class QnAController extends BaseController {
         return ['success' => true, 'id' => $insertId];
     }
 
-    // ============================================================
-    // My Questions (logged-in user)
-    // ============================================================
-
     public function getMyQuestions($userId, $page = 1, $perPage = 10) {
         $totalItems = $this->qnaModel->countMyQuestions($userId);
         $totalPages = ceil($totalItems / $perPage);
         $items = $this->qnaModel->getMyQuestions($userId, $page, $perPage);
 
-        $questionIds = [];
-        $answerIds = [];
-        foreach ($items as $it) {
-            $questionIds[] = $it['ma_cau_hoi'];
-            if (!empty($it['ma_cau_tra_loi'])) $answerIds[] = $it['ma_cau_tra_loi'];
-        }
-
+        $questionIds = array_column($items, 'ma_cau_hoi');
         $qImages = $this->qnaModel->getImagesForQuestions($questionIds);
-        $aImages = $this->qnaModel->getImagesForAnswers($answerIds);
 
         foreach ($items as &$it) {
-            $qid = $it['ma_cau_hoi'];
-            $aid = $it['ma_cau_tra_loi'] ?? null;
-            $it['images'] = $qImages[$qid] ?? [];
-            $it['answer_images'] = ($aid && isset($aImages[$aid])) ? $aImages[$aid] : [];
+            $it['images'] = $qImages[$it['ma_cau_hoi']] ?? [];
+            $it['answer_images'] = [];
         }
 
         return [
@@ -199,10 +168,6 @@ class QnAController extends BaseController {
             'itemsPerPage' => $perPage
         ];
     }
-
-    // ============================================================
-    // Admin methods
-    // ============================================================
 
     public function adminGetQuestions($page = 1, $perPage = 15, $category = 0) {
         $totalItems = $this->qnaModel->countAllQuestionsAdmin($category);
@@ -222,16 +187,9 @@ class QnAController extends BaseController {
         $question = $this->qnaModel->getQuestionDetailAdmin($id);
         if (!$question) return null;
 
-        $question['images'] = [];
-        $question['answer_images'] = [];
-
         $qImages = $this->qnaModel->getImagesForQuestions([$id]);
         $question['images'] = $qImages[$id] ?? [];
-
-        if (!empty($question['ma_cau_tra_loi'])) {
-            $aImages = $this->qnaModel->getImagesForAnswers([$question['ma_cau_tra_loi']]);
-            $question['answer_images'] = $aImages[$question['ma_cau_tra_loi']] ?? [];
-        }
+        $question['answer_images'] = [];
 
         return $question;
     }
@@ -261,24 +219,20 @@ class QnAController extends BaseController {
     public function adminDeleteQuestion($id) {
         $id = (int)$id;
 
-        // 1. Lấy tất cả ảnh liên quan (câu hỏi + câu trả lời)
         $images = $this->qnaModel->getImagePathsByQuestionId($id);
 
-        // 2. Xóa file vật lý trên server
         if (!empty($images)) {
-            $basePath = dirname(__DIR__, 2); // thư mục gốc BookTab/
+            $basePath = dirname(__DIR__, 2);
             foreach ($images as $img) {
                 $filePath = $basePath . '/' . ltrim($img['url_anh'], '/');
                 if (is_file($filePath)) {
                     @unlink($filePath);
                 }
             }
-            // 3. Xóa record ảnh trong DB
             $anhIds = array_column($images, 'ma_anh');
             $this->qnaModel->deleteImageRecords($anhIds);
         }
 
-        // 4. Xóa câu hỏi (cascade sẽ xóa cau_tra_loi, anh_cau_hoi, anh_cau_tra_loi nếu có FK)
         $this->qnaModel->deleteQuestion($id);
         return ['success' => true];
     }
@@ -294,7 +248,18 @@ class QnAController extends BaseController {
     }
 
     public function adminUnhideQuestion($id) {
+        $id = (int)$id;
+        $detail = $this->qnaModel->getQuestionDetailAdmin($id);
+        if (!$detail) {
+            return ['error' => 'Không tìm thấy câu hỏi.'];
+        }
+
         $hasAnswer = $this->qnaModel->questionHasAnswer($id);
+
+        if ($detail['is_faq'] === 'Yes' && !$hasAnswer) {
+            return ['error' => 'FAQ phải có câu trả lời trước khi hiện. Vui lòng thêm câu trả lời rồi thử lại.'];
+        }
+
         $newStatus = $hasAnswer ? 'da_tra_loi' : 'chua_tra_loi';
         $this->qnaModel->updateQuestionStatus($id, $newStatus);
         return ['success' => true];
@@ -375,11 +340,10 @@ class QnAController extends BaseController {
     public function adminReorderCategories(array $order) {
         $ids = array_values(array_filter(array_map('intval', $order), fn($id) => $id > 0));
         if (empty($ids)) {
-            return ['success' => true, 'unchanged' => true]; // không có gì để cập nhật
+            return ['success' => true, 'unchanged' => true];
         }
 
-        // So sánh với thứ tự hiện tại trong DB — nếu không đổi thì bỏ qua UPDATE
-        $currentCategories = $this->qnaModel->getAllCategories(); // đã ORDER BY so_thu_tu ASC
+        $currentCategories = $this->qnaModel->getAllCategories();
         $currentIds = array_values(array_map(fn($c) => (int)$c['ma_loai'], $currentCategories));
         if ($ids === $currentIds) {
             return ['success' => true, 'unchanged' => true];

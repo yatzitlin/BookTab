@@ -9,7 +9,6 @@ $faqPagination = isset($faqPagination) && is_array($faqPagination) ? $faqPaginat
 ];
 $selectedCategory = isset($selectedCategory) ? (int)$selectedCategory : (isset($_GET['category']) ? (int)$_GET['category'] : 0);
 
-// Build category query parameter
 $categoryParam = $selectedCategory > 0 ? '&category=' . $selectedCategory : '';
 ?>
 
@@ -85,28 +84,11 @@ $categoryParam = $selectedCategory > 0 ? '&category=' . $selectedCategory : '';
 						</div>
 					<?php endif; ?>
 
-					<div class="bg-gray-50 border border-gray-100 rounded-lg p-4 text-gray-700 mb-3 flex flex-col gap-4">
+					<div class="bg-gray-50 border border-gray-100 rounded-lg p-4 text-gray-700 mb-3">
 						<div class="answer-content prose max-w-none">
 							<?php echo $item['cau_tra_loi'] ?? ''; ?>
 						</div>
-
-					<?php if (!empty($item['answer_images'])): ?>
-						<div class="mt-3 grid grid-cols-2 sm:grid-cols-3 gap-3">
-							<?php foreach ($item['answer_images'] as $img): ?>
-								<?php $answerImageUrl = BASE_URL . '/' . htmlspecialchars(ltrim($img['url_anh'], '/'), ENT_QUOTES, 'UTF-8'); ?>
-								<button type="button" class="group overflow-hidden rounded-lg bg-white border text-left image-zoom-trigger" data-lightbox-src="<?php echo $answerImageUrl; ?>" data-lightbox-alt="<?php echo htmlspecialchars($img['ten_file'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
-									<figure class="relative">
-										<img src="<?php echo $answerImageUrl; ?>" 
-										     alt="<?php echo htmlspecialchars($img['ten_file'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" 
-										     class="w-full h-36 object-cover lazyload transition duration-300 group-hover:scale-105" 
-										     loading="lazy" 
-										     data-src="<?php echo $answerImageUrl; ?>" />
-										<span class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition"></span>
-									</figure>
-								</button>
-							<?php endforeach; ?>
-						</div>
-					<?php endif; ?>
+					</div>
 				</article>
 			<?php endforeach; ?>
 		<?php endif; ?>
@@ -164,7 +146,6 @@ $categoryParam = $selectedCategory > 0 ? '&category=' . $selectedCategory : '';
 	.animate-fade-in {
 		animation: fadeIn 0.5s ease-out;
 	}
-	/* Lazy loading placeholder */
 	img.lazyload {
 		background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
 		background-size: 200% 100%;
