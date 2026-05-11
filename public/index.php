@@ -218,6 +218,7 @@ if ($page === 'admin' && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (!is_array($order)) $order = [];
                 $result = $qnaCtrl->adminReorderCategories($order);
                 if (isset($result['error'])) $_SESSION['admin_qna_error'] = $result['error'];
+                elseif (!empty($result['unchanged'])) $_SESSION['admin_qna_success'] = 'Thứ tự chủ đề không thay đổi.';
                 else $_SESSION['admin_qna_success'] = 'Đã cập nhật thứ tự chủ đề.';
                 header('Location: ' . BASE_URL . '/public/index.php?page=admin&admin_action=qna&act=categories');
                 exit;

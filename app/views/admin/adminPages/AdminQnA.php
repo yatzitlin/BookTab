@@ -487,7 +487,12 @@ function statusRowClass($trangThai) {
 
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <small class="text-muted">Kéo thả hàng để thay đổi thứ tự, sau đó bấm "Lưu thứ tự".</small>
-                        <button type="submit" class="btn btn-success btn-sm"><i class="ti-save"></i> Lưu thứ tự</button>
+                        <button type="submit" class="btn btn-success btn-sm" id="reorder-save-btn"><i class="ti-save"></i> Lưu thứ tự</button>
+                    </div>
+
+                    <!-- Toast thông báo không thay đổi -->
+                    <div aria-live="polite" aria-atomic="true" style="position:relative;">
+                        <div id="reorder-toast-wrap" style="position:absolute;top:0;right:0;z-index:9999;"></div>
                     </div>
 
                     <div class="table-responsive">
@@ -526,20 +531,51 @@ function statusRowClass($trangThai) {
         (function() {
             var el = document.getElementById('category-list');
             if (!el) return;
+
+            // Thứ tự ban đầu khi trang load
+            var initialOrder = <?php echo json_encode(array_values(array_column($categories, 'ma_loai'))); ?>;
+            var currentOrder = initialOrder.slice(); // bản sao
+            document.getElementById('reorder-input').value = JSON.stringify(currentOrder);
+
+            function syncOrder() {
+                var rows = el.querySelectorAll('tr[data-id]');
+                currentOrder = [];
+                rows.forEach(function(row, i) {
+                    row.querySelector('.stt-cell').textContent = i + 1;
+                    currentOrder.push(parseInt(row.dataset.id));
+                });
+                document.getElementById('reorder-input').value = JSON.stringify(currentOrder);
+            }
+
             new Sortable(el, {
                 handle: '.ti-menu',
                 animation: 150,
                 ghostClass: 'table-active',
-                onEnd: function() {
-                    var rows = el.querySelectorAll('tr[data-id]');
-                    var order = [];
-                    rows.forEach(function(row, i) {
-                        row.querySelector('.stt-cell').textContent = i + 1;
-                        order.push(parseInt(row.dataset.id));
-                    });
-                    document.getElementById('reorder-input').value = JSON.stringify(order);
+                onEnd: syncOrder
+            });
+
+            // Intercept submit: nếu thứ tự không đổi thì hiện toast và KHÔNG gửi request
+            document.getElementById('reorder-form').addEventListener('submit', function(e) {
+                if (JSON.stringify(currentOrder) === JSON.stringify(initialOrder)) {
+                    e.preventDefault();
+                    showNoChangeToast();
                 }
             });
+
+            function showNoChangeToast() {
+                var wrap = document.getElementById('reorder-toast-wrap');
+                var id = 'toast-' + Date.now();
+                var html = '<div id="' + id + '" class="toast align-items-center text-bg-success border-0 mb-2" role="alert" aria-live="assertive" aria-atomic="true">' +
+                    '<div class="d-flex">' +
+                    '<div class="toast-body"><i class="ti-check"></i> Thứ tự chủ đề không thay đổi.</div>' +
+                    '<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>' +
+                    '</div></div>';
+                wrap.insertAdjacentHTML('beforeend', html);
+                var toastEl = document.getElementById(id);
+                var toast = new bootstrap.Toast(toastEl, { delay: 2500 });
+                toast.show();
+                toastEl.addEventListener('hidden.bs.toast', function() { toastEl.remove(); });
+            }
 
             document.querySelectorAll('.delete-cat-btn').forEach(function(btn) {
                 btn.addEventListener('click', function() {

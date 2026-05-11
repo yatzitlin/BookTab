@@ -373,11 +373,18 @@ class QnAController extends BaseController {
     }
 
     public function adminReorderCategories(array $order) {
-        $ids = array_map('intval', $order);
-        $ids = array_filter($ids, fn($id) => $id > 0);
+        $ids = array_values(array_filter(array_map('intval', $order), fn($id) => $id > 0));
         if (empty($ids)) {
-            return ['error' => 'Dữ liệu sắp xếp không hợp lệ.'];
+            return ['success' => true, 'unchanged' => true]; // không có gì để cập nhật
         }
+
+        // So sánh với thứ tự hiện tại trong DB — nếu không đổi thì bỏ qua UPDATE
+        $currentCategories = $this->qnaModel->getAllCategories(); // đã ORDER BY so_thu_tu ASC
+        $currentIds = array_values(array_map(fn($c) => (int)$c['ma_loai'], $currentCategories));
+        if ($ids === $currentIds) {
+            return ['success' => true, 'unchanged' => true];
+        }
+
         $this->qnaModel->reorderCategories($ids);
         return ['success' => true];
     }

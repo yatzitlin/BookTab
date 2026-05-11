@@ -6,7 +6,7 @@ $adminPages = array(
     'home' => array('document_title' => 'AdminHome', 'heading' => 'AdminHome', 'breadcrumb' => 'AdminHome', 'file' => '/adminPages/AdminHome.php'),
     'products' => array('document_title' => 'AdminProducts', 'heading' => 'AdminProducts', 'breadcrumb' => 'AdminProducts', 'file' => '/adminPages/AdminProducts.php'),
     'news' => array('document_title' => 'AdminNews', 'heading' => 'AdminNews', 'breadcrumb' => 'AdminNews', 'file' => '/adminPages/AdminNews.php'),
-    'about' => array('document_title' => 'Giới thiệu', 'heading' => 'Quản lý Giới thiệu', 'breadcrumb' => [['label'=>'Giới thiệu','url'=>BASE_URL.'/public/index.php?page=about'],['label'=>'Chỉnh sửa']], 'file' => '/adminPages/AdminAbout.php'),
+    'about' => array('document_title' => 'Giới thiệu', 'heading' => 'Quản lý Giới thiệu', 'breadcrumb' => [['label'=>'Giới thiệu','url'=>BASE_URL.'/public/index.php?page=about']], 'file' => '/adminPages/AdminAbout.php'),
     'qna' => array('document_title' => 'Hỏi đáp', 'heading' => 'Quản lý Hỏi đáp', 'breadcrumb' => [['label'=>'Hỏi đáp']], 'file' => '/adminPages/AdminQnA.php'),
     'info' => array('document_title' => 'Thông tin', 'heading' => 'Chỉnh sửa thông tin trang web', 'breadcrumb' => [['label'=>'Thông tin']], 'file' => '/adminPages/AdminInfo.php'),
     'contact' => array('document_title' => 'AdminContact', 'heading' => 'AdminContact', 'breadcrumb' => 'AdminContact', 'file' => '/adminPages/AdminContact.php')
