@@ -15,9 +15,9 @@ $adminPages = array(
     'news' => array('document_title' => 'AdminNews', 'heading' => 'AdminNews', 'breadcrumb' => 'AdminNews', 'file' => '/adminPages/AdminNews.php'),
     'users' => array('document_title' => 'AdminUserManage', 'heading' => 'AdminUserManage', 'breadcrumb' => [['label'=>'UserManage']], 'file' => '/adminPages/AdminUserManage.php'),
     'comments' => array('document_title' => 'Quản lý Bình luận', 'heading' => 'Quản lý Bình luận', 'breadcrumb' => [['label'=>'Bình luận']], 'file' => '/adminPages/AdminComment.php'),
-    'about' => array('document_title' => 'Giới thiệu', 'heading' => 'Quản lý Giới thiệu', 'breadcrumb' => [['label'=>'Giới thiệu','url'=>BASE_URL.'/public/index.php?page=about']], 'file' => '/adminPages/AdminAbout.php'),
-    'qna' => array('document_title' => 'Hỏi đáp', 'heading' => 'Quản lý Hỏi đáp', 'breadcrumb' => [['label'=>'Hỏi đáp']], 'file' => '/adminPages/AdminQnA.php'),
-    'info' => array('document_title' => 'Thông tin', 'heading' => 'Chỉnh sửa thông tin trang web', 'breadcrumb' => [['label'=>'Thông tin']], 'file' => '/adminPages/AdminInfo.php'),
+    'about' => array('document_title' => 'About', 'heading' => 'About Management', 'breadcrumb' => [['label'=>'About','url'=>BASE_URL.'/public/index.php?page=about']], 'file' => '/adminPages/AdminAbout.php'),
+    'qna' => array('document_title' => 'Questions and FAQ', 'heading' => 'Questions and FAQ Management', 'breadcrumb' => [['label'=>'Questions and FAQ']], 'file' => '/adminPages/AdminQnA.php'),
+    'info' => array('document_title' => 'Information', 'heading' => 'Modify Information', 'breadcrumb' => [['label'=>'Information']], 'file' => '/adminPages/AdminInfo.php'),
     'contact' => array('document_title' => 'AdminContact', 'heading' => 'AdminContact', 'breadcrumb' => 'AdminContact', 'file' => '/adminPages/AdminContact.php'),
     'orders' => array('document_title' => 'AdminOrders', 'heading' => 'AdminOrders', 'breadcrumb' => 'AdminOrders', 'file' => '/adminPages/AdminOrders.php')
 );

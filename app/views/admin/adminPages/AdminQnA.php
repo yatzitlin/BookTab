@@ -10,19 +10,19 @@ $perPage = 15;
 $categories = $qnaController->getCategories();
 
 $qnaBaseUrl = BASE_URL . '/public/index.php?page=admin&admin_action=qna';
-$_bcQna = ['label' => 'Hỏi đáp', 'url' => $qnaBaseUrl . '&act=questions'];
+$_bcQna = ['label' => 'Question And FAQ', 'url' => $qnaBaseUrl . '&act=questions'];
 switch ($act) {
     case 'faq':
         $adminPageBreadcrumbOverride = [$_bcQna, ['label' => 'FAQ']];
         break;
     case 'categories':
-        $adminPageBreadcrumbOverride = [$_bcQna, ['label' => 'Quản lý chủ đề']];
+        $adminPageBreadcrumbOverride = [$_bcQna, ['label' => 'Category Management']];
         break;
     case 'view':
         $adminPageBreadcrumbOverride = null;
         break;
     default:
-        $adminPageBreadcrumbOverride = [$_bcQna, ['label' => 'Danh sách câu hỏi']];
+        $adminPageBreadcrumbOverride = [$_bcQna, ['label' => 'Question List']];
         break;
 }
 

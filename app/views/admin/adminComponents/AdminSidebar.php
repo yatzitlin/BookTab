@@ -13,17 +13,6 @@ $adminAssetBase = (defined('BASE_URL') ? rtrim(BASE_URL, '/') : 'http://localhos
         <div class="menu-inner">
             <nav>
                 <ul class="metismenu" id="menu">                    
-                    <li class="<?php echo ($currentAction == 'about') ? 'active' : ''; ?>">
-                        <a href="javascript:void(0)" aria-expanded="<?php echo ($currentAction == 'about') ? 'true' : 'false'; ?>">
-                            <i class="ti-info-alt"></i><span>Giới thiệu</span>
-                        </a>
-                        <ul class="collapse <?php echo ($currentAction == 'about') ? 'in show' : ''; ?>">
-                            <li class="<?php echo ($currentAction == 'about') ? 'active' : ''; ?>">
-                                <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=about">Quản lý Giới thiệu</a>
-                            </li>
-                        </ul>
-                    </li>
-
                     <li class="<?php echo ($currentAction == 'products') ? 'active' : ''; ?>">
                         <a href="javascript:void(0)" aria-expanded="<?php echo ($currentAction == 'products') ? 'true' : 'false'; ?>">
                             <i class="ti-pie-chart"></i><span>Products</span>
@@ -73,11 +62,11 @@ $adminAssetBase = (defined('BASE_URL') ? rtrim(BASE_URL, '/') : 'http://localhos
 
                     <li class="<?php echo ($currentAction == 'qna') ? 'active' : ''; ?>">
                         <a href="javascript:void(0)" aria-expanded="<?php echo ($currentAction == 'qna') ? 'true' : 'false'; ?>">
-                            <i class="ti-layout-sidebar-right"></i><span>Hỏi đáp</span>
+                            <i class="ti-layout-sidebar-right"></i><span>Questions and FAQ</span>
                         </a>
                         <ul class="collapse <?php echo ($currentAction == 'qna') ? 'in show' : ''; ?>">
                             <li>
-                                <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna&act=questions">Câu hỏi</a>
+                                <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna&act=questions">Questions</a>
                             </li>
                             <li>
                                 <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=qna&act=faq">FAQ</a>
@@ -94,6 +83,18 @@ $adminAssetBase = (defined('BASE_URL') ? rtrim(BASE_URL, '/') : 'http://localhos
                                 <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=contact">AdminContact</a>
                             </li>
                         </ul>
+
+                    <li class="<?php echo ($currentAction == 'about') ? 'active' : ''; ?>">
+                        <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=about">
+                            <i class="ti-info-alt"></i><span>About Management</span>
+                        </a>
+                    </li>
+
+                    <li class="<?php echo ($currentAction == 'info') ? 'active' : ''; ?>">
+                        <a href="<?php echo BASE_URL; ?>/public/index.php?page=admin&admin_action=info">
+                            <i class="ti-layout-list-post"></i><span>Information</span>
+                        </a>
+                    </li>
 
                     </li>
                 </ul>
