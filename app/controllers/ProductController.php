@@ -59,7 +59,7 @@ class ProductController extends BaseController {
         if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
             header('Location: ' . BASE_URL . '/public/index.php?page=products'); exit;
         }
-        
+
         $productId = intval($_POST['product_id'] ?? 0);
         $score     = max(1, min(5, intval($_POST['diem'] ?? 5)));
         $content   = trim($_POST['noi_dung'] ?? '');
@@ -89,8 +89,20 @@ class ProductController extends BaseController {
             $catId = intval($_POST['ma_loai'] ?? 0) ?: null;
             if (!empty($name) && $price > 0) {
                 $result = $this->productModel->addProduct($name, $desc, $price, $catId);
-                if ($result['success'] && !empty($_POST['url_anh'])) {
-                    $this->productModel->addProductImage($result['product_id'], $_POST['url_anh'], $name, true);
+                // Xử lý upload ảnh
+                if ($result['success'] && isset($_FILES['anh_san_pham']) && $_FILES['anh_san_pham']['error'] === UPLOAD_ERR_OK) {
+                    $file = $_FILES['anh_san_pham'];
+                    $allowed = ['image/jpeg', 'image/png', 'image/webp'];
+                    $maxSize = 2 * 1024 * 1024; // 2MB
+                    if (in_array($file['type'], $allowed) && $file['size'] <= $maxSize) {
+                        $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+                        $filename = 'product_' . $result['product_id'] . '_' . time() . '.' . $ext;
+                        $uploadDir = dirname(__FILE__) . '/../../public/uploads/products/';
+                        if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+                        move_uploaded_file($file['tmp_name'], $uploadDir . $filename);
+                        $urlAnh = 'uploads/products/' . $filename;
+                        $this->productModel->addProductImage($result['product_id'], $urlAnh, $name, true);
+                    }
                 }
             }
         } elseif ($action === 'edit') {
