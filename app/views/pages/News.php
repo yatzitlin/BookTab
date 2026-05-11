@@ -33,206 +33,16 @@ if (!function_exists('booktab_news_thumbnail_url')) {
 }
 ?>
 
-<style>
-    /* ===== Định dạng: News Card - Thẻ bài viết cơ bản ===== */
-    .news-card {
-        background-color: #ffffff;
-        border: 1px solid rgba(0, 0, 0, 0.05);
-        border-radius: 12px;
-        transition: box-shadow 0.3s ease, transform 1s ease;
-    }
-
-    /* ===== Hiệu ứng: Wave Glass - Hiệu ứng thủy tinh khi hover ===== */
-    .wave-glass {
-        position: relative;
-        overflow: hidden;
-    }
-
-    /* Định dạng chung cho 4 mảnh kính */
-    .wave-glass .glass-piece {
-        position: absolute;
-        background: rgba(255, 255, 255, 0.4);
-        backdrop-filter: blur(6px);
-        -webkit-backdrop-filter: blur(6px);
-        width: 0;
-        height: 0;
-        opacity: 1;
-        z-index: 20;
-        pointer-events: none;
-    }
-
-    /* Đặt 4 mảnh vào 4 góc */
-    .wave-glass .glass-piece.top-left { 
-        top: 0; 
-        left: 0;
-    }
-    
-    .wave-glass .glass-piece.top-right { 
-        top: 0; 
-        right: 0;
-    }
-    
-    .wave-glass .glass-piece.bottom-left { 
-        bottom: 0; 
-        left: 0;
-    }
-    
-    .wave-glass .glass-piece.bottom-right { 
-        bottom: 0; 
-        right: 0;
-    }
-
-    /* Animatin hover: Mở rộng mảnh kính, mờ dần */
-    .wave-glass:hover .glass-piece {
-        width: 100%;
-        height: 100%;
-        opacity: 0;
-        transition: all 1.3s;
-    }
-
-    /* ===== Responsive: Tablet và điện thoại ===== */
-    @media (max-width: 1024px) {
-        #discoverBar {
-            margin-bottom: 1.5rem;
-        }
-
-        #discoverBar .grid {
-            gap: 1rem;
-        }
-
-        #discoverBar .font-semibold {
-            margin-bottom: 0.25rem;
-        }
-
-        .news-card,
-        .news-card:hover {
-            transform: none;
-        }
-
-        #sliderDots {
-            right: 1rem;
-            bottom: 1rem;
-        }
-
-        #btnPrev,
-        #btnNext {
-            opacity: 1;
-        }
-    }
-
-    @media (max-width: 768px) {
-        #discoverBar section {
-            padding-top: 1rem;
-            padding-bottom: 1rem;
-        }
-
-        #discoverBar .flex.flex-wrap {
-            gap: 0.5rem;
-        }
-
-        #discoverBar .px-4.py-1\.5 {
-            padding-left: 0.75rem;
-            padding-right: 0.75rem;
-        }
-
-        .news-card {
-            border-radius: 1rem;
-        }
-
-        #sliderContainer,
-        .news-slider-shell {
-            height: 320px;
-        }
-
-        #btnPrev,
-        #btnNext {
-            width: 2.5rem;
-            height: 2.5rem;
-            left: 0.75rem;
-            right: 0.75rem;
-        }
-
-        #sliderDots {
-            gap: 0.35rem;
-        }
-
-        #sliderDots button,
-        #sliderDots span {
-            transform: scale(0.9);
-        }
-
-        .snap-start {
-            width: 12.5rem;
-        }
-    }
-
-    @media (max-width: 640px) {
-        #discoverBar {
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        #discoverBar .font-semibold {
-            font-size: 0.95rem;
-        }
-
-        #sliderContainer,
-        .news-slider-shell {
-            height: 280px;
-        }
-
-        .news-home-slide-title {
-            font-size: 1.35rem;
-            line-height: 1.2;
-        }
-
-        .news-home-slide-summary {
-            width: 100%;
-            font-size: 0.75rem;
-        }
-
-        .news-home-slide-meta {
-            font-size: 0.72rem;
-            gap: 0.4rem;
-        }
-
-        .news-home-trending-card {
-            width: 10rem;
-        }
-
-        .news-home-trending-image {
-            height: auto;
-            aspect-ratio: 1 / 1;
-        }
-
-        .news-home-trending-title {
-            font-size: 0.78rem;
-            line-height: 1.35;
-        }
-
-        .line-clamp-2,
-        .line-clamp-3 {
-            -webkit-line-clamp: 2;
-        }
-
-        .snap-start {
-            width: 11.5rem;
-        }
-
-        h2 {
-            scroll-margin-top: 90px;
-        }
-    }
-</style>
-
 <!-- ===================================================================================== -->
 <!-- Section: Thanh Discover - Hiển thị danh mục + ô tìm kiếm bài viết -->
 <!-- ===================================================================================== -->
+<h1 class="sr-only">Bài viết</h1>
 <div 
     id="discoverBar" 
     class="mb-8 bg-white/80 backdrop-blur-md border-b border-gray-200 relative z-40"
 >
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 py-4">
-        <div class="grid grid-cols-1 lg:grid-cols-10 gap-6 items-start">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+            <div class="grid grid-cols-1 lg:grid-cols-10 gap-6 items-start">
             
             <!-- Component: Danh sách tag danh mục ngang dọc -->
             <div class="lg:col-span-7">
@@ -316,7 +126,7 @@ if (!function_exists('booktab_news_thumbnail_url')) {
                 </form>                
             </div>
         </div>
-    </section>
+    </div>
 </div>
 
 <!-- ===================================================================================== -->

@@ -27,6 +27,9 @@ if (session_status() === PHP_SESSION_NONE) {
             font-family: 'Be Vietnam Pro', sans-serif;
         }
     </style>
+    <?php if (isset($view_content) && stripos(basename($view_content), 'news') !== false): ?>
+        <link rel="stylesheet" href="<?php echo BASE_URL; ?>/public/css/news.css">
+    <?php endif; ?>
 </head>
 <body class="bg-white">
     <!-- HEADER -->

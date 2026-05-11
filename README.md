@@ -119,6 +119,8 @@ BookTab/
 │   │   ├── images/
 │   │   ├── js/
 │   │   └── home/
+│   ├── css/                            # Folder css
+│   │   ├── news.css/                   # CSS cho trang Bài viết
 │   ├── index.php                       # Front Controller (router chính)
 │   ├── upload/                         # Hình ảnh tải lên từ server (bài viết, hỏi đáp)
 │   └── uploads/                        # Hình ảnh tải lên từ server (sản phẩm, avatar)
