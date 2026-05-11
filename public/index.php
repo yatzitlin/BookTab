@@ -9,7 +9,6 @@ error_reporting(E_ALL);
 require_once __DIR__ . '/../app/core/Database.php'; 
 require_once __DIR__ . '/../app/controllers/AboutController.php';
 require_once __DIR__ . '/../app/controllers/QnAController.php';
-require_once __DIR__ . '/../app/models/CompanyContactModel.php';
 require_once __DIR__ . '/../app/controllers/NewsController.php';
 require_once __DIR__ . '/../app/controllers/ProductController.php';
 require_once __DIR__ . '/../app/controllers/CartController.php';
@@ -493,8 +492,7 @@ switch ($page) {
     case 'contact':
         require_once '../app/controllers/ContactController.php';
         $controller = new ContactController($dbConnection);
-        $controller->index();
-        // Don't exit - let template.php handle it
+        $contact = $controller->getContactInfo();
         $view_content = '../app/views/pages/Contact.php';
         $pageTitle = 'Liên hệ';
         break;

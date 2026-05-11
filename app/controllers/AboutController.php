@@ -29,4 +29,5 @@ class AboutController extends BaseController {
         $this->thongTinModel->replaceChiTiet($about['ma_thong_tin'], [['noi_dung' => $noiDung]]);
         return ['success' => true];
     }
+
 }
