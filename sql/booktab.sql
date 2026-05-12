@@ -2,14 +2,14 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th5 11, 2026 lúc 12:55 PM
--- Phiên bản máy phục vụ: 10.4.32-MariaDB
--- Phiên bản PHP: 8.2.12
+-- Host: localhost
+-- Generation Time: May 12, 2026 at 03:46 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
+SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
-SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -18,42 +18,83 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Cơ sở dữ liệu: `booktab`
+-- Database: `BookTab`
 --
+CREATE DATABASE IF NOT EXISTS `BookTab` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `BookTab`;
 
-SET FOREIGN_KEY_CHECKS = 0;
---
--- Đang đổ dữ liệu cho bảng `nguoi_dung`
---
-
-INSERT INTO `nguoi_dung` (`userid`, `username`, `mat_khau`, `ho_va_ten_dem`, `ten`, `so_dien_thoai`, `email`, `avatar_url`, `vai_tro`, `trang_thai`, `ngay_tao`) VALUES
-(1, 'admin', '$2a$12$UHRC2flycgjyh/bpatCJDO14bC/ap99VXEFV/WAXmXuCRbFlIDHyG', 'Quản Trị', 'Viên', '0123456789', 'admin@booktab.com', NULL, 'member', 'active', '2026-05-05 20:23:28'),
-(2, 'user1', '$2y$10$UX5ZV4.g6Ayx5rn0pWoRI.ya575kadXDrMSf9ULjbIr/dGvnLgv6a', 'Bành Phú', 'Hội', '0123456789', 'hoi.banhphu@gmail.com', '6a009d26affd0_Cartethyia.jpeg', 'member', 'active', '2026-05-05 20:24:39'),
-(3, 'admin2', '$2y$10$LtIPqqzSd08/a6cXpCsqD.U/Z4tGSEyizzWXy6lRx5eQJCJUvVAW.', 'Nguyễn Văn', 'Hiệp', '0123456789', 'admin2@booktab.com', NULL, 'member', 'active', '2026-05-11 17:07:59'),
-(4, 'user2', '$2y$10$75FWPGM3gh8zKXqWvRT/XOoVpRHcFYUgGjDeA2uXdyl7wMK0Zh5Su', 'Huỳnh Đức', 'Huy', '0123456789', 'huy.huynhduc@gmail.com', NULL, 'member', 'active', '2026-05-11 17:17:34');
+-- --------------------------------------------------------
 
 --
--- Đang đổ dữ liệu cho bảng `administrator`
+-- Table structure for table `administrator`
+--
+
+CREATE TABLE `administrator` (
+  `userid` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `administrator`
 --
 
 INSERT INTO `administrator` (`userid`) VALUES
 (1),
 (3);
 
+-- --------------------------------------------------------
+
 --
--- Đang đổ dữ liệu cho bảng `anh_san_pham`
+-- Table structure for table `anh`
+--
+
+CREATE TABLE `anh` (
+  `ma_anh` bigint(20) NOT NULL,
+  `url_anh` varchar(500) NOT NULL,
+  `ten_file` varchar(255) DEFAULT NULL,
+  `ngay_tao` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `anh_cau_hoi`
+--
+
+CREATE TABLE `anh_cau_hoi` (
+  `ma_cau_hoi` bigint(20) NOT NULL,
+  `ma_anh` bigint(20) NOT NULL,
+  `so_thu_tu` int(11) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `anh_san_pham`
+--
+
+CREATE TABLE `anh_san_pham` (
+  `ma_anh` bigint(20) NOT NULL,
+  `ma_san_pham` bigint(20) NOT NULL,
+  `url_anh` varchar(500) NOT NULL,
+  `alt_text` varchar(255) DEFAULT NULL,
+  `is_primary` tinyint(1) DEFAULT 0,
+  `so_thu_tu` int(11) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `anh_san_pham`
 --
 
 INSERT INTO `anh_san_pham` (`ma_anh`, `ma_san_pham`, `url_anh`, `alt_text`, `is_primary`, `so_thu_tu`) VALUES
-(1,  1,  'uploads/products/product_1.webp',  'Đắc Nhân Tâm', 1, 1),
-(2,  2,  'uploads/products/product_2.webp',  'Nhà Giả Kim', 1, 1),
-(3,  3,  'uploads/products/product_3.webp',  'Sapiens', 1, 1),
-(4,  4,  'uploads/products/product_4.webp',  'Tư Duy Nhanh Và Chậm', 1, 1),
-(5,  5,  'uploads/products/product_5.webp',  'Atomic Habits', 1, 1),
-(6,  6,  'uploads/products/product_6.webp',  'Người Giàu Có Nhất Thành Babylon', 1, 1),
-(7,  7,  'uploads/products/product_7.webp',  'Cây Cam Ngọt Của Tôi', 1, 1),
-(8,  8,  'uploads/products/product_8.webp',  'Dám Bị Ghét', 1, 1),
-(9,  9,  'uploads/products/product_9.webp',  'Zero to One', 1, 1),
+(1, 1, 'uploads/products/product_1.webp', 'Đắc Nhân Tâm', 1, 1),
+(2, 2, 'uploads/products/product_2.webp', 'Nhà Giả Kim', 1, 1),
+(3, 3, 'uploads/products/product_3.webp', 'Sapiens', 1, 1),
+(4, 4, 'uploads/products/product_4.webp', 'Tư Duy Nhanh Và Chậm', 1, 1),
+(5, 5, 'uploads/products/product_5.webp', 'Atomic Habits', 1, 1),
+(6, 6, 'uploads/products/product_6.webp', 'Người Giàu Có Nhất Thành Babylon', 1, 1),
+(7, 7, 'uploads/products/product_7.webp', 'Cây Cam Ngọt Của Tôi', 1, 1),
+(8, 8, 'uploads/products/product_8.webp', 'Dám Bị Ghét', 1, 1),
+(9, 9, 'uploads/products/product_9.webp', 'Zero to One', 1, 1),
 (10, 10, 'uploads/products/product_10.webp', 'Hoàng Tử Bé', 1, 1),
 (11, 11, 'uploads/products/product_11.webp', 'Thinking in Systems', 1, 1),
 (12, 12, 'uploads/products/product_12.webp', 'Doraemon', 1, 1),
@@ -61,8 +102,29 @@ INSERT INTO `anh_san_pham` (`ma_anh`, `ma_san_pham`, `url_anh`, `alt_text`, `is_
 (14, 14, 'uploads/products/product_14.webp', 'Rèn Luyện Tư Duy Phản Biện', 1, 1),
 (15, 15, 'uploads/products/product_15.webp', 'Sản Phẩm Test', 1, 1);
 
+-- --------------------------------------------------------
+
 --
--- Đang đổ dữ liệu cho bảng `bai_viet`
+-- Table structure for table `bai_viet`
+--
+
+CREATE TABLE `bai_viet` (
+  `ma_bai_viet` bigint(20) NOT NULL,
+  `tieu_de` varchar(255) NOT NULL,
+  `tom_tat` text DEFAULT NULL,
+  `noi_dung` text NOT NULL,
+  `thumbnail_url` varchar(500) DEFAULT NULL,
+  `luot_xem` int(11) DEFAULT 0,
+  `trang_thai` varchar(50) DEFAULT 'ban_nhap',
+  `ngay_dang` datetime DEFAULT current_timestamp(),
+  `ngay_cap_nhat` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `slug` varchar(255) DEFAULT NULL,
+  `ma_loai` bigint(20) DEFAULT NULL,
+  `administrator_userid` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `bai_viet`
 --
 
 INSERT INTO `bai_viet` (`ma_bai_viet`, `tieu_de`, `tom_tat`, `noi_dung`, `thumbnail_url`, `luot_xem`, `trang_thai`, `ngay_dang`, `ngay_cap_nhat`, `slug`, `ma_loai`, `administrator_userid`) VALUES
@@ -93,8 +155,26 @@ INSERT INTO `bai_viet` (`ma_bai_viet`, `tieu_de`, `tom_tat`, `noi_dung`, `thumbn
 (19, 'Blockchain là gì? Tất tần tật sách về công nghệ Blockchain từ cơ bản đến nâng cao', 'Trong kỷ nguyên số hóa, công nghệ blockchain đã trở thành một từ khóa quen thuộc xuất hiện trong hầu hết các lĩnh vực từ tài chính, y tế cho đến chuỗi cung ứng và nghệ thuật. Không chỉ là nền tảng cho tiền mã hóa như Bitcoin, blockchain còn mở ra tiềm năng cách mạng hóa cách chúng ta lưu trữ, chia sẻ và xác minh thông tin. Với khả năng cung cấp minh bạch, bảo mật và phi tập trung, blockchain đang định hình tương lai của nhiều ngành công nghiệp.', '<h2 dir=\"ltr\" style=\"text-align: justify;\" data-pm-slice=\"1 1 []\"><strong>Blockchain l&agrave; g&igrave;?</strong></h2>\r\n<p dir=\"ltr\" style=\"text-align: justify;\" data-pm-slice=\"1 1 []\">Blockchain&nbsp;<sup id=\"cite_ref-te20151031_1-0\" class=\"reference\"></sup><sup id=\"cite_ref-fortune20160515_2-0\" class=\"reference\"></sup><sup id=\"cite_ref-nyt20160521_3-0\" class=\"reference\"></sup>(chuỗi khối), t&ecirc;n ban đầu&nbsp;block chain&nbsp;<sup id=\"cite_ref-primer_4-0\" class=\"reference\"></sup><sup id=\"cite_ref-obmh_5-0\" class=\"reference\"></sup>l&agrave; một cơ sở dữ liệu ph&acirc;n cấp lưu trữ th&ocirc;ng tin trong c&aacute;c khối th&ocirc;ng tin được li&ecirc;n kết với nhau bằng m&atilde; h&oacute;a v&agrave; mở rộng theo thời gian.<sup id=\"cite_ref-te20151031_1-1\" class=\"reference\"></sup><sup id=\"cite_ref-cryptocurrencytech_6-0\" class=\"reference\"></sup>&nbsp;Mỗi khối th&ocirc;ng tin đều chứa th&ocirc;ng tin về thời gian khởi tạo v&agrave; được li&ecirc;n kết tới khối trước đ&oacute;<sup id=\"cite_ref-cryptocurrencytech_6-1\" class=\"reference\"></sup>, k&egrave;m một m&atilde; thời gian v&agrave; dữ liệu giao dịch.&nbsp;<sup id=\"cite_ref-IPblockchain_7-0\" class=\"reference\"></sup>Blockchain được thiết kế để chống lại sự thay đổi của dữ liệu: Một khi dữ liệu đ&atilde; được mạng lưới chấp nhận th&igrave; sẽ kh&ocirc;ng c&oacute; c&aacute;ch n&agrave;o thay đổi được n&oacute;.</p>\r\n<p dir=\"ltr\" style=\"text-align: justify;\">Điểm nổi bật của blockchain l&agrave; t&iacute;nh phi tập trung, loại bỏ nhu cầu về trung gian như ng&acirc;n h&agrave;ng hay cơ quan quản l&yacute;. Mỗi giao dịch tr&ecirc;n blockchain được m&atilde; h&oacute;a v&agrave; x&aacute;c minh bởi c&aacute;c node th&ocirc;ng qua c&aacute;c thuật to&aacute;n đồng thuận như Proof of Work (PoW) hoặc Proof of Stake (PoS) gi&uacute;p blockchain trở n&ecirc;n an to&agrave;n v&agrave; đ&aacute;ng tin cậy, đồng thời giảm thiểu nguy cơ gian lận hoặc sửa đổi dữ liệu.</p>\r\n<p dir=\"ltr\" style=\"text-align: justify;\"><img src=\"upload/news/2026-05-10/image-blockchain-la-gi-tat-tan-tat-sach-ve-cong-nghe-blockchain-tu-co-ban-den-nang-cao-1778443362-551.png\" alt=\"\" width=\"1536\" height=\"864\"></p>\r\n<p dir=\"ltr\" style=\"text-align: justify;\" data-pm-slice=\"1 1 []\">C&ocirc;ng nghệ blockchain lần đầu ti&ecirc;n được giới thiệu v&agrave;o năm 2008 bởi một c&aacute; nh&acirc;n hoặc nh&oacute;m ẩn danh dưới b&uacute;t danh Satoshi Nakamoto, như một phần của giao thức Bitcoin. Ban đầu, blockchain được thiết kế để hỗ trợ c&aacute;c giao dịch tiền m&atilde; h&oacute;a, đảm bảo rằng mọi giao dịch được ghi lại c&ocirc;ng khai v&agrave; kh&ocirc;ng thể bị thay đổi. Tuy nhi&ecirc;n, kể từ đ&oacute;, blockchain đ&atilde; vượt xa vai tr&ograve; ban đầu của n&oacute;.</p>\r\n<p dir=\"ltr\" style=\"text-align: justify;\">V&agrave;o năm 2015, Ethereum ra đời, mở rộng tiềm năng của blockchain bằng c&aacute;ch giới thiệu hợp đồng th&ocirc;ng minh (smart contracts) &ndash; c&aacute;c chương tr&igrave;nh tự động thực thi khi c&aacute;c điều kiện được đ&aacute;p ứng. Điều n&agrave;y đ&atilde; mở ra một kỷ nguy&ecirc;n mới cho c&aacute;c ứng dụng phi tập trung (DApps) v&agrave; c&aacute;c lĩnh vực như t&agrave;i ch&iacute;nh phi tập trung (DeFi), token h&oacute;a t&agrave;i sản, v&agrave; quản l&yacute; chuỗi cung ứng. Ng&agrave;y nay, blockchain được &aacute;p dụng trong nhiều ng&agrave;nh c&ocirc;ng nghiệp, từ y tế (lưu trữ hồ sơ bệnh &aacute;n an to&agrave;n) đến nghệ thuật số (NFTs), v&agrave; thậm ch&iacute; cả quản l&yacute; danh t&iacute;nh kỹ thuật số.</p>\r\n<h2 dir=\"ltr\" style=\"text-align: justify;\" data-pm-slice=\"1 3 []\"><span id=\"Cac_thanh_phan_cot_loi_cua_Blockchain\" class=\"ez-toc-section\"></span><strong>C&aacute;c th&agrave;nh phần cốt l&otilde;i của Blockchain</strong></h2>\r\n<ul class=\"tight\" dir=\"ltr\" style=\"text-align: justify;\" data-tight=\"true\">\r\n<li>\r\n<p dir=\"ltr\"><strong>Khối (Block):</strong>&nbsp;Mỗi khối chứa dữ liệu giao dịch, dấu thời gian, v&agrave; một m&atilde; hash. Hash l&agrave; một chuỗi k&yacute; tự duy nhất được tạo ra từ dữ liệu của khối, đảm bảo t&iacute;nh to&agrave;n vẹn v&agrave; li&ecirc;n kết với khối trước đ&oacute;.</p>\r\n</li>\r\n<li>\r\n<p dir=\"ltr\"><strong>Chuỗi (Chain):</strong>&nbsp;C&aacute;c khối được li&ecirc;n kết theo thứ tự thời gian, tạo th&agrave;nh một chuỗi kh&ocirc;ng thể thay đổi. Nếu một khối bị sửa đổi, to&agrave;n bộ chuỗi sẽ bị ph&aacute; vỡ, khiến việc gian lận trở n&ecirc;n gần như kh&ocirc;ng thể.</p>\r\n</li>\r\n<li>\r\n<p dir=\"ltr\"><strong>Mạng lưới ph&acirc;n t&aacute;n (Distributed Network):</strong>&nbsp;Blockchain hoạt động tr&ecirc;n một mạng lưới c&aacute;c m&aacute;y t&iacute;nh (nodes), mỗi node lưu trữ một bản sao của chuỗi khối đảm bảo t&iacute;nh minh bạch v&agrave; khả năng phục hồi của hệ thống.</p>\r\n</li>\r\n<li>\r\n<p dir=\"ltr\"><strong>Thuật to&aacute;n đồng thuận (Consensus Algorithms):</strong> C&aacute;c thuật to&aacute;n như PoW, PoS, hoặc Delegated Proof of Stake (DPoS) được sử dụng để x&aacute;c minh v&agrave; th&ecirc;m c&aacute;c giao dịch mới v&agrave;o blockchain, đảm bảo tất cả c&aacute;c node đồng &yacute; về trạng th&aacute;i của sổ c&aacute;i.</p>\r\n</li>\r\n</ul>\r\n<p style=\"text-align: justify;\"><img src=\"upload/news/2026-05-10/image-blockchain-la-gi-tat-tan-tat-sach-ve-cong-nghe-blockchain-tu-co-ban-den-nang-cao-1778443390-388.png\" alt=\"\" width=\"1024\" height=\"576\"></p>\r\n<h2 dir=\"ltr\" style=\"text-align: justify;\" data-pm-slice=\"1 3 []\"><strong>C&aacute;c loại Blockchain</strong></h2>\r\n<ul class=\"tight\" dir=\"ltr\" style=\"text-align: justify;\" data-tight=\"true\">\r\n<li>\r\n<p dir=\"ltr\"><strong>Blockchain c&ocirc;ng khai (Public Blockchain):</strong>&nbsp;Mở cho tất cả mọi người tham gia, như Bitcoin v&agrave; Ethereum. Bất kỳ ai cũng c&oacute; thể tham gia mạng lưới, x&aacute;c minh giao dịch hoặc ph&aacute;t triển ứng dụng.</p>\r\n</li>\r\n<li>\r\n<p dir=\"ltr\"><strong>Blockchain ri&ecirc;ng (Private Blockchain):</strong>&nbsp;Chỉ giới hạn trong một tổ chức hoặc nh&oacute;m người được cấp ph&eacute;p. Loại blockchain n&agrave;y thường được sử dụng trong c&aacute;c doanh nghiệp để quản l&yacute; dữ liệu nội bộ.</p>\r\n</li>\r\n<li>\r\n<p dir=\"ltr\"><strong>Blockchain li&ecirc;n minh (Consortium Blockchain):</strong>&nbsp;Kết hợp giữa blockchain c&ocirc;ng khai v&agrave; ri&ecirc;ng, được quản l&yacute; bởi một nh&oacute;m tổ chức. V&iacute; dụ, Hyperledger Fabric l&agrave; một nền tảng phổ biến cho c&aacute;c ứng dụng doanh nghiệp.</p>\r\n</li>\r\n<li>\r\n<p dir=\"ltr\"><strong>Blockchain lai (Hybrid Blockchain):</strong>&nbsp;Kết hợp c&aacute;c t&iacute;nh năng của cả blockchain c&ocirc;ng khai v&agrave; ri&ecirc;ng, cho ph&eacute;p t&ugrave;y chỉnh mức độ minh bạch v&agrave; quyền truy cập.</p>\r\n</li>\r\n</ul>\r\n<h2 dir=\"ltr\" style=\"text-align: justify;\"><span id=\"Ung_dung_thuc_tien_cua_Blockchain\" class=\"ez-toc-section\"></span><strong>Ứng dụng thực tiễn của Blockchain</strong></h2>\r\n<ul class=\"tight\" dir=\"ltr\" style=\"text-align: justify;\" data-tight=\"true\">\r\n<li>\r\n<p dir=\"ltr\"><strong>T&agrave;i ch&iacute;nh v&agrave; Ng&acirc;n h&agrave;ng:</strong>&nbsp;Blockchain cho ph&eacute;p người d&ugrave;ng thực hiện giao dịch một c&aacute;ch nhanh ch&oacute;ng, minh bạch với chi ph&iacute; thấp. Nhờ ứng dụng c&ocirc;ng nghệ n&agrave;y, c&aacute;c nền tảng t&agrave;i ch&iacute;nh phi tập trung (DeFi) như Uniswap hay Aave c&oacute; thể cung cấp dịch vụ vay, cho vay v&agrave; giao dịch m&agrave; kh&ocirc;ng cần đến b&ecirc;n trung gian, mang lại sự linh hoạt v&agrave; tự do hơn cho người d&ugrave;ng.</p>\r\n</li>\r\n<li>\r\n<p dir=\"ltr\"><strong>Chuỗi cung ứng:</strong>&nbsp;Blockchain gi&uacute;p theo d&otilde;i nguồn gốc v&agrave; h&agrave;nh tr&igrave;nh của sản phẩm, từ nguy&ecirc;n liệu th&ocirc; đến tay người ti&ecirc;u d&ugrave;ng. V&iacute; dụ, Walmart sử dụng blockchain để quản l&yacute; chuỗi cung ứng thực phẩm, đảm bảo t&iacute;nh minh bạch v&agrave; an to&agrave;n.</p>\r\n</li>\r\n<li>\r\n<p dir=\"ltr\"><strong>Hợp đồng th&ocirc;ng minh:</strong>&nbsp;C&aacute;c hợp đồng tự động thực thi tr&ecirc;n blockchain, như tr&ecirc;n Ethereum, gi&uacute;p loại bỏ sự phụ thuộc v&agrave;o b&ecirc;n thứ ba trong c&aacute;c thỏa thuận như mua b&aacute;n bất động sản hoặc bảo hiểm.</p>\r\n</li>\r\n<li>\r\n<p dir=\"ltr\"><strong>NFTs v&agrave; Nghệ thuật số:</strong>&nbsp;Non-Fungible Tokens (NFTs) sử dụng blockchain để x&aacute;c minh quyền sở hữu v&agrave; t&iacute;nh độc đ&aacute;o của c&aacute;c t&aacute;c phẩm nghệ thuật số, &acirc;m nhạc, hoặc t&agrave;i sản ảo.</p>\r\n</li>\r\n<li>\r\n<p dir=\"ltr\"><strong>Quản l&yacute; danh t&iacute;nh kỹ thuật số:</strong> Blockchain cung cấp giải ph&aacute;p x&aacute;c minh danh t&iacute;nh an to&agrave;n, gi&uacute;p ngăn chặn gian lận danh t&iacute;nh v&agrave; bảo vệ quyền ri&ecirc;ng tư của người d&ugrave;ng.</p>\r\n</li>\r\n</ul>\r\n<h2 dir=\"ltr\" style=\"text-align: justify;\" data-pm-slice=\"1 1 []\"><strong>Th&aacute;ch thức v&agrave; tương lai của Blockchain</strong></h2>\r\n<p style=\"text-align: justify;\" data-start=\"88\" data-end=\"598\">D&ugrave; rất tiềm năng, c&ocirc;ng nghệ blockchain vẫn đang đối mặt với kh&ocirc;ng &iacute;t th&aacute;ch thức. Khả năng mở rộng c&ograve;n hạn chế khiến c&aacute;c blockchain c&ocirc;ng khai như Bitcoin v&agrave; Ethereum gặp kh&oacute; khăn khi xử l&yacute; khối lượng lớn giao dịch. B&ecirc;n cạnh đ&oacute;, mức ti&ecirc;u thụ năng lượng cao của c&aacute;c thuật to&aacute;n như Proof of Work (PoW) l&agrave;m dấy l&ecirc;n những lo ngại về t&aacute;c động m&ocirc;i trường. Về mặt ph&aacute;p l&yacute;, nhiều quốc gia vẫn đang loay hoay t&igrave;m c&aacute;ch x&acirc;y dựng khung quản l&yacute; ph&ugrave; hợp cho c&aacute;c hoạt động li&ecirc;n quan đến blockchain v&agrave; tiền m&atilde; h&oacute;a.</p>\r\n<p style=\"text-align: justify;\" data-start=\"600\" data-end=\"1053\">Tuy nhi&ecirc;n, đ&acirc;y vẫn l&agrave; lĩnh vực rất c&oacute; triển vọng. C&aacute;c giải ph&aacute;p mở rộng như Layer 2 &ndash; điển h&igrave;nh l&agrave; Lightning Network của Bitcoin &ndash; c&ugrave;ng với những thuật to&aacute;n đồng thuận th&acirc;n thiện với m&ocirc;i trường đang dần được triển khai. Kh&ocirc;ng chỉ dừng lại ở lĩnh vực t&agrave;i ch&iacute;nh, blockchain c&ograve;n đang được t&iacute;ch hợp với những c&ocirc;ng nghệ ti&ecirc;n tiến như tr&iacute; tuệ nh&acirc;n tạo (AI) v&agrave; Internet vạn vật (IoT), mở ra những cơ hội mới cho c&aacute;c ứng dụng th&ocirc;ng minh.</p>\r\n<h2 style=\"text-align: justify;\" data-start=\"600\" data-end=\"1053\"><span id=\"Loi_ket\" class=\"ez-toc-section\"></span><strong>Lời kết</strong></h2>\r\n<p style=\"text-align: justify;\">Trong thời đại số h&oacute;a, blockchain kh&ocirc;ng chỉ đ&oacute;ng vai tr&ograve; l&agrave; nền tảng của tiền điện tử, m&agrave; c&ograve;n l&agrave; chiếc ch&igrave;a kh&oacute;a mở ra một tương lai minh bạch, an to&agrave;n v&agrave; phi tập trung. Với khả năng tạo n&ecirc;n những đột ph&aacute; từ lĩnh vực t&agrave;i ch&iacute;nh đến nghệ thuật, c&ocirc;ng nghệ n&agrave;y đang từng bước định h&igrave;nh n&ecirc;n một nền kinh tế số hiện đại v&agrave; bền vững.</p>', 'upload/news/2026-05-10/thumbnail-blockchain-la-gi-tat-tan-tat-sach-ve-cong-nghe-blockchain-tu-co-ban-den-nang-cao-1778443433-709.png', 1, 'da_dang', '2026-05-11 03:03:53', '2026-05-11 03:04:05', 'blockchain-la-gi-tat-tan-tat-sach-ve-cong-nghe-blockchain-tu-co-ban-den-nang-cao', 3, 1),
 (20, 'MBA Bằng Hình - Hiểu về kinh doanh dễ dàng qua từng nét vẽ', '“MBA Bằng Hình” (The Visual MBA) là một cuốn sách độc đáo do Jason Barron viết, ghi chép lại toàn bộ hành trình hai năm theo học chương trình MBA tại Brigham Young University bằng hình vẽ minh họa. Cuốn sách mang đến một cách tiếp cận mới, trực quan và tính ứng dụng cao cho những ai muốn hiểu rõ về kiến thức kinh doanh mà không có điều kiện theo học MBA truyền thống.', '<h2 style=\"text-align: justify;\"><strong>Đ&ocirc;i n&eacute;t về t&aacute;c giả Jason Barron</strong></h2>\r\n<p style=\"text-align: justify;\"><img src=\"upload/news/2026-05-10/image-mba-bang-hinh-hieu-ve-kinh-doanh-de-dang-qua-tung-net-ve-1778443753-462.png\" alt=\"\" width=\"1024\" height=\"576\"></p>\r\n<p style=\"text-align: justify;\">Jason Barron l&agrave; một nh&agrave; l&atilde;nh đạo s&aacute;ng tạo, tập trung v&agrave;o chiến lược sản phẩm số v&agrave; trải nghiệm người d&ugrave;ng. &Ocirc;ng c&oacute; bằng MBA v&agrave; l&agrave; người đồng s&aacute;ng lập c&ocirc;ng ty khởi nghiệp LowestMed, sau đ&oacute; được RetailMeNot mua lại v&agrave;o năm 2018. Hiện tại, Jason đang giữ vị tr&iacute; quản l&yacute; cấp cao tại một tổ chức phi lợi nhuận lớn, chuy&ecirc;n về c&aacute;c sản phẩm số, phục vụ h&agrave;ng triệu người d&ugrave;ng tr&ecirc;n to&agrave;n thế giới. &Ocirc;ng nhận bằng cử nh&acirc;n từ Đại học Southern Virginia năm 2007 v&agrave; bằng Thạc sĩ Quản trị Kinh doanh từ Đại học Brigham Young năm 2017. Jason Barron hiện đang sống gần Salt Lake City, Utah, c&ugrave;ng vợ v&agrave; năm người con. &Ocirc;ng cũng l&agrave; t&aacute;c giả của cuốn s&aacute;ch b&aacute;n chạy &ldquo;MBA Bằng H&igrave;nh&rdquo; (The Visual MBA), được b&igrave;nh chọn bởi Wall Street Journal v&agrave; đ&atilde; gi&agrave;nh được Huy chương V&agrave;ng Axiom.</p>\r\n<p style=\"text-align: justify;\">&ldquo;MBA Bằng H&igrave;nh&rdquo; của Jason Barron kh&ocirc;ng chỉ l&agrave; một cuốn s&aacute;ch kinh doanh th&ocirc;ng thường, m&agrave; l&agrave; một t&aacute;c phẩm nghệ thuật kết hợp giữa kiến thức kinh doanh s&acirc;u rộng v&agrave; phương ph&aacute;p tr&igrave;nh b&agrave;y trực quan, s&aacute;ng tạo. Cuốn s&aacute;ch n&agrave;y giải m&atilde; thế giới MBA phức tạp bằng c&aacute;ch biến những l&yacute; thuyết kh&ocirc; khan th&agrave;nh những h&igrave;nh ảnh sinh động, dễ hiểu v&agrave; dễ nhớ.</p>\r\n<h2 style=\"text-align: justify;\"><span id=\"Noi_dung_cot_loi_cua_cuon_sach\" class=\"ez-toc-section\"></span><strong>Nội dung cốt l&otilde;i của cuốn s&aacute;ch</strong></h2>\r\n<h3 style=\"text-align: justify;\"><span id=\"1_Ke_toan_quan_tri_Managerial_Accounting\" class=\"ez-toc-section\"></span><strong>1. Kế to&aacute;n quản trị (Managerial Accounting)</strong></h3>\r\n<p style=\"text-align: justify;\">Barron mở đầu bằng việc giải th&iacute;ch hệ thống kế to&aacute;n quản trị, nhấn mạnh vai tr&ograve; then chốt của n&oacute; trong việc đưa ra quyết định kinh doanh s&aacute;ng suốt. &Ocirc;ng cung cấp c&aacute;c c&ocirc;ng cụ v&agrave; kỹ thuật cần thiết để quản l&yacute; t&agrave;i ch&iacute;nh hiệu quả, gi&uacute;p người đọc hiểu r&otilde; về c&aacute;ch c&aacute;c con số ảnh hưởng đến hoạt động của doanh nghiệp.</p>\r\n<h3 style=\"text-align: justify;\"><span id=\"2_Hoach_dinh_tai_chinh_khoi_nghiep_Startup_Finance\" class=\"ez-toc-section\"></span><strong>2. Hoạch định t&agrave;i ch&iacute;nh khởi nghiệp (Startup Finance)</strong></h3>\r\n<p style=\"text-align: justify;\">Chương n&agrave;y l&agrave; cẩm nang hữu &iacute;ch cho những ai ấp ủ giấc mơ khởi nghiệp. Barron hướng dẫn chi tiết c&aacute;ch lập kế hoạch t&agrave;i ch&iacute;nh cho dự &aacute;n, từ việc x&aacute;c định nguồn vốn, dự b&aacute;o doanh thu, đến quản l&yacute; chi ph&iacute; v&agrave; d&ograve;ng tiền. &Ocirc;ng cũng nhấn mạnh tầm quan trọng của việc hiểu r&otilde; c&aacute;c chỉ số t&agrave;i ch&iacute;nh để đưa ra quyết định đầu tư v&agrave; huy động vốn hiệu quả.</p>\r\n<h3 style=\"text-align: justify;\"><strong>3. Chiến lược kinh doanh (Business Strategy)</strong></h3>\r\n<p style=\"text-align: justify;\">Barron kh&ocirc;ng chỉ tr&igrave;nh b&agrave;y c&aacute;c l&yacute; thuyết chiến lược kinh điển m&agrave; c&ograve;n đưa ra những v&iacute; dụ thực tế, gi&uacute;p người đọc hiểu r&otilde; c&aacute;ch c&aacute;c doanh nghiệp x&acirc;y dựng lợi thế cạnh tranh v&agrave; th&iacute;ch ứng với m&ocirc;i trường kinh doanh thay đổi. &Ocirc;ng hướng dẫn c&aacute;ch ph&acirc;n t&iacute;ch thị trường, x&aacute;c định đối thủ cạnh tranh, v&agrave; lựa chọn chiến lược ph&ugrave; hợp với mục ti&ecirc;u v&agrave; nguồn lực của doanh nghiệp.</p>\r\n<h3 style=\"text-align: justify;\"><span id=\"4_Quan_tri_doanh_nghiep_Management\" class=\"ez-toc-section\"></span><strong>4. Quản trị doanh nghiệp (Management)</strong></h3>\r\n<p style=\"text-align: justify;\">Chương n&agrave;y tập trung v&agrave;o c&aacute;c nguy&ecirc;n tắc quản trị cơ bản, từ việc x&acirc;y dựng cơ cấu tổ chức hiệu quả, đến việc quản l&yacute; nh&acirc;n sự, điều h&agrave;nh hoạt động v&agrave; kiểm so&aacute;t chất lượng. Barron nhấn mạnh tầm quan trọng của việc x&acirc;y dựng một văn h&oacute;a doanh nghiệp t&iacute;ch cực, khuyến kh&iacute;ch sự s&aacute;ng tạo v&agrave; hợp t&aacute;c, để đạt được hiệu suất cao v&agrave; duy tr&igrave; lợi thế cạnh tranh.</p>\r\n<h3 style=\"text-align: justify;\"><span id=\"5_Tai_chinh_doanh_nghiep_Corporate_Finance\" class=\"ez-toc-section\"></span><strong>5. T&agrave;i ch&iacute;nh doanh nghiệp (Corporate Finance)</strong></h3>\r\n<p style=\"text-align: justify;\">Barron đi s&acirc;u v&agrave;o c&aacute;c vấn đề t&agrave;i ch&iacute;nh quan trọng của doanh nghiệp, như quản l&yacute; vốn lưu động, đ&aacute;nh gi&aacute; dự &aacute;n đầu tư, v&agrave; huy động vốn từ c&aacute;c nguồn kh&aacute;c nhau. &Ocirc;ng cung cấp c&aacute;c c&ocirc;ng cụ v&agrave; kỹ thuật cần thiết để đưa ra quyết định t&agrave;i ch&iacute;nh s&aacute;ng suốt, nhằm tối ưu h&oacute;a lợi nhuận v&agrave; đảm bảo sự ph&aacute;t triển bền vững của doanh nghiệp.</p>\r\n<h2 style=\"text-align: justify;\"><span id=\"Phuong_phap_tiep_can_doc_dao\" class=\"ez-toc-section\"></span><strong>Phương ph&aacute;p tiếp cận độc đ&aacute;o&nbsp;</strong></h2>\r\n<p style=\"text-align: justify;\">Điểm đặc biệt của &ldquo;MBA Bằng H&igrave;nh&rdquo; nằm ở phương ph&aacute;p tr&igrave;nh b&agrave;y trực quan v&agrave; s&aacute;ng tạo. Thay v&igrave; những d&ograve;ng chữ d&agrave;y đặc, Barron sử dụng h&igrave;nh ảnh minh họa, sơ đồ, biểu đồ v&agrave; c&aacute;c h&igrave;nh vẽ ngộ nghĩnh để giải th&iacute;ch c&aacute;c kh&aacute;i niệm phức tạp. C&aacute;ch tiếp cận n&agrave;y gi&uacute;p người đọc dễ d&agrave;ng tiếp thu kiến thức, ghi nhớ l&acirc;u hơn, v&agrave; &aacute;p dụng v&agrave;o thực tế một c&aacute;ch hiệu quả.</p>\r\n<h2 style=\"text-align: justify;\"><span id=\"Doi_tuong_doc_gia_da_dang\" class=\"ez-toc-section\"></span><strong>Đối tượng độc giả đa dạng</strong></h2>\r\n<p style=\"text-align: justify;\">&ldquo;MBA Bằng H&igrave;nh&rdquo; kh&ocirc;ng chỉ d&agrave;nh cho những người chuẩn bị theo học MBA, m&agrave; c&ograve;n ph&ugrave; hợp với sinh vi&ecirc;n c&aacute;c ng&agrave;nh kinh tế, quản l&yacute;, t&agrave;i ch&iacute;nh, cũng như c&aacute;c doanh nh&acirc;n, nh&agrave; quản l&yacute;, v&agrave; bất kỳ ai muốn n&acirc;ng cao kiến thức kinh doanh của m&igrave;nh. Cuốn s&aacute;ch n&agrave;y cung cấp một c&aacute;i nh&igrave;n tổng quan về chương tr&igrave;nh MBA, gi&uacute;p người đọc hiểu r&otilde; c&aacute;c kh&aacute;i niệm v&agrave; c&ocirc;ng cụ cơ bản, đồng thời trang bị cho họ những kỹ năng cần thiết để th&agrave;nh c&ocirc;ng trong m&ocirc;i trường kinh doanh cạnh tranh.</p>\r\n<p style=\"text-align: justify;\"><img src=\"upload/news/2026-05-10/image-mba-bang-hinh-hieu-ve-kinh-doanh-de-dang-qua-tung-net-ve-1778443784-406.jpg\" alt=\"\" width=\"720\" height=\"575\"></p>\r\n<h2 style=\"text-align: justify;\"><strong>Điểm cộng của cuốn s&aacute;ch</strong></h2>\r\n<p style=\"text-align: justify;\">Điểm độc đ&aacute;o của cuốn s&aacute;ch &ldquo;MBA Bằng H&igrave;nh&rdquo; (The Visual MBA) của Jason Barron nằm ở c&aacute;ch tiếp cận trực quan v&agrave; s&aacute;ng tạo trong việc tr&igrave;nh b&agrave;y kiến thức quản trị kinh doanh. Thay v&igrave; sử dụng văn bản d&agrave;i d&ograve;ng v&agrave; kh&ocirc; khan, t&aacute;c giả đ&atilde; kh&eacute;o l&eacute;o chuyển đổi c&aacute;c kh&aacute;i niệm phức tạp th&agrave;nh h&igrave;nh ảnh minh họa sinh động, biểu đồ, v&agrave; sơ đồ dễ hiểu.</p>\r\n<p style=\"text-align: justify;\">Những điểm nổi bật tạo n&ecirc;n sự kh&aacute;c biệt của cuốn s&aacute;ch:</p>\r\n<ul style=\"text-align: justify;\">\r\n<li aria-level=\"1\"><strong>H&igrave;nh ảnh trực quan</strong><strong>:</strong>&nbsp;Cuốn s&aacute;ch t&oacute;m lược kiến thức MBA th&ocirc;ng qua rất nhiều h&igrave;nh ảnh minh họa trực quan sinh động. Jason Barron đ&atilde; ghi ch&eacute;p nội dung từng buổi học bằng c&aacute;c h&igrave;nh vẽ, nắm bắt những điểm quan trọng, v&agrave; cung cấp một t&agrave;i liệu hữu &iacute;ch v&agrave; th&uacute; vị.</li>\r\n<li aria-level=\"1\"><strong>Phong c&aacute;ch viết đơn giản v&agrave; trực quan</strong><strong>:</strong>&nbsp;Jason Barron kết hợp t&iacute;nh trực quan với sự đơn giản trong phong c&aacute;ch viết. &Ocirc;ng sử dụng h&igrave;nh ảnh, biểu đồ, v&agrave; sơ đồ thay cho những đoạn văn d&agrave;i d&ograve;ng để truyền tải th&ocirc;ng tin, gi&uacute;p người đọc dễ d&agrave;ng tiếp thu v&agrave; ghi nhớ. M&agrave;u sắc v&agrave; bố cục được sử dụng kh&eacute;o l&eacute;o để nhấn mạnh c&aacute;c th&ocirc;ng tin quan trọng.</li>\r\n<li aria-level=\"1\"><strong>Tiếp cận đa dạng chủ đề</strong><strong>:&nbsp;</strong>S&aacute;ch bao qu&aacute;t nhiều lĩnh vực như kế to&aacute;n quản trị, hoạch định t&agrave;i ch&iacute;nh khởi nghiệp, chiến lược kinh doanh, quản trị doanh nghiệp, v&agrave; t&agrave;i ch&iacute;nh doanh nghiệp.</li>\r\n<li aria-level=\"1\"><strong>Ph&ugrave; hợp với nhiều đối tượng</strong><strong>:&nbsp;</strong>Cuốn s&aacute;ch ph&ugrave; hợp cho những người chuẩn bị thi v&agrave;o trường kinh doanh, sinh vi&ecirc;n chuy&ecirc;n ng&agrave;nh t&agrave;i ch&iacute;nh, hoặc những ai muốn t&igrave;m hiểu về MBA. N&oacute; cung cấp c&aacute;i nh&igrave;n cận cảnh về cấu tr&uacute;c kh&oacute;a học MBA th&ocirc;ng qua những ghi ch&eacute;p trực quan v&agrave; h&igrave;nh ảnh minh họa.</li>\r\n</ul>\r\n<p style=\"text-align: justify;\">&ldquo;MBA Bằng H&igrave;nh&rdquo; tạo ra một trải nghiệm đọc th&uacute; vị v&agrave; đ&aacute;ng nhớ th&ocirc;ng qua việc kết hợp kiến thức kinh doanh với h&igrave;nh ảnh trực quan, gi&uacute;p độc giả dễ d&agrave;ng tiếp cận v&agrave; nắm bắt kiến thức một c&aacute;ch nhanh ch&oacute;ng v&agrave; hiệu quả.</p>\r\n<h2 style=\"text-align: justify;\"><span id=\"Danh_gia_tu_doc_gia_va_gioi_chuyen_mon\" class=\"ez-toc-section\"></span><strong>Đ&aacute;nh gi&aacute; từ độc giả v&agrave; giới chuy&ecirc;n m&ocirc;n</strong></h2>\r\n<p style=\"text-align: justify;\">&ldquo;MBA Bằng H&igrave;nh&rdquo; của Jason Barron đ&atilde; tạo n&ecirc;n tiếng vang lớn trong cộng đồng độc giả v&agrave; giới chuy&ecirc;n m&ocirc;n bởi sự độc đ&aacute;o v&agrave; hiệu quả trong c&aacute;ch tiếp cận kiến thức kinh doanh. Độc giả đồng loạt ca ngợi t&iacute;nh trực quan v&agrave; dễ tiếp cận của cuốn s&aacute;ch, cho rằng việc sử dụng h&igrave;nh ảnh minh họa thay cho văn bản d&agrave;i d&ograve;ng gi&uacute;p họ nắm bắt th&ocirc;ng tin nhanh ch&oacute;ng v&agrave; hiệu quả. Nhiều người cũng đ&aacute;nh gi&aacute; cao t&iacute;nh ứng dụng của cuốn s&aacute;ch, khi c&aacute;c kh&aacute;i niệm phức tạp được tr&igrave;nh b&agrave;y một c&aacute;ch dễ hiểu, gi&uacute;p họ tự tin &aacute;p dụng v&agrave;o c&ocirc;ng việc v&agrave; cuộc sống. Đặc biệt, t&iacute;nh đa dạng về đối tượng m&agrave; cuốn s&aacute;ch hướng đến cũng được ghi nhận, từ những người mới bắt đầu t&igrave;m hiểu về kinh doanh đến c&aacute;c doanh nh&acirc;n v&agrave; nh&agrave; quản l&yacute; muốn n&acirc;ng cao kiến thức.&nbsp;</p>\r\n<p style=\"text-align: justify;\">Giới chuy&ecirc;n m&ocirc;n cũng kh&ocirc;ng tiếc lời khen ngợi c&aacute;ch tiếp cận mới mẻ v&agrave; hiệu quả của cuốn s&aacute;ch trong việc học tập v&agrave; ứng dụng kiến thức quản trị kinh doanh. Họ đ&aacute;nh gi&aacute; cao sự s&aacute;ng tạo của Jason Barron trong việc biến những kh&aacute;i niệm phức tạp th&agrave;nh những h&igrave;nh ảnh dễ hiểu, mở ra một phương ph&aacute;p học tập mới lạ v&agrave; hấp dẫn. Tuy nhi&ecirc;n, một số &yacute; kiến tr&aacute;i chiều cho rằng cuốn s&aacute;ch c&oacute; thể chưa đủ s&acirc;u sắc đối với những ai muốn nghi&ecirc;n cứu chuy&ecirc;n s&acirc;u về MBA. Nh&igrave;n chung, &ldquo;MBA Bằng H&igrave;nh&rdquo; vẫn l&agrave; một t&aacute;c phẩm đ&aacute;ng đọc, mang đến một trải nghiệm học tập trực quan, s&aacute;ng tạo v&agrave; hiệu quả cho bất kỳ ai quan t&acirc;m đến lĩnh vực kinh doanh.</p>\r\n<h2 style=\"text-align: justify;\"><strong>Lời kết&nbsp;</strong></h2>\r\n<p style=\"text-align: justify;\">&ldquo;MBA Bằng H&igrave;nh&rdquo; kh&ocirc;ng chỉ đơn thuần l&agrave; một cuốn s&aacute;ch kinh doanh, m&agrave; c&ograve;n l&agrave; một phương ph&aacute;p học tập s&aacute;ng tạo, gi&uacute;p người đọc tiếp cận kiến thức MBA một c&aacute;ch trực quan v&agrave; dễ hiểu. Với sự kết hợp giữa h&igrave;nh ảnh sinh động v&agrave; nội dung c&ocirc; đọng, cuốn s&aacute;ch n&agrave;y l&agrave; lựa chọn l&yacute; tưởng cho những ai muốn trang bị tư duy quản trị m&agrave; kh&ocirc;ng cần theo học một chương tr&igrave;nh MBA ch&iacute;nh quy. Đ&acirc;y chắc chắn l&agrave; một t&agrave;i liệu hữu &iacute;ch cho bất kỳ ai quan t&acirc;m đến kinh doanh v&agrave; quản trị doanh nghiệp.</p>', 'upload/news/2026-05-10/thumbnail-mba-bang-hinh-hieu-ve-kinh-doanh-de-dang-qua-tung-net-ve-1778443803-244.png', 5, 'da_dang', '2026-05-11 03:10:03', '2026-05-11 14:57:53', 'mba-bang-hinh-hieu-ve-kinh-doanh-de-dang-qua-tung-net-ve', 3, 1);
 
+-- --------------------------------------------------------
+
 --
--- Đang đổ dữ liệu cho bảng `binh_luan`
+-- Table structure for table `binh_luan`
+--
+
+CREATE TABLE `binh_luan` (
+  `ma_binh_luan` bigint(20) NOT NULL,
+  `noi_dung` text NOT NULL,
+  `ngay_tao` datetime DEFAULT current_timestamp(),
+  `luot_thich` int(11) DEFAULT 0,
+  `trang_thai` varchar(50) DEFAULT 'ban_nhap',
+  `url_anh` varchar(500) DEFAULT NULL,
+  `ma_bai_viet` bigint(20) NOT NULL,
+  `userid` bigint(20) NOT NULL,
+  `binh_luan_cha` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `binh_luan`
 --
 
 INSERT INTO `binh_luan` (`ma_binh_luan`, `noi_dung`, `ngay_tao`, `luot_thich`, `trang_thai`, `url_anh`, `ma_bai_viet`, `userid`, `binh_luan_cha`) VALUES
@@ -102,8 +182,24 @@ INSERT INTO `binh_luan` (`ma_binh_luan`, `noi_dung`, `ngay_tao`, `luot_thich`, `
 (6, 'Cảm ơn bạn đã quan tâm tới bài viết!', '2026-05-11 14:00:42', 0, 'hien', NULL, 1, 1, 5),
 (7, 'Nhớ ra thêm nhiều bài review sách hay nữa nha', '2026-05-11 14:02:21', 0, 'hien', NULL, 1, 2, 5);
 
+-- --------------------------------------------------------
+
 --
--- Đang đổ dữ liệu cho bảng `cau_hoi`
+-- Table structure for table `cau_hoi`
+--
+
+CREATE TABLE `cau_hoi` (
+  `ma_cau_hoi` bigint(20) NOT NULL,
+  `ten_cau_hoi` varchar(255) NOT NULL,
+  `trang_thai` enum('cho_duyet','chua_tra_loi','da_tra_loi','da_an') NOT NULL DEFAULT 'chua_tra_loi',
+  `is_faq` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `ma_loai` bigint(20) DEFAULT NULL,
+  `userid` bigint(20) NOT NULL,
+  `ngay_tao` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `cau_hoi`
 --
 
 INSERT INTO `cau_hoi` (`ma_cau_hoi`, `ten_cau_hoi`, `trang_thai`, `is_faq`, `ma_loai`, `userid`, `ngay_tao`) VALUES
@@ -138,8 +234,22 @@ INSERT INTO `cau_hoi` (`ma_cau_hoi`, `ten_cau_hoi`, `trang_thai`, `is_faq`, `ma_
 (29, 'Sách combo có được tách lẻ ra để đổi trả không?', 'da_tra_loi', 'No', 4, 2, '2026-05-10 15:07:28'),
 (30, 'Làm sao để đánh giá và viết nhận xét cho sách đã mua?', 'da_tra_loi', 'No', 5, 2, '2026-05-10 15:07:28');
 
+-- --------------------------------------------------------
+
 --
--- Đang đổ dữ liệu cho bảng `cau_tra_loi`
+-- Table structure for table `cau_tra_loi`
+--
+
+CREATE TABLE `cau_tra_loi` (
+  `ma_cau_tra_loi` bigint(20) NOT NULL,
+  `ma_cau_hoi` bigint(20) NOT NULL,
+  `administrator_userid` bigint(20) NOT NULL,
+  `noi_dung` text NOT NULL,
+  `ngay_dang` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `cau_tra_loi`
 --
 
 INSERT INTO `cau_tra_loi` (`ma_cau_tra_loi`, `ma_cau_hoi`, `administrator_userid`, `noi_dung`, `ngay_dang`) VALUES
@@ -175,13 +285,120 @@ INSERT INTO `cau_tra_loi` (`ma_cau_tra_loi`, `ma_cau_hoi`, `administrator_userid
 (30, 30, 1, 'Khi đơn hàng chuyển trạng thái \"Giao hàng thành công\", bạn vào \"Đơn hàng của tôi\", chọn đơn hàng tương ứng và nhấn vào nút \"Đánh giá\" để để lại nhận xét nhé.', '2026-05-07 15:50:00');
 
 --
--- Đang đổ dữ liệu cho bảng `lien_he`
+-- Triggers `cau_tra_loi`
+--
+DELIMITER $$
+CREATE TRIGGER `trg_after_delete_cau_tra_loi` AFTER DELETE ON `cau_tra_loi` FOR EACH ROW BEGIN
+    IF NOT EXISTS (SELECT 1 FROM cau_tra_loi WHERE ma_cau_hoi = OLD.ma_cau_hoi) THEN
+        UPDATE cau_hoi SET trang_thai = 'da_an'
+        WHERE ma_cau_hoi = OLD.ma_cau_hoi
+          AND trang_thai IN ('da_tra_loi', 'chua_tra_loi')
+          AND is_faq = 'Yes';
+        UPDATE cau_hoi SET trang_thai = 'chua_tra_loi'
+        WHERE ma_cau_hoi = OLD.ma_cau_hoi
+          AND trang_thai = 'da_tra_loi'
+          AND is_faq = 'No';
+    END IF;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `trg_after_insert_cau_tra_loi` AFTER INSERT ON `cau_tra_loi` FOR EACH ROW BEGIN
+    UPDATE cau_hoi SET trang_thai = 'da_tra_loi'
+    WHERE ma_cau_hoi = NEW.ma_cau_hoi AND trang_thai NOT IN ('da_an');
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `chi_tiet_don_hang`
+--
+
+CREATE TABLE `chi_tiet_don_hang` (
+  `ma_don` bigint(20) NOT NULL,
+  `ma_san_pham` bigint(20) NOT NULL,
+  `so_luong` int(11) NOT NULL,
+  `gia` decimal(15,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `chi_tiet_gio_hang`
+--
+
+CREATE TABLE `chi_tiet_gio_hang` (
+  `ma_gio_hang` bigint(20) NOT NULL,
+  `ma_san_pham` bigint(20) NOT NULL,
+  `so_luong` int(11) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `danh_gia`
+--
+
+CREATE TABLE `danh_gia` (
+  `member_userid` bigint(20) NOT NULL,
+  `ma_san_pham` bigint(20) NOT NULL,
+  `diem` int(11) NOT NULL,
+  `noi_dung` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `don_hang`
+--
+
+CREATE TABLE `don_hang` (
+  `ma_don` bigint(20) NOT NULL,
+  `member_userid` bigint(20) NOT NULL,
+  `ngay_dat` datetime DEFAULT current_timestamp(),
+  `thoi_gian_nhan_hang_du_kien` datetime DEFAULT NULL,
+  `thoi_gian_nhan_hang_thuc_te` datetime DEFAULT NULL,
+  `phuong_thuc_thanh_toan` varchar(50) DEFAULT NULL,
+  `tong_tien` decimal(15,2) NOT NULL,
+  `dia_chi_giao_hang` text NOT NULL,
+  `trang_thai_don_hang` varchar(50) DEFAULT NULL,
+  `so_luong_san_pham` int(11) NOT NULL,
+  `trang_thai_giao_dich` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `gio_hang`
+--
+
+CREATE TABLE `gio_hang` (
+  `ma_gio_hang` bigint(20) NOT NULL,
+  `member_userid` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `lien_he`
+--
+
+CREATE TABLE `lien_he` (
+  `ma_lien_he` bigint(20) NOT NULL,
+  `ho_va_ten` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `noi_dung` text NOT NULL,
+  `trang_thai` enum('unread','read','replied') DEFAULT 'unread',
+  `thoi_gian_tao` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `lien_he`
 --
 
 INSERT INTO `lien_he` (`ma_lien_he`, `ho_va_ten`, `email`, `noi_dung`, `trang_thai`, `thoi_gian_tao`) VALUES
-(1, 'Huỳnh Đức Huy', 'huynhduchuy10032005@gmail.com', 'to thich cau', 'unread', '2026-05-07 22:24:57'),
-(2, 'Huỳnh Đức Huy', 'huynhduchuy10032005@gmail.com', 'to thich cau', 'unread', '2026-05-07 22:25:07'),
-(3, 'Huỳnh Đức Huy', 'huynhduchuy10032005@gmail.com', 'to thich cau', 'unread', '2026-05-07 22:25:48'),
 (4, 'Huỳnh Đức Huy', 'huynhduchuy10032005@gmail.com', 'sach dep', 'unread', '2026-05-08 07:21:43'),
 (5, 'Huỳnh Đức Huy', 'huynhduchuy10032005@gmail.com', 'sach dep', 'unread', '2026-05-08 07:23:19'),
 (6, 'Huỳnh Đức Huy', 'huynhduchuy10032005@gmail.com', 'f', 'unread', '2026-05-08 07:23:36'),
@@ -201,8 +418,22 @@ INSERT INTO `lien_he` (`ma_lien_he`, `ho_va_ten`, `email`, `noi_dung`, `trang_th
 (20, 'Huỳnh Đức Huy', 'huynhduchuy10032005@gmail.com', 'ádsdfa', 'replied', '2026-05-08 08:07:15'),
 (22, 'Huỳnh Đức Huy', 'huynhduchuy10032005@gmail.com', 'huy', 'unread', '2026-05-10 16:19:47');
 
+-- --------------------------------------------------------
+
 --
--- Đang đổ dữ liệu cho bảng `loai_bai_viet`
+-- Table structure for table `loai_bai_viet`
+--
+
+CREATE TABLE `loai_bai_viet` (
+  `ma_loai` bigint(20) NOT NULL,
+  `ten_loai` varchar(255) NOT NULL,
+  `slug` varchar(255) DEFAULT NULL,
+  `trang_thai` varchar(50) DEFAULT 'active',
+  `loai_cha` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `loai_bai_viet`
 --
 
 INSERT INTO `loai_bai_viet` (`ma_loai`, `ten_loai`, `slug`, `trang_thai`, `loai_cha`) VALUES
@@ -210,8 +441,20 @@ INSERT INTO `loai_bai_viet` (`ma_loai`, `ten_loai`, `slug`, `trang_thai`, `loai_
 (2, 'Sách Tâm lý - Kỹ năng sống', 'sach-tam-ly-ky-nang-song', 'active', NULL),
 (3, 'Sách Kinh tế', 'sach-kinh-te', 'active', NULL);
 
+-- --------------------------------------------------------
+
 --
--- Đang đổ dữ liệu cho bảng `loai_cau_hoi`
+-- Table structure for table `loai_cau_hoi`
+--
+
+CREATE TABLE `loai_cau_hoi` (
+  `ma_loai` bigint(20) NOT NULL,
+  `ten_loai` varchar(255) NOT NULL,
+  `so_thu_tu` int(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `loai_cau_hoi`
 --
 
 INSERT INTO `loai_cau_hoi` (`ma_loai`, `ten_loai`, `so_thu_tu`) VALUES
@@ -223,8 +466,20 @@ INSERT INTO `loai_cau_hoi` (`ma_loai`, `ten_loai`, `so_thu_tu`) VALUES
 (6, 'Ưu đãi & khuyến mãi', 6000),
 (7, 'Khác', 7000);
 
+-- --------------------------------------------------------
+
 --
--- Đang đổ dữ liệu cho bảng `loai_san_pham`
+-- Table structure for table `loai_san_pham`
+--
+
+CREATE TABLE `loai_san_pham` (
+  `ma_loai` bigint(20) NOT NULL,
+  `ten_loai` varchar(255) NOT NULL,
+  `loai_cha` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `loai_san_pham`
 --
 
 INSERT INTO `loai_san_pham` (`ma_loai`, `ten_loai`, `loai_cha`) VALUES
@@ -234,16 +489,84 @@ INSERT INTO `loai_san_pham` (`ma_loai`, `ten_loai`, `loai_cha`) VALUES
 (4, 'Khoa học - Công nghệ', NULL),
 (5, 'Thiếu nhi', NULL);
 
+-- --------------------------------------------------------
+
 --
--- Đang đổ dữ liệu cho bảng `member`
+-- Table structure for table `member`
+--
+
+CREATE TABLE `member` (
+  `userid` bigint(20) NOT NULL,
+  `diem_tich_luy` int(11) DEFAULT 0,
+  `ten_rank` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `member`
 --
 
 INSERT INTO `member` (`userid`, `diem_tich_luy`, `ten_rank`) VALUES
 (2, 0, NULL),
 (9, 0, NULL);
 
+-- --------------------------------------------------------
+
 --
--- Đang đổ dữ liệu cho bảng `san_pham`
+-- Table structure for table `nguoi_dung`
+--
+
+CREATE TABLE `nguoi_dung` (
+  `userid` bigint(20) NOT NULL,
+  `username` varchar(50) DEFAULT NULL,
+  `mat_khau` varchar(255) NOT NULL,
+  `ho_va_ten_dem` varchar(50) NOT NULL,
+  `ten` varchar(50) NOT NULL,
+  `so_dien_thoai` varchar(20) DEFAULT NULL,
+  `email` varchar(100) NOT NULL,
+  `avatar_url` varchar(500) DEFAULT NULL,
+  `vai_tro` enum('guest','member','admin') DEFAULT 'member',
+  `trang_thai` varchar(50) DEFAULT NULL,
+  `ngay_tao` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `nguoi_dung`
+--
+
+INSERT INTO `nguoi_dung` (`userid`, `username`, `mat_khau`, `ho_va_ten_dem`, `ten`, `so_dien_thoai`, `email`, `avatar_url`, `vai_tro`, `trang_thai`, `ngay_tao`) VALUES
+(1, 'admin', '$2a$12$UHRC2flycgjyh/bpatCJDO14bC/ap99VXEFV/WAXmXuCRbFlIDHyG', 'Quản Trị', 'Viên', '0123456789', 'admin@booktab.com', NULL, 'member', 'active', '2026-05-05 20:23:28'),
+(2, 'user1', '$2y$10$UX5ZV4.g6Ayx5rn0pWoRI.ya575kadXDrMSf9ULjbIr/dGvnLgv6a', 'Bành Phú', 'Hội', '0123456789', 'hoi.banhphu@gmail.com', '6a009d26affd0_Cartethyia.jpeg', 'member', 'active', '2026-05-05 20:24:39'),
+(3, 'admin2', '$2y$10$LtIPqqzSd08/a6cXpCsqD.U/Z4tGSEyizzWXy6lRx5eQJCJUvVAW.', 'Nguyễn Văn', 'Hiệp', '0123456789', 'admin2@booktab.com', NULL, 'member', 'active', '2026-05-11 17:07:59'),
+(4, 'user2', '$2y$10$75FWPGM3gh8zKXqWvRT/XOoVpRHcFYUgGjDeA2uXdyl7wMK0Zh5Su', 'Huỳnh Đức', 'Huy', '0123456789', 'huy.huynhduc@gmail.com', NULL, 'member', 'active', '2026-05-11 17:17:34');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `rank`
+--
+
+CREATE TABLE `rank` (
+  `ten_rank` varchar(50) NOT NULL,
+  `diem_toi_thieu` int(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `san_pham`
+--
+
+CREATE TABLE `san_pham` (
+  `ma_san_pham` bigint(20) NOT NULL,
+  `ten_san_pham` varchar(255) NOT NULL,
+  `mo_ta` text DEFAULT NULL,
+  `gia_san_pham` decimal(15,2) NOT NULL,
+  `is_active` tinyint(1) DEFAULT 1,
+  `ma_loai` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `san_pham`
 --
 
 INSERT INTO `san_pham` (`ma_san_pham`, `ten_san_pham`, `mo_ta`, `gia_san_pham`, `is_active`, `ma_loai`) VALUES
@@ -263,8 +586,22 @@ INSERT INTO `san_pham` (`ma_san_pham`, `ten_san_pham`, `mo_ta`, `gia_san_pham`, 
 (14, 'Rèn Luyện Tư Duy Phản Biện', 'Cuốn sách giúp bạn nhận diện và tránh các lỗi suy nghĩ thường gặp, từ đó đưa ra quyết định sáng suốt hơn trong cuộc sống và công việc.', 85000.00, 1, 3),
 (15, 'Sản Phẩm Ngừng Kinh Doanh', 'Đây là sản phẩm dùng để kiểm tra tính năng ngừng kinh doanh', 50000.00, 0, 2);
 
+-- --------------------------------------------------------
+
 --
--- Đang đổ dữ liệu cho bảng `thong_tin`
+-- Table structure for table `thong_tin`
+--
+
+CREATE TABLE `thong_tin` (
+  `ma_thong_tin` bigint(20) NOT NULL,
+  `loai_thong_tin` varchar(50) NOT NULL,
+  `type` enum('text','link') NOT NULL DEFAULT 'text',
+  `ngay_tao` datetime DEFAULT current_timestamp(),
+  `ngay_cap_nhat` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `thong_tin`
 --
 
 INSERT INTO `thong_tin` (`ma_thong_tin`, `loai_thong_tin`, `type`, `ngay_tao`, `ngay_cap_nhat`) VALUES
@@ -278,8 +615,21 @@ INSERT INTO `thong_tin` (`ma_thong_tin`, `loai_thong_tin`, `type`, `ngay_tao`, `
 (8, 'email', 'text', '2026-05-10 15:07:28', '2026-05-10 15:07:28'),
 (9, 'copyright', 'text', '2026-05-10 15:07:28', '2026-05-10 15:07:28');
 
+-- --------------------------------------------------------
+
 --
--- Đang đổ dữ liệu cho bảng `thong_tin_chi_tiet`
+-- Table structure for table `thong_tin_chi_tiet`
+--
+
+CREATE TABLE `thong_tin_chi_tiet` (
+  `ma_chi_tiet` bigint(20) NOT NULL,
+  `ma_thong_tin` bigint(20) NOT NULL,
+  `noi_dung` text NOT NULL,
+  `url` varchar(500) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `thong_tin_chi_tiet`
 --
 
 INSERT INTO `thong_tin_chi_tiet` (`ma_chi_tiet`, `ma_thong_tin`, `noi_dung`, `url`) VALUES
@@ -302,8 +652,390 @@ INSERT INTO `thong_tin_chi_tiet` (`ma_chi_tiet`, `ma_thong_tin`, `noi_dung`, `ur
 (18, 9, '© 2026 BookTab. Nhà sách trực tuyến — Nơi sách gặp công nghệ.', NULL),
 (19, 1, '<div class=\"not-prose\" style=\"text-align: center; padding: 40px 20px; background: linear-gradient(135deg, #ef4444, #f97316); border-radius: 16px; color: white; margin-bottom: 32px;\">\r\n<h1 style=\"font-size: 36px; font-weight: bold; margin: 0;\"><span style=\"color: rgb(255, 255, 255);\">BookTab &mdash; Nơi s&aacute;ch gặp c&ocirc;ng nghệ</span></h1>\r\n<p style=\"margin-top: 12px; font-size: 18px; opacity: 0.9;\">X&acirc;y dựng trải nghiệm mua s&aacute;ch trực tuyến nhanh, r&otilde; r&agrave;ng v&agrave; đ&aacute;ng tin cậy cho mọi độc giả.</p>\r\n</div>\r\n<h2><span style=\"color: rgb(224, 62, 45);\">BookTab</span> l&agrave; g&igrave;?</h2>\r\n<p>BookTab l&agrave; dự &aacute;n thương mại điện tử s&aacute;ch được ph&aacute;t triển theo kiến tr&uacute;c MVC tự x&acirc;y dựng. Ch&uacute;ng t&ocirc;i tập trung v&agrave;o trải nghiệm t&igrave;m kiếm dễ d&ugrave;ng, th&ocirc;ng tin minh bạch v&agrave; quy tr&igrave;nh đặt h&agrave;ng đơn giản để ai cũng c&oacute; thể mua s&aacute;ch thuận tiện.</p>\r\n<p>Với kho s&aacute;ch đa dạng từ văn học trong nước đến s&aacute;ch ngoại văn, từ s&aacute;ch gi&aacute;o khoa đến tiểu thuyết, BookTab mong muốn trở th&agrave;nh điểm đến tin cậy cho mọi đối tượng độc giả &mdash; từ học sinh, sinh vi&ecirc;n đến những người y&ecirc;u s&aacute;ch ở mọi lứa tuổi.</p>\r\n<h2><span style=\"color: rgb(224, 62, 45);\">Sứ mệnh</span> của ch&uacute;ng t&ocirc;i</h2>\r\n<p>Ch&uacute;ng t&ocirc;i mong muốn r&uacute;t ngắn khoảng c&aacute;ch giữa người đọc v&agrave; những đầu s&aacute;ch chất lượng th&ocirc;ng qua một nền tảng ổng định, dễ truy cập v&agrave; th&acirc;n thiện với cả người d&ugrave;ng mới.</p>\r\n<p>Mỗi ng&agrave;y, h&agrave;ng ng&agrave;n cuốn s&aacute;ch mới được xuất bản tr&ecirc;n thế giới. Nhiệm vụ của BookTab l&agrave; gi&uacute;p bạn tiếp cận những cuốn s&aacute;ch đ&oacute; một c&aacute;ch nhanh nhất, với gi&aacute; cả hợp l&yacute; nhất v&agrave; dịch vụ chuy&ecirc;n nghiệp nhất.</p>\r\n<h2><span style=\"color: rgb(224, 62, 45);\">Gi&aacute; trị cốt l&otilde;i</span></h2>\r\n<p>BookTab ưu ti&ecirc;n ba gi&aacute; trị ch&iacute;nh trong mọi hoạt động:</p>\r\n<ul>\r\n<li><strong>Minh bạch th&ocirc;ng tin:</strong> M&otilde;i cuốn s&aacute;ch đều c&oacute; m&ocirc; tả chi tiết, h&igrave;nh ảnh thực tế v&agrave; đ&aacute;nh gi&aacute; từ người mua. Kh&ocirc;ng c&oacute; th&ocirc;ng tin ẩn hay ph&iacute; ph&aacute;t sinh.</li>\r\n<li><strong>Tối ưu hiệu năng:</strong> Trang web tải nhanh, t&igrave;m kiếm ch&iacute;nh x&aacute;c, quy tr&iacute;nh đặt h&agrave;ng gọn g&agrave;ng. Ch&uacute;ng t&ocirc;i li&ecirc;n tục cải thiện tốc độ v&agrave; trải nghiệm người d&ugrave;ng.</li>\r\n<li><strong>Cải tiến li&ecirc;n tục:</strong> Phản hồi từ người d&ugrave;ng l&agrave; nguồn cảm hứng cho mọi cập nhật. Ch&uacute;ng t&ocirc;i lắng nghe, học hỏi v&agrave; cải thiện mỗi ng&agrave;y.</li>\r\n</ul>\r\n<h2><span style=\"color: rgb(224, 62, 45);\">Đội ngũ </span>đằng sau BookTab</h2>\r\n<p>BookTab được x&acirc;y dựng bởi đội ngũ nhỏ gọn nhưng đam m&ecirc;, bao gồm c&aacute;c lập tr&igrave;nh vi&ecirc;n, thiết kế vi&ecirc;n v&agrave; những người y&ecirc;u s&aacute;ch. Ch&uacute;ng t&ocirc;i tin rằng c&ocirc;ng nghệ phải phục vụ con người, v&agrave; m&otilde;i d&ograve;ng code đều hướng tới trải nghiệm tốt hơn cho người đọc.</p>\r\n<h2><span style=\"color: rgb(224, 62, 45);\">Li&ecirc;n hệ</span> với ch&uacute;ng t&ocirc;i</h2>\r\n<p>Bạn c&oacute; thắ̂c măc, đề xuất hay muốn hợp t&aacute;c? Đừng ngần ngại li&ecirc;n hệ:</p>\r\n<ul>\r\n<li><strong>Email:</strong> support@booktab.vn</li>\r\n<li><strong>Hotline:</strong> 0123 456 789 (8:00 &ndash; 21:00 h&agrave;ng ng&agrave;y)</li>\r\n<li><strong>Địa chỉ:</strong> 123 Đường S&aacute;ch, Quận 1, TP. Hồ Ch&iacute; Minh</li>\r\n</ul>\r\n<blockquote>\r\n<p>&ldquo;Mỗi cuốn s&aacute;ch l&agrave; một c&aacute;nh cửa. BookTab gi&uacute;p bạn mở c&aacute;nh cửa đ&oacute; dễ d&agrave;ng hơn.&rdquo;</p>\r\n</blockquote>', NULL);
 
+--
+-- Indexes for dumped tables
+--
 
-SET FOREIGN_KEY_CHECKS = 1;
+--
+-- Indexes for table `administrator`
+--
+ALTER TABLE `administrator`
+  ADD PRIMARY KEY (`userid`);
+
+--
+-- Indexes for table `anh`
+--
+ALTER TABLE `anh`
+  ADD PRIMARY KEY (`ma_anh`);
+
+--
+-- Indexes for table `anh_cau_hoi`
+--
+ALTER TABLE `anh_cau_hoi`
+  ADD PRIMARY KEY (`ma_cau_hoi`,`ma_anh`),
+  ADD KEY `idx_acq_ma_anh` (`ma_anh`);
+
+--
+-- Indexes for table `anh_san_pham`
+--
+ALTER TABLE `anh_san_pham`
+  ADD PRIMARY KEY (`ma_anh`),
+  ADD KEY `ma_san_pham` (`ma_san_pham`);
+
+--
+-- Indexes for table `bai_viet`
+--
+ALTER TABLE `bai_viet`
+  ADD PRIMARY KEY (`ma_bai_viet`),
+  ADD UNIQUE KEY `slug` (`slug`),
+  ADD KEY `ma_loai` (`ma_loai`),
+  ADD KEY `administrator_userid` (`administrator_userid`);
+
+--
+-- Indexes for table `binh_luan`
+--
+ALTER TABLE `binh_luan`
+  ADD PRIMARY KEY (`ma_binh_luan`),
+  ADD KEY `ma_bai_viet` (`ma_bai_viet`),
+  ADD KEY `userid` (`userid`),
+  ADD KEY `binh_luan_cha` (`binh_luan_cha`);
+
+--
+-- Indexes for table `cau_hoi`
+--
+ALTER TABLE `cau_hoi`
+  ADD PRIMARY KEY (`ma_cau_hoi`),
+  ADD KEY `ma_loai` (`ma_loai`),
+  ADD KEY `userid` (`userid`);
+
+--
+-- Indexes for table `cau_tra_loi`
+--
+ALTER TABLE `cau_tra_loi`
+  ADD PRIMARY KEY (`ma_cau_tra_loi`),
+  ADD KEY `ma_cau_hoi` (`ma_cau_hoi`),
+  ADD KEY `administrator_userid` (`administrator_userid`);
+
+--
+-- Indexes for table `chi_tiet_don_hang`
+--
+ALTER TABLE `chi_tiet_don_hang`
+  ADD PRIMARY KEY (`ma_don`,`ma_san_pham`),
+  ADD KEY `ma_san_pham` (`ma_san_pham`);
+
+--
+-- Indexes for table `chi_tiet_gio_hang`
+--
+ALTER TABLE `chi_tiet_gio_hang`
+  ADD PRIMARY KEY (`ma_gio_hang`,`ma_san_pham`),
+  ADD KEY `ma_san_pham` (`ma_san_pham`);
+
+--
+-- Indexes for table `danh_gia`
+--
+ALTER TABLE `danh_gia`
+  ADD PRIMARY KEY (`member_userid`,`ma_san_pham`),
+  ADD KEY `ma_san_pham` (`ma_san_pham`);
+
+--
+-- Indexes for table `don_hang`
+--
+ALTER TABLE `don_hang`
+  ADD PRIMARY KEY (`ma_don`),
+  ADD KEY `member_userid` (`member_userid`);
+
+--
+-- Indexes for table `gio_hang`
+--
+ALTER TABLE `gio_hang`
+  ADD PRIMARY KEY (`ma_gio_hang`),
+  ADD UNIQUE KEY `member_userid` (`member_userid`);
+
+--
+-- Indexes for table `lien_he`
+--
+ALTER TABLE `lien_he`
+  ADD PRIMARY KEY (`ma_lien_he`);
+
+--
+-- Indexes for table `loai_bai_viet`
+--
+ALTER TABLE `loai_bai_viet`
+  ADD PRIMARY KEY (`ma_loai`),
+  ADD UNIQUE KEY `slug` (`slug`),
+  ADD KEY `loai_cha` (`loai_cha`);
+
+--
+-- Indexes for table `loai_cau_hoi`
+--
+ALTER TABLE `loai_cau_hoi`
+  ADD PRIMARY KEY (`ma_loai`),
+  ADD UNIQUE KEY `ten_loai` (`ten_loai`);
+
+--
+-- Indexes for table `loai_san_pham`
+--
+ALTER TABLE `loai_san_pham`
+  ADD PRIMARY KEY (`ma_loai`),
+  ADD KEY `loai_cha` (`loai_cha`);
+
+--
+-- Indexes for table `member`
+--
+ALTER TABLE `member`
+  ADD PRIMARY KEY (`userid`),
+  ADD KEY `ten_rank` (`ten_rank`);
+
+--
+-- Indexes for table `nguoi_dung`
+--
+ALTER TABLE `nguoi_dung`
+  ADD PRIMARY KEY (`userid`),
+  ADD UNIQUE KEY `email` (`email`),
+  ADD UNIQUE KEY `username` (`username`);
+
+--
+-- Indexes for table `rank`
+--
+ALTER TABLE `rank`
+  ADD PRIMARY KEY (`ten_rank`);
+
+--
+-- Indexes for table `san_pham`
+--
+ALTER TABLE `san_pham`
+  ADD PRIMARY KEY (`ma_san_pham`),
+  ADD KEY `ma_loai` (`ma_loai`);
+
+--
+-- Indexes for table `thong_tin`
+--
+ALTER TABLE `thong_tin`
+  ADD PRIMARY KEY (`ma_thong_tin`);
+
+--
+-- Indexes for table `thong_tin_chi_tiet`
+--
+ALTER TABLE `thong_tin_chi_tiet`
+  ADD PRIMARY KEY (`ma_chi_tiet`),
+  ADD KEY `ma_thong_tin` (`ma_thong_tin`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `anh`
+--
+ALTER TABLE `anh`
+  MODIFY `ma_anh` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `anh_san_pham`
+--
+ALTER TABLE `anh_san_pham`
+  MODIFY `ma_anh` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- AUTO_INCREMENT for table `bai_viet`
+--
+ALTER TABLE `bai_viet`
+  MODIFY `ma_bai_viet` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
+-- AUTO_INCREMENT for table `binh_luan`
+--
+ALTER TABLE `binh_luan`
+  MODIFY `ma_binh_luan` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `cau_hoi`
+--
+ALTER TABLE `cau_hoi`
+  MODIFY `ma_cau_hoi` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+
+--
+-- AUTO_INCREMENT for table `cau_tra_loi`
+--
+ALTER TABLE `cau_tra_loi`
+  MODIFY `ma_cau_tra_loi` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+
+--
+-- AUTO_INCREMENT for table `don_hang`
+--
+ALTER TABLE `don_hang`
+  MODIFY `ma_don` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `gio_hang`
+--
+ALTER TABLE `gio_hang`
+  MODIFY `ma_gio_hang` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `lien_he`
+--
+ALTER TABLE `lien_he`
+  MODIFY `ma_lien_he` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+
+--
+-- AUTO_INCREMENT for table `loai_bai_viet`
+--
+ALTER TABLE `loai_bai_viet`
+  MODIFY `ma_loai` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `loai_cau_hoi`
+--
+ALTER TABLE `loai_cau_hoi`
+  MODIFY `ma_loai` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `loai_san_pham`
+--
+ALTER TABLE `loai_san_pham`
+  MODIFY `ma_loai` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `nguoi_dung`
+--
+ALTER TABLE `nguoi_dung`
+  MODIFY `userid` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `san_pham`
+--
+ALTER TABLE `san_pham`
+  MODIFY `ma_san_pham` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- AUTO_INCREMENT for table `thong_tin`
+--
+ALTER TABLE `thong_tin`
+  MODIFY `ma_thong_tin` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `thong_tin_chi_tiet`
+--
+ALTER TABLE `thong_tin_chi_tiet`
+  MODIFY `ma_chi_tiet` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `administrator`
+--
+ALTER TABLE `administrator`
+  ADD CONSTRAINT `administrator_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `nguoi_dung` (`userid`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `anh_cau_hoi`
+--
+ALTER TABLE `anh_cau_hoi`
+  ADD CONSTRAINT `fk_anh_cau_hoi_anh` FOREIGN KEY (`ma_anh`) REFERENCES `anh` (`ma_anh`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_anh_cau_hoi_cau_hoi` FOREIGN KEY (`ma_cau_hoi`) REFERENCES `cau_hoi` (`ma_cau_hoi`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `anh_san_pham`
+--
+ALTER TABLE `anh_san_pham`
+  ADD CONSTRAINT `anh_san_pham_ibfk_1` FOREIGN KEY (`ma_san_pham`) REFERENCES `san_pham` (`ma_san_pham`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `bai_viet`
+--
+ALTER TABLE `bai_viet`
+  ADD CONSTRAINT `bai_viet_ibfk_1` FOREIGN KEY (`ma_loai`) REFERENCES `loai_bai_viet` (`ma_loai`) ON DELETE SET NULL,
+  ADD CONSTRAINT `bai_viet_ibfk_2` FOREIGN KEY (`administrator_userid`) REFERENCES `administrator` (`userid`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `binh_luan`
+--
+ALTER TABLE `binh_luan`
+  ADD CONSTRAINT `binh_luan_ibfk_1` FOREIGN KEY (`ma_bai_viet`) REFERENCES `bai_viet` (`ma_bai_viet`) ON DELETE CASCADE,
+  ADD CONSTRAINT `binh_luan_ibfk_2` FOREIGN KEY (`userid`) REFERENCES `nguoi_dung` (`userid`) ON DELETE CASCADE,
+  ADD CONSTRAINT `binh_luan_ibfk_3` FOREIGN KEY (`binh_luan_cha`) REFERENCES `binh_luan` (`ma_binh_luan`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `cau_hoi`
+--
+ALTER TABLE `cau_hoi`
+  ADD CONSTRAINT `cau_hoi_ibfk_1` FOREIGN KEY (`ma_loai`) REFERENCES `loai_cau_hoi` (`ma_loai`) ON DELETE SET NULL,
+  ADD CONSTRAINT `cau_hoi_ibfk_2` FOREIGN KEY (`userid`) REFERENCES `nguoi_dung` (`userid`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `cau_tra_loi`
+--
+ALTER TABLE `cau_tra_loi`
+  ADD CONSTRAINT `cau_tra_loi_ibfk_1` FOREIGN KEY (`ma_cau_hoi`) REFERENCES `cau_hoi` (`ma_cau_hoi`) ON DELETE CASCADE,
+  ADD CONSTRAINT `cau_tra_loi_ibfk_2` FOREIGN KEY (`administrator_userid`) REFERENCES `administrator` (`userid`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `chi_tiet_don_hang`
+--
+ALTER TABLE `chi_tiet_don_hang`
+  ADD CONSTRAINT `chi_tiet_don_hang_ibfk_1` FOREIGN KEY (`ma_don`) REFERENCES `don_hang` (`ma_don`) ON DELETE CASCADE,
+  ADD CONSTRAINT `chi_tiet_don_hang_ibfk_2` FOREIGN KEY (`ma_san_pham`) REFERENCES `san_pham` (`ma_san_pham`);
+
+--
+-- Constraints for table `chi_tiet_gio_hang`
+--
+ALTER TABLE `chi_tiet_gio_hang`
+  ADD CONSTRAINT `chi_tiet_gio_hang_ibfk_1` FOREIGN KEY (`ma_gio_hang`) REFERENCES `gio_hang` (`ma_gio_hang`) ON DELETE CASCADE,
+  ADD CONSTRAINT `chi_tiet_gio_hang_ibfk_2` FOREIGN KEY (`ma_san_pham`) REFERENCES `san_pham` (`ma_san_pham`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `danh_gia`
+--
+ALTER TABLE `danh_gia`
+  ADD CONSTRAINT `danh_gia_ibfk_1` FOREIGN KEY (`member_userid`) REFERENCES `member` (`userid`) ON DELETE CASCADE,
+  ADD CONSTRAINT `danh_gia_ibfk_2` FOREIGN KEY (`ma_san_pham`) REFERENCES `san_pham` (`ma_san_pham`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `don_hang`
+--
+ALTER TABLE `don_hang`
+  ADD CONSTRAINT `don_hang_ibfk_1` FOREIGN KEY (`member_userid`) REFERENCES `member` (`userid`);
+
+--
+-- Constraints for table `gio_hang`
+--
+ALTER TABLE `gio_hang`
+  ADD CONSTRAINT `gio_hang_ibfk_1` FOREIGN KEY (`member_userid`) REFERENCES `member` (`userid`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `loai_bai_viet`
+--
+ALTER TABLE `loai_bai_viet`
+  ADD CONSTRAINT `loai_bai_viet_ibfk_1` FOREIGN KEY (`loai_cha`) REFERENCES `loai_bai_viet` (`ma_loai`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `loai_san_pham`
+--
+ALTER TABLE `loai_san_pham`
+  ADD CONSTRAINT `loai_san_pham_ibfk_1` FOREIGN KEY (`loai_cha`) REFERENCES `loai_san_pham` (`ma_loai`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `member`
+--
+ALTER TABLE `member`
+  ADD CONSTRAINT `member_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `nguoi_dung` (`userid`) ON DELETE CASCADE,
+  ADD CONSTRAINT `member_ibfk_2` FOREIGN KEY (`ten_rank`) REFERENCES `rank` (`ten_rank`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `san_pham`
+--
+ALTER TABLE `san_pham`
+  ADD CONSTRAINT `san_pham_ibfk_1` FOREIGN KEY (`ma_loai`) REFERENCES `loai_san_pham` (`ma_loai`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `thong_tin_chi_tiet`
+--
+ALTER TABLE `thong_tin_chi_tiet`
+  ADD CONSTRAINT `thong_tin_chi_tiet_ibfk_1` FOREIGN KEY (`ma_thong_tin`) REFERENCES `thong_tin` (`ma_thong_tin`) ON DELETE CASCADE;
+SET FOREIGN_KEY_CHECKS=1;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
